@@ -23,14 +23,18 @@
   let data;
   const pages = { jad: 1, bkd: 1 };
 
-  function setView(name) {
+  function setView(name, updateHash = true) {
+    const view = ['home', 'jad', 'bkd'].includes(name) ? name : 'home';
     document.querySelectorAll('.tab-button').forEach((button) => {
-      const active = button.dataset.view === name;
+      const active = button.dataset.view === view;
       button.classList.toggle('active', active);
       button.setAttribute('aria-selected', String(active));
     });
-    $('#jadView').hidden = name !== 'jad';
-    $('#bkdView').hidden = name !== 'bkd';
+    $('#homeView').hidden = view !== 'home';
+    $('#jadView').hidden = view !== 'jad';
+    $('#bkdView').hidden = view !== 'bkd';
+    if (updateHash && window.location.hash !== `#${view}`) window.location.hash = view;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   function optionsFor(select, values, firstLabel) {
@@ -102,6 +106,8 @@
     $('#jadTotal').textContent = fmt(records.length, 0);
     $('#jadComplete').textContent = fmt(complete, 0);
     $('#jadIncomplete').textContent = fmt(incomplete, 0);
+    $('#homeJadTotal').textContent = fmt(records.length, 0);
+    $('#homeJadComplete').textContent = fmt(complete, 0);
     $('#jadPublicationChart').innerHTML = [...counts.entries()].map(([label, count]) => {
       const width = records.length ? Math.round(count / records.length * 100) : 0;
       const cls = label === 'LENGKAP' ? '' : label.includes('BELUM') ? 'warn' : 'neutral';
@@ -170,6 +176,8 @@
     const complianceRate = records.length ? met / records.length * 100 : 0;
     $('#bkdTotal').textContent = fmt(records.length, 0);
     $('#bkdMet').textContent = fmt(met, 0);
+    $('#homeBkdTotal').textContent = fmt(records.length, 0);
+    $('#homeBkdMet').textContent = fmt(met, 0);
     $('#bkdMetFoot').textContent = `${fmt(complianceRate, 1)}% dari data yang dipilih`;
     $('#bkdUnmet').textContent = fmt(unmet, 0);
     $('#bkdUnmetFoot').textContent = `${fmt(records.length ? unmet / records.length * 100 : 0, 1)}% dari data yang dipilih`;
@@ -281,7 +289,10 @@
   }
 
   async function init() {
-    document.querySelectorAll('.tab-button').forEach((button) => button.addEventListener('click', () => setView(button.dataset.view)));
+    document.querySelectorAll('[data-view]').forEach((button) => button.addEventListener('click', () => setView(button.dataset.view)));
+    const routeFromHash = () => setView(window.location.hash.slice(1) || 'home', false);
+    window.addEventListener('hashchange', routeFromHash);
+    routeFromHash();
     $('#dialogClose').addEventListener('click', () => $('#detailDialog').close());
     $('#detailDialog').addEventListener('click', (event) => { if (event.target === $('#detailDialog')) $('#detailDialog').close(); });
     try {
