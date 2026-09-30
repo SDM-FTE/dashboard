@@ -99,17 +99,16 @@
     records.forEach((row) => counts.set(shortText(row.publication, 'Tidak ada status'), (counts.get(shortText(row.publication, 'Tidak ada status')) || 0) + 1));
     const complete = counts.get('LENGKAP') || 0;
     const incomplete = records.length - complete;
-    const akTotal = records.reduce((sum, row) => sum + (Number(row.totalAkBaru) || 0), 0);
     $('#jadTotal').textContent = fmt(records.length, 0);
     $('#jadComplete').textContent = fmt(complete, 0);
     $('#jadIncomplete').textContent = fmt(incomplete, 0);
-    $('#jadAkTotal').textContent = fmt(akTotal);
     $('#jadPublicationChart').innerHTML = [...counts.entries()].map(([label, count]) => {
       const width = records.length ? Math.round(count / records.length * 100) : 0;
       const cls = label === 'LENGKAP' ? '' : label.includes('BELUM') ? 'warn' : 'neutral';
       return `<div class="bar-item"><div class="bar-meta"><span>${esc(label)}</span><strong>${fmt(count, 0)} dosen</strong></div><div class="bar-track"><div class="bar-fill ${cls}" style="width:${width}%"></div></div></div>`;
     }).join('');
     optionsFor($('#jadPublicationFilter'), records.map((row) => row.publication), 'Semua status publikasi');
+    $('#jadPublicationFilter').insertAdjacentHTML('beforeend', '<option value="__incomplete__">Perlu dilengkapi</option>');
     optionsFor($('#jadRankFilter'), records.map((row) => row.proposedRank), 'Semua usulan JFA');
 
     const render = () => {
@@ -118,7 +117,8 @@
       const rank = $('#jadRankFilter').value;
       const filtered = records.filter((row) => {
         const haystack = normalized([row.name, row.currentRank, row.proposedRank, row.degree].join(' '));
-        return (!query || haystack.includes(query)) && (!publication || row.publication === publication) && (!rank || row.proposedRank === rank);
+        const publicationMatches = !publication || (publication === '__incomplete__' ? row.publication !== 'LENGKAP' : row.publication === publication);
+        return (!query || haystack.includes(query)) && publicationMatches && (!rank || row.proposedRank === rank);
       });
       const pagesTotal = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
       pages.jad = Math.min(pages.jad, pagesTotal);
@@ -128,21 +128,35 @@
       $('#jadPrev').disabled = pages.jad <= 1;
       $('#jadNext').disabled = pages.jad >= pagesTotal;
       const shown = filtered.slice(start, start + PAGE_SIZE);
-      $('#jadTableBody').innerHTML = shown.length ? shown.map((row) => `<tr>
+      $('#jadTableBody').innerHTML = shown.length ? shown.map((row) => `<tr class="clickable-row" data-jad-detail="${esc(row.no)}">
         <td class="name-cell">${esc(row.name)}<span class="sub-cell">${esc(shortText(row.degree, 'Ijazah tidak dicantumkan'))}</span></td>
         <td>${badge(row.publication)}</td>
         <td>${esc(shortText(row.currentRank))}</td>
         <td>${esc(shortText(row.proposedRank))}</td>
         <td class="numeric">${fmt(row.totalAkBaru)}</td>
         <td class="numeric">${fmt(row.totalAkLamaBaru)}</td>
-        <td><button type="button" class="row-action" data-detail-jad="${esc(row.no)}" aria-label="Lihat detail ${esc(row.name)}">›</button></td>
+        <td><button type="button" class="row-action" aria-label="Lihat detail ${esc(row.name)}">›</button></td>
       </tr>`).join('') : '<tr><td colspan="7" class="empty-row">Tidak ada data yang cocok dengan filter.</td></tr>';
-      $('#jadTableBody').querySelectorAll('[data-detail-jad]').forEach((button) => button.addEventListener('click', () => {
-        const record = records.find((row) => String(row.no) === button.dataset.detailJad);
+      $('#jadTableBody').querySelectorAll('[data-jad-detail]').forEach((rowElement) => rowElement.addEventListener('click', () => {
+        const record = records.find((row) => String(row.no) === rowElement.dataset.jadDetail);
         if (record) showDetails('jad', record);
       }));
     };
-    ['jadSearch', 'jadPublicationFilter', 'jadRankFilter'].forEach((id) => $(`#${id}`).addEventListener('input', () => { pages.jad = 1; render(); }));
+    function clearQuickSelection() {
+      document.querySelectorAll('[data-jad-quick-filter]').forEach((button) => button.setAttribute('aria-pressed', 'false'));
+    }
+    $('#jadSearch').addEventListener('input', () => { clearQuickSelection(); pages.jad = 1; render(); });
+    ['jadPublicationFilter', 'jadRankFilter'].forEach((id) => $(`#${id}`).addEventListener('change', () => { clearQuickSelection(); pages.jad = 1; render(); }));
+    document.querySelectorAll('[data-jad-quick-filter]').forEach((button) => button.addEventListener('click', () => {
+      const mode = button.dataset.jadQuickFilter;
+      $('#jadSearch').value = '';
+      $('#jadRankFilter').value = '';
+      $('#jadPublicationFilter').value = mode === 'complete' ? 'LENGKAP' : mode === 'incomplete' ? '__incomplete__' : '';
+      document.querySelectorAll('[data-jad-quick-filter]').forEach((card) => card.setAttribute('aria-pressed', String(card === button)));
+      pages.jad = 1;
+      render();
+      $('.table-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }));
     $('#jadPrev').addEventListener('click', () => { pages.jad -= 1; render(); });
     $('#jadNext').addEventListener('click', () => { pages.jad += 1; render(); });
     render();
