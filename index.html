@@ -28,17 +28,52 @@
     </section>
 
     <nav class="view-tabs" aria-label="Menu monitoring">
-      <button class="tab-button active" type="button" data-view="jad" aria-selected="true">
-        <span class="tab-index">01</span> Monitoring JAD
+      <button class="tab-button active" type="button" data-view="home" aria-selected="true">
+        <span class="tab-index">00</span> Beranda
+      </button>
+      <button class="tab-button" type="button" data-view="jad" aria-selected="false">
+        <span class="tab-index">01</span> Detail Usulan JAD
       </button>
       <button class="tab-button" type="button" data-view="bkd" aria-selected="false">
-        <span class="tab-index">02</span> Monitoring BKD
+        <span class="tab-index">02</span> Rekap BKD
       </button>
     </nav>
 
-    <section id="jadView" class="view-panel active" aria-labelledby="jadHeading">
+    <section id="homeView" class="view-panel active home-panel" aria-labelledby="homeHeading">
+      <div class="home-welcome">
+        <div>
+          <p class="eyebrow">BERANDA DASHBOARD</p>
+          <h2 id="homeHeading">Ringkasan monitoring dosen</h2>
+          <p>Pilih halaman untuk melihat detail usulan jabatan akademik atau rekap beban kerja dosen per program studi.</p>
+        </div>
+        <span class="home-mark" aria-hidden="true">JAD<br><i>+</i><br>BKD</span>
+      </div>
+      <div class="home-summary-grid" aria-label="Ringkasan data">
+        <article class="home-stat"><span>Usulan JAD</span><strong id="homeJadTotal">—</strong><small>dosen dalam rekap</small></article>
+        <article class="home-stat accent-teal"><span>Publikasi lengkap</span><strong id="homeJadComplete">—</strong><small>dosen berstatus lengkap</small></article>
+        <article class="home-stat accent-blue"><span>Data BKD</span><strong id="homeBkdTotal">—</strong><small>dosen di 8 prodi pilihan</small></article>
+        <article class="home-stat accent-rose"><span>Memenuhi BKD</span><strong id="homeBkdMet">—</strong><small>dosen berkesimpulan memenuhi</small></article>
+      </div>
+      <div class="home-pages-heading"><div><p class="eyebrow">PILIH HALAMAN</p><h3>Jelajahi dashboard</h3></div></div>
+      <div class="home-page-grid">
+        <article class="home-page-card jad-home-card">
+          <span class="home-page-number">01 / JAD</span>
+          <h3>Detail Usulan JAD</h3>
+          <p>Lihat daftar usulan dosen, filter publikasi dan usulan JFA, lalu buka rincian angka kredit serta SKP per tahun.</p>
+          <button type="button" class="home-link-button" data-view="jad">Buka Detail Usulan JAD <span aria-hidden="true">→</span></button>
+        </article>
+        <article class="home-page-card bkd-home-card">
+          <span class="home-page-number">02 / BKD</span>
+          <h3>Rekap BKD</h3>
+          <p>Lihat hasil BKD per prodi, buka daftar dosen tiap kelompok, atau cari data lintas 8 program studi pilihan.</p>
+          <button type="button" class="home-link-button" data-view="bkd">Buka Rekap BKD <span aria-hidden="true">→</span></button>
+        </article>
+      </div>
+    </section>
+
+    <section id="jadView" class="view-panel" aria-labelledby="jadHeading" hidden>
       <div class="section-heading">
-        <div><p class="eyebrow">JABATAN AKADEMIK DOSEN</p><h2 id="jadHeading">Monitoring JAD</h2></div>
+        <div><p class="eyebrow">JABATAN AKADEMIK DOSEN</p><h2 id="jadHeading">Detail Usulan JAD</h2></div>
         <p class="section-note">Data usulan dan penilaian dari workbook JAD.</p>
       </div>
       <div class="kpi-grid jad-kpis">
@@ -66,7 +101,7 @@
 
     <section id="bkdView" class="view-panel" aria-labelledby="bkdHeading" hidden>
       <div class="section-heading">
-        <div><p class="eyebrow">BEBAN KERJA DOSEN</p><h2 id="bkdHeading">Monitoring BKD</h2></div>
+        <div><p class="eyebrow">BEBAN KERJA DOSEN</p><h2 id="bkdHeading">Rekap BKD</h2></div>
         <p class="section-note">Rekap dosen pada 8 program studi pilihan.</p>
       </div>
       <div class="kpi-grid">
