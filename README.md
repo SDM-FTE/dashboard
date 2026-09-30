@@ -1,6 +1,6 @@
 # Dashboard Monitoring JAD + BKD
 
-Paket statis untuk GitHub Pages. `index.html` membuka Beranda dashboard, dengan halaman Detail Usulan JAD dan Rekap BKD yang dapat dipilih lewat menu. Seluruh tampilan dan data dashboard berada di folder `assets/`.
+Paket statis untuk GitHub Pages. `index.html` membuka Beranda yang hanya berisi pilihan halaman JAD dan BKD. Di halaman JAD, klik baris dosen pada tabel untuk membuka rincian usulan. Tombol “Kembali ke Beranda” tersedia di halaman JAD dan BKD. Seluruh tampilan dan data dashboard berada di folder `assets/`.
 
 ## Isi paket
 
