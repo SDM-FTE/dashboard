@@ -5,7 +5,7 @@ Paket statis untuk GitHub Pages. Halaman utama adalah `index.html`; seluruh tamp
 ## Isi paket
 
 - Monitoring JAD: 26 dosen, kartu ringkasan yang memfilter daftar dosen saat diklik, baris tabel yang membuka detail, filter nama/status publikasi/usulan JFA, serta rincian angka kredit dan SKP per tahun. Kartu Total AKK Baru sudah dihapus.
-- Monitoring BKD: 210 dosen pada 8 prodi pilihan, filter nama, prodi, status dosen, dan kesimpulan BKD.
+- Monitoring BKD: 210 dosen pada 8 prodi pilihan, ringkasan yang dapat diklik untuk membuka detail per prodi atau menyaring status memenuhi/tidak memenuhi, daftar dosen per prodi yang dapat dibuka, dan filter pencarian lintas prodi.
 - File sumber Excel tidak dimasukkan. Dashboard memakai salinan data JSON di `assets/data/dashboard-data.json`.
 - NIDN dan NUPTK tidak ditampilkan di dashboard.
 
