@@ -38,7 +38,7 @@
 
     <section id="jadView" class="view-panel" aria-labelledby="jadHeading" hidden>
       <div class="section-heading">
-        <div><p class="eyebrow">JABATAN AKADEMIK DOSEN</p><h2 id="jadHeading">Detail Usulan JAD</h2></div>
+        <div><p class="eyebrow">JABATAN AKADEMIK DOSEN</p><h2 id="jadHeading">Ringkasan JAD</h2></div>
         <div class="section-tools"><p class="section-note">Data usulan dan penilaian dari workbook JAD.</p><button class="page-back" type="button" data-view="home">← Kembali ke Beranda</button></div>
       </div>
       <div class="kpi-grid jad-kpis">
@@ -48,10 +48,16 @@
       </div>
 
       <div class="content-card chart-card">
-        <div class="card-heading"><div><h3>Kelengkapan publikasi</h3><p>Jumlah dosen berdasarkan status berkas publikasi.</p></div><span class="chart-caption">STATUS</span></div>
+        <div class="card-heading"><div><h3>Kelengkapan publikasi</h3><p>Klik status atau jumlah untuk membuka daftar dosen.</p></div><span class="chart-caption">STATUS</span></div>
         <div id="jadPublicationChart" class="bar-list" aria-label="Grafik status kelengkapan publikasi"></div>
       </div>
+    </section>
 
+    <section id="jadDetailView" class="view-panel" aria-labelledby="jadDetailHeading" hidden>
+      <div class="section-heading">
+        <div><p class="eyebrow">JABATAN AKADEMIK DOSEN</p><h2 id="jadDetailHeading">Detail Usulan JAD</h2></div>
+        <button class="page-back" type="button" data-view="jad">← Kembali ke Ringkasan JAD</button>
+      </div>
       <div class="content-card table-card">
         <div class="card-heading table-heading"><div><h3>Detail usulan JAD</h3><p>Pilih nama dosen untuk melihat rincian penilaian.</p></div><span id="jadResultCount" class="result-count"></span></div>
         <div class="filters">
@@ -71,32 +77,32 @@
       </div>
       <div class="kpi-grid">
         <button class="kpi-card kpi-button" type="button" data-bkd-quick-filter="all" aria-pressed="true" aria-label="Tampilkan seluruh dosen BKD per prodi"><span class="kpi-label">Total dosen</span><strong id="bkdTotal" class="kpi-value">—</strong><span class="kpi-foot">klik untuk detail per prodi</span></button>
-        <button class="kpi-card accent-teal kpi-button" type="button" data-bkd-quick-filter="M" aria-pressed="false" aria-label="Tampilkan dosen yang memenuhi BKD"><span class="kpi-label">Memenuhi</span><strong id="bkdMet" class="kpi-value">—</strong><span id="bkdMetFoot" class="kpi-foot">klik untuk lihat dosen</span></button>
-        <button class="kpi-card accent-rose kpi-button" type="button" data-bkd-quick-filter="TM" aria-pressed="false" aria-label="Tampilkan dosen yang tidak memenuhi BKD"><span class="kpi-label">Tidak memenuhi</span><strong id="bkdUnmet" class="kpi-value">—</strong><span id="bkdUnmetFoot" class="kpi-foot">klik untuk lihat dosen</span></button>
+        <button class="kpi-card accent-teal kpi-button" type="button" data-bkd-quick-filter="M" aria-pressed="false" aria-label="Tampilkan prodi yang dosennya memenuhi BKD"><span class="kpi-label">Memenuhi</span><strong id="bkdMet" class="kpi-value">—</strong><span id="bkdMetFoot" class="kpi-foot">klik untuk sorot prodi</span></button>
+        <button class="kpi-card accent-rose kpi-button" type="button" data-bkd-quick-filter="TM" aria-pressed="false" aria-label="Tampilkan prodi yang dosennya tidak memenuhi BKD"><span class="kpi-label">Tidak memenuhi</span><strong id="bkdUnmet" class="kpi-value">—</strong><span id="bkdUnmetFoot" class="kpi-foot">klik untuk sorot prodi</span></button>
         <button class="kpi-card accent-blue kpi-button" type="button" data-bkd-quick-filter="prodi" aria-pressed="false" aria-label="Buka semua kelompok program studi"><span class="kpi-label">Prodi</span><strong id="bkdPrograms" class="kpi-value">—</strong><span class="kpi-foot">klik untuk membuka kelompok</span></button>
       </div>
 
       <div class="content-card chart-card">
-        <div class="card-heading"><div><h3>Rekap per prodi</h3><p>Jumlah dosen menurut kesimpulan BKD.</p></div><span class="chart-caption">8 PRODI</span></div>
+        <div class="card-heading"><div><h3>Rekap per prodi</h3><p>Klik nama prodi untuk membuka daftar dosennya.</p></div><span class="chart-caption">8 PRODI</span></div>
         <div class="legend"><span><i class="legend-dot met"></i> Memenuhi</span><span><i class="legend-dot unmet"></i> Tidak memenuhi</span></div>
         <div id="bkdProgramChart" class="program-chart" aria-label="Rekap BKD per prodi"></div>
       </div>
 
-      <div class="content-card grouped-card">
-        <div class="card-heading table-heading"><div><h3>Detail dosen per prodi</h3><p>Klik nama prodi untuk membuka daftar dosen dan kesimpulan BKD.</p></div><span class="chart-caption">8 PRODI</span></div>
-        <div id="bkdProgramGroups" class="program-groups"></div>
-      </div>
+    </section>
 
+    <section id="bkdProgramView" class="view-panel" aria-labelledby="bkdProgramHeading" hidden>
+      <div class="section-heading">
+        <div><p class="eyebrow">BEBAN KERJA DOSEN</p><h2 id="bkdProgramHeading">Daftar dosen per prodi</h2></div>
+        <button class="page-back" type="button" data-view="bkd">← Kembali ke Rekap BKD</button>
+      </div>
       <div class="content-card table-card">
-        <div class="card-heading table-heading"><div><h3>Pencarian lintas prodi</h3><p>Gunakan filter untuk mencari dosen dari semua prodi pilihan.</p></div><span id="bkdResultCount" class="result-count"></span></div>
+        <div class="card-heading table-heading"><div><h3 id="bkdProgramTitle">Program studi</h3><p id="bkdProgramDescription">Daftar dosen dan kesimpulan BKD pada program studi ini.</p></div><span id="bkdProgramResultCount" class="result-count"></span></div>
         <div class="filters bkd-filters">
-          <label class="search-field"><span class="sr-only">Cari nama dosen</span><span class="search-icon" aria-hidden="true">⌕</span><input id="bkdSearch" type="search" placeholder="Cari nama dosen…"></label>
-          <label><span class="sr-only">Filter prodi</span><select id="bkdProgramFilter"><option value="">Semua prodi pilihan</option></select></label>
-          <label><span class="sr-only">Filter kesimpulan</span><select id="bkdConclusionFilter"><option value="">Semua kesimpulan</option><option value="M">Memenuhi</option><option value="TM">Tidak memenuhi</option></select></label>
-          <label><span class="sr-only">Filter status dosen</span><select id="bkdTypeFilter"><option value="">Semua status dosen</option></select></label>
+          <label class="search-field"><span class="sr-only">Cari nama dosen</span><span class="search-icon" aria-hidden="true">⌕</span><input id="bkdProgramSearch" type="search" placeholder="Cari nama dosen…"></label>
+          <label><span class="sr-only">Filter kesimpulan</span><select id="bkdProgramConclusionFilter"><option value="">Semua kesimpulan</option><option value="M">Memenuhi</option><option value="TM">Tidak memenuhi</option></select></label>
         </div>
-        <div class="table-wrap"><table><thead><tr><th>Nama dosen</th><th>Program studi</th><th>Status dosen</th><th>Jabatan fungsional</th><th>BKD</th><th>Kesimpulan</th><th class="numeric">Σ Kinerja</th><th class="numeric">Beban lebih</th><th><span class="sr-only">Detail</span></th></tr></thead><tbody id="bkdTableBody"></tbody></table></div>
-        <div class="table-footer"><span id="bkdPageLabel"></span><div class="pagination"><button id="bkdPrev" type="button" class="page-button" aria-label="Halaman sebelumnya">‹</button><button id="bkdNext" type="button" class="page-button" aria-label="Halaman berikutnya">›</button></div></div>
+        <div class="table-wrap"><table><thead><tr><th>Nama dosen</th><th>Status dosen</th><th>Jabatan fungsional</th><th>BKD</th><th>Kewajiban</th><th>Kesimpulan</th><th class="numeric">Σ Kinerja</th><th class="numeric">Beban lebih</th><th><span class="sr-only">Detail</span></th></tr></thead><tbody id="bkdProgramTableBody"></tbody></table></div>
+        <div class="table-footer"><span id="bkdProgramPageLabel"></span><div class="pagination"><button id="bkdProgramPrev" type="button" class="page-button" aria-label="Halaman sebelumnya">‹</button><button id="bkdProgramNext" type="button" class="page-button" aria-label="Halaman berikutnya">›</button></div></div>
       </div>
     </section>
 
