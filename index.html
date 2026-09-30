@@ -41,11 +41,10 @@
         <div><p class="eyebrow">JABATAN AKADEMIK DOSEN</p><h2 id="jadHeading">Monitoring JAD</h2></div>
         <p class="section-note">Data usulan dan penilaian dari workbook JAD.</p>
       </div>
-      <div class="kpi-grid">
-        <article class="kpi-card"><span class="kpi-label">Total dosen</span><strong id="jadTotal" class="kpi-value">—</strong><span class="kpi-foot">baris penilaian</span></article>
-        <article class="kpi-card accent-teal"><span class="kpi-label">Publikasi lengkap</span><strong id="jadComplete" class="kpi-value">—</strong><span class="kpi-foot">status pada workbook</span></article>
-        <article class="kpi-card accent-amber"><span class="kpi-label">Perlu dilengkapi</span><strong id="jadIncomplete" class="kpi-value">—</strong><span class="kpi-foot">belum lengkap atau belum diunggah</span></article>
-        <article class="kpi-card accent-blue"><span class="kpi-label">Total AKK baru</span><strong id="jadAkTotal" class="kpi-value">—</strong><span class="kpi-foot">angka kredit dari sumber</span></article>
+      <div class="kpi-grid jad-kpis">
+        <button class="kpi-card kpi-button" type="button" data-jad-quick-filter="all" aria-pressed="true" aria-label="Tampilkan semua data dosen JAD"><span class="kpi-label">Total dosen</span><strong id="jadTotal" class="kpi-value">—</strong><span class="kpi-foot">klik untuk melihat semua data</span></button>
+        <button class="kpi-card accent-teal kpi-button" type="button" data-jad-quick-filter="complete" aria-pressed="false" aria-label="Tampilkan dosen dengan publikasi lengkap"><span class="kpi-label">Publikasi lengkap</span><strong id="jadComplete" class="kpi-value">—</strong><span class="kpi-foot">klik untuk melihat datanya</span></button>
+        <button class="kpi-card accent-amber kpi-button" type="button" data-jad-quick-filter="incomplete" aria-pressed="false" aria-label="Tampilkan dosen yang perlu melengkapi publikasi"><span class="kpi-label">Perlu dilengkapi</span><strong id="jadIncomplete" class="kpi-value">—</strong><span class="kpi-foot">klik untuk melihat datanya</span></button>
       </div>
 
       <div class="content-card chart-card">
