@@ -70,10 +70,10 @@
         <p class="section-note">Rekap dosen pada 8 program studi pilihan.</p>
       </div>
       <div class="kpi-grid">
-        <article class="kpi-card"><span class="kpi-label">Total dosen</span><strong id="bkdTotal" class="kpi-value">—</strong><span class="kpi-foot">pada 8 prodi</span></article>
-        <article class="kpi-card accent-teal"><span class="kpi-label">Memenuhi</span><strong id="bkdMet" class="kpi-value">—</strong><span id="bkdMetFoot" class="kpi-foot">—</span></article>
-        <article class="kpi-card accent-rose"><span class="kpi-label">Tidak memenuhi</span><strong id="bkdUnmet" class="kpi-value">—</strong><span id="bkdUnmetFoot" class="kpi-foot">—</span></article>
-        <article class="kpi-card accent-blue"><span class="kpi-label">Prodi</span><strong id="bkdPrograms" class="kpi-value">—</strong><span class="kpi-foot">program studi pilihan</span></article>
+        <button class="kpi-card kpi-button" type="button" data-bkd-quick-filter="all" aria-pressed="true" aria-label="Tampilkan seluruh dosen BKD per prodi"><span class="kpi-label">Total dosen</span><strong id="bkdTotal" class="kpi-value">—</strong><span class="kpi-foot">klik untuk detail per prodi</span></button>
+        <button class="kpi-card accent-teal kpi-button" type="button" data-bkd-quick-filter="M" aria-pressed="false" aria-label="Tampilkan dosen yang memenuhi BKD"><span class="kpi-label">Memenuhi</span><strong id="bkdMet" class="kpi-value">—</strong><span id="bkdMetFoot" class="kpi-foot">klik untuk lihat dosen</span></button>
+        <button class="kpi-card accent-rose kpi-button" type="button" data-bkd-quick-filter="TM" aria-pressed="false" aria-label="Tampilkan dosen yang tidak memenuhi BKD"><span class="kpi-label">Tidak memenuhi</span><strong id="bkdUnmet" class="kpi-value">—</strong><span id="bkdUnmetFoot" class="kpi-foot">klik untuk lihat dosen</span></button>
+        <button class="kpi-card accent-blue kpi-button" type="button" data-bkd-quick-filter="prodi" aria-pressed="false" aria-label="Buka semua kelompok program studi"><span class="kpi-label">Prodi</span><strong id="bkdPrograms" class="kpi-value">—</strong><span class="kpi-foot">klik untuk membuka kelompok</span></button>
       </div>
 
       <div class="content-card chart-card">
@@ -82,8 +82,13 @@
         <div id="bkdProgramChart" class="program-chart" aria-label="Rekap BKD per prodi"></div>
       </div>
 
+      <div class="content-card grouped-card">
+        <div class="card-heading table-heading"><div><h3>Detail dosen per prodi</h3><p>Klik nama prodi untuk membuka daftar dosen dan kesimpulan BKD.</p></div><span class="chart-caption">8 PRODI</span></div>
+        <div id="bkdProgramGroups" class="program-groups"></div>
+      </div>
+
       <div class="content-card table-card">
-        <div class="card-heading table-heading"><div><h3>Detail BKD</h3><p>Gunakan filter untuk mencari data dosen.</p></div><span id="bkdResultCount" class="result-count"></span></div>
+        <div class="card-heading table-heading"><div><h3>Pencarian lintas prodi</h3><p>Gunakan filter untuk mencari dosen dari semua prodi pilihan.</p></div><span id="bkdResultCount" class="result-count"></span></div>
         <div class="filters bkd-filters">
           <label class="search-field"><span class="sr-only">Cari nama dosen</span><span class="search-icon" aria-hidden="true">⌕</span><input id="bkdSearch" type="search" placeholder="Cari nama dosen…"></label>
           <label><span class="sr-only">Filter prodi</span><select id="bkdProgramFilter"><option value="">Semua prodi pilihan</option></select></label>
