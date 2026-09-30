@@ -22,14 +22,53 @@
 
   let data;
   const pages = { jad: 1, bkd: 1 };
+  let activeProgramIndex = null;
+  let bkdPrograms = [];
+  let renderBkdProgramTable = () => {};
 
   function setView(name, updateHash = true) {
-    const view = ['home', 'jad', 'bkd'].includes(name) ? name : 'home';
+    const view = ['home', 'jad', 'jad-detail', 'bkd', 'bkd-prodi'].includes(name) ? name : 'home';
     $('#homeView').hidden = view !== 'home';
     $('#jadView').hidden = view !== 'jad';
+    $('#jadDetailView').hidden = view !== 'jad-detail';
     $('#bkdView').hidden = view !== 'bkd';
-    if (updateHash && window.location.hash !== `#${view}`) window.location.hash = view;
+    $('#bkdProgramView').hidden = view !== 'bkd-prodi';
+    if (updateHash) {
+      const hash = view === 'bkd-prodi'
+        ? (activeProgramIndex === null ? '#bkd-detail' : `#bkd-prodi/${activeProgramIndex}`)
+        : `#${view}`;
+      if (window.location.hash !== hash) window.location.hash = hash;
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function openBkdProgram(index, updateHash = true) {
+    activeProgramIndex = Number(index);
+    const program = bkdPrograms[activeProgramIndex];
+    if (!program) return;
+    $('#bkdProgramHeading').textContent = program;
+    $('#bkdProgramTitle').textContent = program;
+    $('#bkdProgramDescription').textContent = 'Daftar dosen dan kesimpulan BKD pada program studi ini.';
+    $('#bkdProgramSearch').value = '';
+    $('#bkdProgramConclusionFilter').value = '';
+    pages.bkd = 1;
+    renderBkdProgramTable();
+    setView('bkd-prodi', updateHash);
+  }
+
+  function routeFromHash() {
+    const route = window.location.hash.slice(1) || 'home';
+    const programMatch = route.match(/^bkd-prodi\/(\d+)$/);
+    if (programMatch) {
+      if (data) openBkdProgram(programMatch[1], false);
+      else setView('bkd-prodi', false);
+      return;
+    }
+    if (route === 'bkd-detail') {
+      setView('bkd', false);
+      return;
+    }
+    setView(route, false);
   }
 
   function optionsFor(select, values, firstLabel) {
@@ -104,10 +143,11 @@
     $('#jadPublicationChart').innerHTML = [...counts.entries()].map(([label, count]) => {
       const width = records.length ? Math.round(count / records.length * 100) : 0;
       const cls = label === 'LENGKAP' ? '' : label.includes('BELUM') ? 'warn' : 'neutral';
-      return `<div class="bar-item"><div class="bar-meta"><span>${esc(label)}</span><strong>${fmt(count, 0)} dosen</strong></div><div class="bar-track"><div class="bar-fill ${cls}" style="width:${width}%"></div></div></div>`;
+      return `<button type="button" class="bar-item chart-filter-button" data-jad-chart-filter="${esc(label)}" aria-label="Buka ${esc(fmt(count, 0))} dosen dengan status ${esc(label)}"><span class="bar-meta"><span>${esc(label)}</span><strong>${fmt(count, 0)} dosen</strong></span><span class="bar-track"><span class="bar-fill ${cls}" style="width:${width}%"></span></span></button>`;
     }).join('');
     optionsFor($('#jadPublicationFilter'), records.map((row) => row.publication), 'Semua status publikasi');
     $('#jadPublicationFilter').insertAdjacentHTML('beforeend', '<option value="__incomplete__">Perlu dilengkapi</option>');
+    if (counts.has('Tidak ada status')) $('#jadPublicationFilter').insertAdjacentHTML('beforeend', '<option value="__missing__">Tidak ada status</option>');
     optionsFor($('#jadRankFilter'), records.map((row) => row.proposedRank), 'Semua usulan JFA');
 
     const render = () => {
@@ -116,7 +156,7 @@
       const rank = $('#jadRankFilter').value;
       const filtered = records.filter((row) => {
         const haystack = normalized([row.name, row.currentRank, row.proposedRank, row.degree].join(' '));
-        const publicationMatches = !publication || (publication === '__incomplete__' ? row.publication !== 'LENGKAP' : row.publication === publication);
+        const publicationMatches = !publication || (publication === '__incomplete__' ? row.publication !== 'LENGKAP' : publication === '__missing__' ? !row.publication : row.publication === publication);
         return (!query || haystack.includes(query)) && publicationMatches && (!rank || row.proposedRank === rank);
       });
       const pagesTotal = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
@@ -154,16 +194,25 @@
       document.querySelectorAll('[data-jad-quick-filter]').forEach((card) => card.setAttribute('aria-pressed', String(card === button)));
       pages.jad = 1;
       render();
-      $('.table-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setView('jad-detail');
     }));
     $('#jadPrev').addEventListener('click', () => { pages.jad -= 1; render(); });
     $('#jadNext').addEventListener('click', () => { pages.jad += 1; render(); });
     render();
+    $('#jadPublicationChart').querySelectorAll('[data-jad-chart-filter]').forEach((button) => button.addEventListener('click', () => {
+      $('#jadSearch').value = '';
+      $('#jadRankFilter').value = '';
+      $('#jadPublicationFilter').value = button.dataset.jadChartFilter === 'Tidak ada status' ? '__missing__' : button.dataset.jadChartFilter;
+      pages.jad = 1;
+      clearQuickSelection();
+      render();
+      setView('jad-detail');
+    }));
   }
 
   function initBkd() {
     const records = data.bkd || [];
-    const programs = data.focusPrograms || data.meta.bkdProgramNames || [];
+    bkdPrograms = data.focusPrograms || data.meta.bkdProgramNames || [];
     const met = records.filter((row) => row.conclusion === 'M').length;
     const unmet = records.filter((row) => row.conclusion === 'TM').length;
     const complianceRate = records.length ? met / records.length * 100 : 0;
@@ -172,23 +221,46 @@
     $('#bkdMetFoot').textContent = `${fmt(complianceRate, 1)}% dari data yang dipilih`;
     $('#bkdUnmet').textContent = fmt(unmet, 0);
     $('#bkdUnmetFoot').textContent = `${fmt(records.length ? unmet / records.length * 100 : 0, 1)}% dari data yang dipilih`;
-    $('#bkdPrograms').textContent = fmt(programs.length, 0);
-    $('#bkdProgramFilter').innerHTML = '<option value="">Semua prodi pilihan</option>' + programs.map((program) => `<option value="${esc(program)}">${esc(program)}</option>`).join('');
-    optionsFor($('#bkdTypeFilter'), records.map((row) => row.status), 'Semua status dosen');
+    $('#bkdPrograms').textContent = fmt(bkdPrograms.length, 0);
 
-    const byProgram = programs.map((program) => {
+    const byProgram = bkdPrograms.map((program, index) => {
       const group = records.filter((row) => row.program === program);
-      return { program, total: group.length, met: group.filter((row) => row.conclusion === 'M').length, unmet: group.filter((row) => row.conclusion === 'TM').length };
+      return { program, index, total: group.length, met: group.filter((row) => row.conclusion === 'M').length, unmet: group.filter((row) => row.conclusion === 'TM').length };
     });
-    $('#bkdProgramChart').innerHTML = byProgram.map((group, index) => {
+    $('#bkdProgramChart').innerHTML = byProgram.map((group) => {
       const goodWidth = group.total ? group.met / group.total * 100 : 0;
       const badWidth = group.total ? group.unmet / group.total * 100 : 0;
-      return `<div class="program-row"><button type="button" class="program-name-link" data-open-program="${index}" title="Lihat detail ${esc(group.program)}">${esc(group.program)}</button><div class="stack-track" aria-label="${fmt(group.met, 0)} memenuhi, ${fmt(group.unmet, 0)} tidak memenuhi"><div class="stack-met" style="width:${goodWidth}%"></div><div class="stack-unmet" style="width:${badWidth}%"></div></div><span class="program-numbers">${fmt(group.total, 0)} dosen</span></div>`;
+      return `<button type="button" class="program-row program-open-button" data-open-program="${group.index}" data-met="${group.met}" data-unmet="${group.unmet}" aria-label="Buka daftar ${esc(group.program)}, ${fmt(group.total, 0)} dosen"><span class="program-name">${esc(group.program)}</span><span class="stack-track" aria-hidden="true"><span class="stack-met" style="width:${goodWidth}%"></span><span class="stack-unmet" style="width:${badWidth}%"></span></span><span class="program-numbers">${fmt(group.total, 0)} dosen</span></button>`;
     }).join('');
+    $('#bkdProgramChart').querySelectorAll('[data-open-program]').forEach((button) => button.addEventListener('click', () => openBkdProgram(button.dataset.openProgram)));
 
-    $('#bkdProgramGroups').innerHTML = byProgram.map((group, index) => {
-      const groupRecords = records.filter((row) => row.program === group.program);
-      const rows = groupRecords.map((row) => `<tr class="clickable-row" data-group-record="${esc(row.no)}" data-conclusion="${esc(row.conclusion)}">
+    const applyChartFilter = (mode) => {
+      document.querySelectorAll('[data-bkd-quick-filter]').forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.bkdQuickFilter === mode)));
+      const conclusionMode = mode === 'M' || mode === 'TM' ? mode : 'all';
+      $('#bkdProgramChart').querySelectorAll('[data-open-program]').forEach((row) => {
+        row.hidden = conclusionMode === 'M' ? Number(row.dataset.met) === 0 : conclusionMode === 'TM' ? Number(row.dataset.unmet) === 0 : false;
+      });
+    };
+    document.querySelectorAll('[data-bkd-quick-filter]').forEach((button) => button.addEventListener('click', () => {
+      applyChartFilter(button.dataset.bkdQuickFilter);
+    }));
+
+    renderBkdProgramTable = () => {
+      const program = bkdPrograms[activeProgramIndex];
+      const query = normalized($('#bkdProgramSearch').value);
+      const conclusion = $('#bkdProgramConclusionFilter').value;
+      const filtered = records.filter((row) => row.program === program &&
+        (!query || normalized([row.name, row.position, row.status, row.obligation].join(' ')).includes(query)) &&
+        (!conclusion || row.conclusion === conclusion));
+      const pagesTotal = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+      pages.bkd = Math.min(pages.bkd, pagesTotal);
+      const start = (pages.bkd - 1) * PAGE_SIZE;
+      $('#bkdProgramResultCount').textContent = `${fmt(filtered.length, 0)} dosen`;
+      $('#bkdProgramPageLabel').textContent = `Baris ${filtered.length ? start + 1 : 0}–${Math.min(start + PAGE_SIZE, filtered.length)} dari ${fmt(filtered.length, 0)}`;
+      $('#bkdProgramPrev').disabled = pages.bkd <= 1;
+      $('#bkdProgramNext').disabled = pages.bkd >= pagesTotal;
+      const shown = filtered.slice(start, start + PAGE_SIZE);
+      $('#bkdProgramTableBody').innerHTML = shown.length ? shown.map((row) => `<tr class="clickable-row" data-bkd-detail="${esc(row.no)}">
         <td class="name-cell">${esc(row.name)}</td>
         <td>${esc(shortText(row.status))}</td>
         <td>${esc(shortText(row.position))}</td>
@@ -198,92 +270,22 @@
         <td class="numeric">${fmt(row.totalPerformance)}</td>
         <td class="numeric">${fmt(row.excessLoad)}</td>
         <td><button type="button" class="row-action" aria-label="Lihat detail ${esc(row.name)}">›</button></td>
-      </tr>`).join('');
-      return `<details class="program-group" id="program-group-${index}">
-        <summary class="group-summary"><span class="group-program-name" title="${esc(group.program)}">${esc(group.program)}</span>
-          <span class="group-count">${fmt(group.total, 0)} dosen</span>
-          <span class="group-state-count met">${fmt(group.met, 0)} memenuhi</span>
-          <span class="group-state-count unmet">${fmt(group.unmet, 0)} tidak</span>
-        </summary>
-        <div class="group-table-wrap"><table class="group-record-table"><thead><tr>
-          <th>Nama dosen</th><th>Status</th><th>Jabatan fungsional</th><th>BKD</th><th>Kewajiban</th><th>Kesimpulan</th><th class="numeric">Σ Kinerja</th><th class="numeric">Beban lebih</th><th><span class="sr-only">Detail</span></th>
-        </tr></thead><tbody>${rows || '<tr><td colspan="9" class="empty-row">Belum ada data pada prodi ini.</td></tr>'}</tbody></table></div>
-      </details>`;
-    }).join('');
-    $('#bkdProgramGroups').querySelectorAll('[data-group-record]').forEach((rowElement) => rowElement.addEventListener('click', () => {
-      const record = records.find((row) => String(row.no) === rowElement.dataset.groupRecord);
-      if (record) showDetails('bkd', record);
-    }));
-    const applyGroupMode = (mode, expandMatches) => {
-      document.querySelectorAll('.program-group').forEach((group) => {
-        const rows = [...group.querySelectorAll('[data-group-record]')];
-        const visibleRows = rows.filter((row) => !mode || row.dataset.conclusion === mode);
-        rows.forEach((row) => { row.hidden = Boolean(mode && row.dataset.conclusion !== mode); });
-        group.hidden = visibleRows.length === 0;
-        if (expandMatches && visibleRows.length) group.open = true;
-      });
-    };
-    document.querySelectorAll('[data-bkd-quick-filter]').forEach((card) => card.addEventListener('click', () => {
-      const mode = card.dataset.bkdQuickFilter;
-      const conclusion = mode === 'M' || mode === 'TM' ? mode : '';
-      document.querySelectorAll('[data-bkd-quick-filter]').forEach((item) => item.setAttribute('aria-pressed', String(item === card)));
-      applyGroupMode(conclusion, true);
-      $('#bkdProgramGroups').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }));
-    $('#bkdProgramChart').querySelectorAll('[data-open-program]').forEach((button) => button.addEventListener('click', () => {
-      document.querySelectorAll('[data-bkd-quick-filter]').forEach((card) => card.setAttribute('aria-pressed', 'false'));
-      applyGroupMode('', false);
-      const group = $(`#program-group-${button.dataset.openProgram}`);
-      if (group) {
-        group.open = true;
-        group.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }));
-
-    const render = () => {
-      const query = normalized($('#bkdSearch').value);
-      const program = $('#bkdProgramFilter').value;
-      const conclusion = $('#bkdConclusionFilter').value;
-      const type = $('#bkdTypeFilter').value;
-      const filtered = records.filter((row) => {
-        const haystack = normalized([row.name, row.program, row.position, row.status, row.obligation].join(' '));
-        return (!query || haystack.includes(query)) && (!program || row.program === program) && (!conclusion || row.conclusion === conclusion) && (!type || row.status === type);
-      });
-      const pagesTotal = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-      pages.bkd = Math.min(pages.bkd, pagesTotal);
-      const start = (pages.bkd - 1) * PAGE_SIZE;
-      $('#bkdResultCount').textContent = `${fmt(filtered.length, 0)} hasil`;
-      $('#bkdPageLabel').textContent = `Baris ${filtered.length ? start + 1 : 0}–${Math.min(start + PAGE_SIZE, filtered.length)} dari ${fmt(filtered.length, 0)}`;
-      $('#bkdPrev').disabled = pages.bkd <= 1;
-      $('#bkdNext').disabled = pages.bkd >= pagesTotal;
-      const shown = filtered.slice(start, start + PAGE_SIZE);
-      $('#bkdTableBody').innerHTML = shown.length ? shown.map((row) => `<tr>
-        <td class="name-cell">${esc(row.name)}</td>
-        <td title="${esc(row.program)}">${esc(row.program)}</td>
-        <td>${esc(shortText(row.status))}</td>
-        <td>${esc(shortText(row.position))}</td>
-        <td>${esc(shortText(row.semesterBkd))}</td>
-        <td>${badge(row.conclusion, row.conclusion === 'M' ? 'Memenuhi' : row.conclusion === 'TM' ? 'Tidak memenuhi' : shortText(row.conclusion))}</td>
-        <td class="numeric">${fmt(row.totalPerformance)}</td>
-        <td class="numeric">${fmt(row.excessLoad)}</td>
-        <td><button type="button" class="row-action" data-detail-bkd="${esc(row.no)}" aria-label="Lihat detail ${esc(row.name)}">›</button></td>
       </tr>`).join('') : '<tr><td colspan="9" class="empty-row">Tidak ada data yang cocok dengan filter.</td></tr>';
-      $('#bkdTableBody').querySelectorAll('[data-detail-bkd]').forEach((button) => button.addEventListener('click', () => {
-        const record = records.find((row) => String(row.no) === button.dataset.detailBkd);
+      $('#bkdProgramTableBody').querySelectorAll('[data-bkd-detail]').forEach((rowElement) => rowElement.addEventListener('click', () => {
+        const record = filtered.find((row) => String(row.no) === rowElement.dataset.bkdDetail);
         if (record) showDetails('bkd', record);
       }));
     };
-    ['bkdSearch', 'bkdProgramFilter', 'bkdConclusionFilter', 'bkdTypeFilter'].forEach((id) => $(`#${id}`).addEventListener('input', () => { pages.bkd = 1; render(); }));
-    $('#bkdPrev').addEventListener('click', () => { pages.bkd -= 1; render(); });
-    $('#bkdNext').addEventListener('click', () => { pages.bkd += 1; render(); });
-    render();
+    $('#bkdProgramSearch').addEventListener('input', () => { pages.bkd = 1; renderBkdProgramTable(); });
+    $('#bkdProgramConclusionFilter').addEventListener('change', () => { pages.bkd = 1; renderBkdProgramTable(); });
+    $('#bkdProgramPrev').addEventListener('click', () => { pages.bkd -= 1; renderBkdProgramTable(); });
+    $('#bkdProgramNext').addEventListener('click', () => { pages.bkd += 1; renderBkdProgramTable(); });
+    renderBkdProgramTable();
   }
 
   async function init() {
     document.querySelectorAll('[data-view]').forEach((button) => button.addEventListener('click', () => setView(button.dataset.view)));
-    const routeFromHash = () => setView(window.location.hash.slice(1) || 'home', false);
     window.addEventListener('hashchange', routeFromHash);
-    routeFromHash();
     $('#dialogClose').addEventListener('click', () => $('#detailDialog').close());
     $('#detailDialog').addEventListener('click', (event) => { if (event.target === $('#detailDialog')) $('#detailDialog').close(); });
     try {
@@ -293,6 +295,7 @@
       initJad();
       initBkd();
       $('#sourceLabel').textContent = 'Sumber: workbook JAD dan SISTER BKD yang diunggah';
+      routeFromHash();
     } catch (error) {
       $('#loadError').hidden = false;
       console.error(error);
@@ -301,3 +304,4 @@
 
   document.addEventListener('DOMContentLoaded', init);
 })();
+

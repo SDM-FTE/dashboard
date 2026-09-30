@@ -1,12 +1,12 @@
 # Dashboard Monitoring JAD + BKD
 
-Paket statis untuk GitHub Pages. `index.html` membuka Beranda yang hanya berisi pilihan halaman JAD dan BKD. Di halaman JAD, klik baris dosen pada tabel untuk membuka rincian usulan. Tombol “Kembali ke Beranda” tersedia di halaman JAD dan BKD. Seluruh tampilan dan data dashboard berada di folder `assets/`.
+Paket statis untuk GitHub Pages. `index.html` membuka Beranda yang hanya berisi pilihan halaman JAD dan BKD.
 
 ## Isi paket
 
-- Beranda: ringkasan data JAD dan BKD, dengan tombol menuju dua halaman detail.
-- Detail Usulan JAD: 26 dosen, ringkasan yang memfilter daftar saat diklik, baris tabel yang membuka detail, filter nama/status publikasi/usulan JFA, serta rincian angka kredit dan SKP per tahun. Kartu Total AKK Baru sudah dihapus.
-- Rekap BKD: 210 dosen pada 8 prodi pilihan, ringkasan yang dapat diklik untuk membuka detail per prodi atau menyaring status memenuhi/tidak memenuhi, daftar dosen per prodi yang dapat dibuka, dan filter pencarian lintas prodi.
+- Beranda: dua pilihan halaman, Detail Usulan JAD dan Rekap BKD.
+- JAD: klik angka ringkasan atau status publikasi untuk membuka halaman tabel Detail Usulan JAD. Tabel menyediakan pencarian/filter; klik baris dosen untuk melihat rincian angka kredit dan SKP per tahun. Kartu Total AKK Baru sudah dihapus.
+- BKD: 210 dosen pada 8 prodi pilihan. Klik nama prodi di rekap untuk membuka halaman berisi daftar dosen pada prodi itu saja. Daftar memiliki pencarian, filter kesimpulan, dan pagination; klik baris dosen untuk membuka rincian kinerja.
 - File sumber Excel tidak dimasukkan. Dashboard memakai salinan data JSON di `assets/data/dashboard-data.json`.
 - NIDN dan NUPTK tidak ditampilkan di dashboard.
 
