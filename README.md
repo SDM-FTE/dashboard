@@ -22,3 +22,11 @@ Berkas JSON tidak menyertakan NIP, NIDN, NUPTK, nomor sertifikat, tempat lahir, 
 5. GitHub Pages dari `main` dan `/(root)` akan menerbitkan pembaruan otomatis setelah commit.
 
 Workbook Excel tidak dimasukkan. Data dashboard berada di `assets/data/dashboard-data.json`.
+
+## Progres dan ceklis admin JAD
+
+- Klik baris dosen pada tabel JAD untuk membuka halaman progres, tahapan ajuan, dan rincian yang tersedia dari workbook.
+- Ceklis syarat utama adalah **Paper terbit (PDF)**, **Hasil similarity**, dan **Korespondensi syarat utama**. Di situs, status tampil baca-saja.
+- Untuk mengubah status, admin yang memiliki akses tulis repository membuka [`assets/data/jad-progress.json`](https://github.com/SDM-FTE/dashboard/edit/main/assets/data/jad-progress.json), mencari nama dosen pada berkas tersebut, mengubah nilai syarat menjadi `true` (lengkap), `false` (sudah diperiksa tetapi belum lengkap), atau `null` (belum diperiksa), lalu melakukan commit. Gunakan `stage: null` bila belum diperbarui; angka 0–4 menunjukkan tahap yang sedang berjalan dan 5 berarti Selesai.
+- GitHub membatasi siapa yang dapat menyimpan perubahan ke branch utama. Namun situs dan berkas JSON tetap dapat dibaca publik; jangan masukkan berkas PDF, tautan privat, atau informasi sensitif ke JSON. Ceklis hanya menunjukkan status kelengkapan.
+- Untuk menambah dosen ke daftar, tambahkan entri baru di `lecturers` dengan `no` yang sama seperti data JAD.

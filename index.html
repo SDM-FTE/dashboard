@@ -76,6 +76,27 @@
       </div>
     </section>
 
+    <section id="jadProgressView" class="view-panel" aria-labelledby="jadProgressHeading" hidden>
+      <div class="section-heading">
+        <div><p class="eyebrow">JABATAN AKADEMIK DOSEN</p><h2 id="jadProgressHeading">Progres Usulan JAD</h2></div>
+        <button class="page-back" type="button" data-view="jad-detail">← Kembali ke daftar JAD</button>
+      </div>
+      <div class="content-card progress-applicant-card">
+        <div class="card-heading"><div><h3>Data dosen yang diajukan</h3><p>Ringkasan berdasarkan workbook JAD.</p></div><span id="jadProgressPublication" class="badge neutral">—</span></div>
+        <div id="jadProgressApplicant" class="progress-applicant-grid"></div>
+      </div>
+      <div class="content-card chart-card progress-stage-card">
+        <div class="card-heading"><div><h3>Status ajuan</h3><p id="jadProgressStageLabel">Tahapan proses belum diperbarui.</p></div><span class="chart-caption">PROGRES</span></div>
+        <ol id="jadProgressTimeline" class="progress-timeline" aria-label="Tahapan proses usulan JAD"></ol>
+      </div>
+      <div class="content-card chart-card jad-requirements-card">
+        <div class="card-heading"><div><h3>Syarat utama penelitian</h3><p>Status kelengkapan dokumen. Pembaruan hanya dapat disimpan oleh admin repository.</p></div><a class="admin-edit-link" href="https://github.com/SDM-FTE/dashboard/edit/main/assets/data/jad-progress.json" target="_blank" rel="noopener">Ubah status (admin GitHub) ↗</a></div>
+        <div id="jadProgressRequirements" class="jad-checklist"></div>
+        <p class="admin-edit-note">Ceklis di halaman ini hanya untuk dilihat. Admin dengan akses tulis repository mengubah berkas progres di GitHub lalu melakukan commit.</p>
+      </div>
+      <div id="jadProgressSections" class="progress-accordion-list"></div>
+    </section>
+
     <section id="bkdView" class="view-panel" aria-labelledby="bkdHeading" hidden>
       <div class="section-heading">
         <div><p class="eyebrow">BEBAN KERJA DOSEN</p><h2 id="bkdHeading">Rekap BKD</h2></div>
