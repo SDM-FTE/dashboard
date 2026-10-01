@@ -36,7 +36,7 @@
         <article class="home-page-card fte-home-card">
           <span class="home-page-number">03 / FTE</span>
           <h3>Data FTE 2026</h3>
-          <p>Cari data pegawai, jabatan fungsional, unit kerja, dan masa kerja yang dihitung mengikuti tanggal hari ini.</p>
+          <p>Cari data dosen, jabatan fungsional, prodi, dan masa kerja yang dihitung mengikuti tanggal hari ini.</p>
           <button type="button" class="home-link-button" data-view="fte">Buka Data FTE <span aria-hidden="true">→</span></button>
         </article>
       </div>
@@ -139,22 +139,21 @@
         <div><p class="eyebrow">DATA FTE</p><h2 id="fteHeading">Data FTE 2026</h2></div>
         <div class="section-tools"><p class="section-note">Sheet 2026 (ganjil 26-27).</p><button class="page-back" type="button" data-view="home">← Kembali ke Beranda</button></div>
       </div>
-      <div class="kpi-grid">
-        <div class="kpi-card"><span class="kpi-label">Total pegawai</span><strong id="fteTotal" class="kpi-value">—</strong><span class="kpi-foot">baris data terisi</span></div>
-        <div class="kpi-card accent-teal"><span class="kpi-label">Dosen</span><strong id="fteLecturers" class="kpi-value">—</strong><span class="kpi-foot">berdasarkan status pegawai</span></div>
+      <div class="kpi-grid fte-kpis">
+        <div class="kpi-card"><span class="kpi-label">Total dosen</span><strong id="fteTotal" class="kpi-value">—</strong><span class="kpi-foot">dari data yang ditampilkan</span></div>
         <div class="kpi-card accent-blue"><span class="kpi-label">Prodi</span><strong id="ftePrograms" class="kpi-value">—</strong><span class="kpi-foot">lokasi kerja program studi</span></div>
         <div class="kpi-card accent-amber"><span class="kpi-label">JFA perlu diperiksa</span><strong id="fteJfaReview" class="kpi-value">—</strong><span class="kpi-foot">nilai kosong atau tidak terbaca</span></div>
       </div>
       <div class="content-card table-card">
-        <div class="card-heading table-heading"><div><h3>Daftar pegawai FTE</h3><p>Masa dan umur dihitung ulang otomatis menurut tanggal WIB.</p></div><span id="fteResultCount" class="result-count"></span></div>
+        <div class="card-heading table-heading"><div><h3>Daftar dosen FTE</h3><p>Masa dan umur dihitung ulang otomatis menurut tanggal WIB.</p></div><span id="fteResultCount" class="result-count"></span></div>
         <p id="fteAsOfLabel" class="dynamic-note"></p>
         <div class="filters fte-filters">
-          <label class="search-field"><span class="sr-only">Cari pegawai</span><span class="search-icon" aria-hidden="true">⌕</span><input id="fteSearch" type="search" placeholder="Cari nama, bidang, atau unit…"></label>
+          <label class="search-field"><span class="sr-only">Cari nama dosen</span><span class="search-icon" aria-hidden="true">⌕</span><input id="fteSearch" type="search" placeholder="Cari nama, bidang, atau prodi…"></label>
           <label><span class="sr-only">Filter prodi atau unit</span><select id="fteLocationFilter"><option value="">Semua prodi/unit</option></select></label>
           <label><span class="sr-only">Filter JFA</span><select id="fteRankFilter"><option value="">Semua JFA</option></select></label>
-          <label><span class="sr-only">Filter status pegawai</span><select id="fteStatusFilter"><option value="">Semua status pegawai</option></select></label>
+          <label><span class="sr-only">Filter status dosen</span><select id="fteStatusFilter"><option value="">Semua status dosen</option></select></label>
         </div>
-        <div class="table-wrap"><table class="fte-table"><thead><tr><th>Nama pegawai</th><th>Prodi/unit</th><th>JFA</th><th class="numeric">Angka JFA</th><th>Masa TMT JFA</th><th>Masa kerja</th><th>Masa kerja SK</th><th>Umur</th><th><span class="sr-only">Detail</span></th></tr></thead><tbody id="fteTableBody"></tbody></table></div>
+        <div class="table-wrap"><table class="fte-table"><thead><tr><th>Nama dosen</th><th>Prodi/unit</th><th>JFA</th><th class="numeric">Angka JFA</th><th>Masa TMT JFA</th><th>Masa kerja</th><th>Masa kerja SK</th><th>Umur</th><th><span class="sr-only">Detail</span></th></tr></thead><tbody id="fteTableBody"></tbody></table></div>
         <div class="table-footer"><span id="ftePageLabel"></span><div class="pagination"><button id="ftePrev" type="button" class="page-button" aria-label="Halaman sebelumnya">‹</button><button id="fteNext" type="button" class="page-button" aria-label="Halaman berikutnya">›</button></div></div>
       </div>
     </section>

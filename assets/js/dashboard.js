@@ -222,7 +222,7 @@
       $('#dialogTitle').textContent = record.name;
       $('#dialogContent').innerHTML =
         detailSection('Jabatan dan penugasan', [
-          ['Lokasi kerja', record.location], ['Status pegawai', record.employmentStatus],
+          ['Lokasi kerja', record.location], ['Status dosen', record.employmentStatus],
           ['JFA saat ini', fteJfaLabel(record.jfa)], ['Angka JFA', fmt(record.jfaPoints)],
           ['Usulan kenaikan JFA', record.nextJfa], ['Bidang keahlian', record.field],
           ['Kelompok keahlian', record.expertiseGroup], ['CoE', record.coe],
@@ -405,16 +405,15 @@
   }
 
   function initFte() {
-    const records = data.fte || [];
+    const records = (data.fte || []).filter((row) => normalized(row.employmentStatus).startsWith('dosen'));
     const locations = [...new Set(records.map((row) => row.location).filter(Boolean))];
     const programs = locations.filter((location) => normalized(location).startsWith('prodi '));
     $('#fteTotal').textContent = fmt(records.length, 0);
-    $('#fteLecturers').textContent = fmt(records.filter((row) => normalized(row.employmentStatus).startsWith('dosen')).length, 0);
     $('#ftePrograms').textContent = fmt(programs.length, 0);
     $('#fteJfaReview').textContent = fmt(records.filter((row) => !row.jfa || String(row.jfa).includes('#VALUE!')).length, 0);
     optionsFor($('#fteLocationFilter'), locations, 'Semua prodi/unit');
     optionsFor($('#fteRankFilter'), records.map((row) => fteJfaLabel(row.jfa)), 'Semua JFA');
-    optionsFor($('#fteStatusFilter'), records.map((row) => row.employmentStatus), 'Semua status pegawai');
+    optionsFor($('#fteStatusFilter'), records.map((row) => row.employmentStatus), 'Semua status dosen');
     let displayedDay = '';
 
     const render = () => {
@@ -432,7 +431,7 @@
       const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
       pages.fte = Math.min(pages.fte, pageCount);
       const start = (pages.fte - 1) * PAGE_SIZE;
-      $('#fteResultCount').textContent = `${fmt(filtered.length, 0)} pegawai`;
+      $('#fteResultCount').textContent = `${fmt(filtered.length, 0)} dosen`;
       $('#ftePageLabel').textContent = `Baris ${filtered.length ? start + 1 : 0}–${Math.min(start + PAGE_SIZE, filtered.length)} dari ${fmt(filtered.length, 0)}`;
       $('#ftePrev').disabled = pages.fte <= 1;
       $('#fteNext').disabled = pages.fte >= pageCount;
