@@ -19,20 +19,57 @@
   };
   const badge = (value, label) => `<span class="badge ${badgeClass(value)}">${esc(label ?? shortText(value))}</span>`;
   const normalized = (value) => String(value ?? '').toLocaleLowerCase('id-ID').trim();
+  const oneDayMs = 86400000;
+  function jakartaToday() {
+    const parts = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jakarta', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(new Date());
+    const values = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+    return new Date(Date.UTC(Number(values.year), Number(values.month) - 1, Number(values.day)));
+  }
+  function isoDay(date) {
+    return `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, '0')}-${String(date.getUTCDate()).padStart(2, '0')}`;
+  }
+  function dateFromIso(value) {
+    const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(value ?? ''));
+    return match ? new Date(Date.UTC(Number(match[1]), Number(match[2]) - 1, Number(match[3]))) : null;
+  }
+  function formatJakartaDate(date) {
+    return new Intl.DateTimeFormat('id-ID', { timeZone: 'UTC', day: 'numeric', month: 'long', year: 'numeric' }).format(date);
+  }
+  function addClampedMonths(start, months) {
+    const absoluteMonth = start.getUTCMonth() + months;
+    const year = start.getUTCFullYear() + Math.floor(absoluteMonth / 12);
+    const month = absoluteMonth % 12;
+    const lastDay = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
+    return new Date(Date.UTC(year, month, Math.min(start.getUTCDate(), lastDay)));
+  }
+  function durationFromIso(value, today = jakartaToday()) {
+    const start = dateFromIso(value);
+    if (!start) return '—';
+    if (start > today) return 'Belum dimulai';
+    let months = (today.getUTCFullYear() - start.getUTCFullYear()) * 12 + today.getUTCMonth() - start.getUTCMonth();
+    if (addClampedMonths(start, months) > today) months -= 1;
+    const anchor = addClampedMonths(start, months);
+    const days = Math.floor((today.getTime() - anchor.getTime()) / oneDayMs);
+    const years = Math.floor(months / 12);
+    const remainingMonths = months % 12;
+    return `${years} tahun, ${remainingMonths} bulan, ${days} hari`;
+  }
+  const fteJfaLabel = (value) => String(value ?? '').includes('#VALUE!') ? 'Perlu diperiksa' : shortText(value);
 
   let data;
-  const pages = { jad: 1, bkd: 1 };
+  const pages = { jad: 1, bkd: 1, fte: 1 };
   let activeProgramIndex = null;
   let bkdPrograms = [];
   let renderBkdProgramTable = () => {};
 
   function setView(name, updateHash = true) {
-    const view = ['home', 'jad', 'jad-detail', 'bkd', 'bkd-prodi'].includes(name) ? name : 'home';
+    const view = ['home', 'jad', 'jad-detail', 'bkd', 'bkd-prodi', 'fte'].includes(name) ? name : 'home';
     $('#homeView').hidden = view !== 'home';
     $('#jadView').hidden = view !== 'jad';
     $('#jadDetailView').hidden = view !== 'jad-detail';
     $('#bkdView').hidden = view !== 'bkd';
     $('#bkdProgramView').hidden = view !== 'bkd-prodi';
+    $('#fteView').hidden = view !== 'fte';
     if (updateHash) {
       const hash = view === 'bkd-prodi'
         ? (activeProgramIndex === null ? '#bkd-detail' : `#bkd-prodi/${activeProgramIndex}`)
@@ -114,6 +151,25 @@
           ['Rekomendasi Senat', record.senateRecommendation], ['Catatan Senat', record.senateNote],
         ]));
       }
+    } else if (kind === 'fte') {
+      const today = jakartaToday();
+      $('#dialogEyebrow').textContent = 'DETAIL DATA FTE';
+      $('#dialogTitle').textContent = record.name;
+      $('#dialogContent').innerHTML =
+        detailSection('Jabatan dan penugasan', [
+          ['Lokasi kerja', record.location], ['Status pegawai', record.employmentStatus],
+          ['JFA saat ini', fteJfaLabel(record.jfa)], ['Angka JFA', fmt(record.jfaPoints)],
+          ['Usulan kenaikan JFA', record.nextJfa], ['Bidang keahlian', record.field],
+          ['Kelompok keahlian', record.expertiseGroup], ['CoE', record.coe],
+        ]) + detailSection('Pendidikan', [
+          ['Pendidikan terakhir', record.education], ['Program studi S1', record.s1Program],
+          ['Program studi S2', record.s2Program], ['Program studi S3', record.s3Program],
+        ]) + detailSection('Masa dan umur per ' + formatJakartaDate(today), [
+          ['Masa TMT JFA', durationFromIso(record.tmtJfaDate, today)],
+          ['Masa kerja', durationFromIso(record.joinDate, today)],
+          ['Masa kerja SK', durationFromIso(record.skStartDate, today)],
+          ['Umur', durationFromIso(record.birthDate, today)],
+        ]);
     } else {
       $('#dialogEyebrow').textContent = 'DETAIL MONITORING BKD';
       $('#dialogTitle').textContent = record.name;
@@ -283,6 +339,65 @@
     renderBkdProgramTable();
   }
 
+  function initFte() {
+    const records = data.fte || [];
+    const locations = [...new Set(records.map((row) => row.location).filter(Boolean))];
+    const programs = locations.filter((location) => normalized(location).startsWith('prodi '));
+    $('#fteTotal').textContent = fmt(records.length, 0);
+    $('#fteLecturers').textContent = fmt(records.filter((row) => normalized(row.employmentStatus).startsWith('dosen')).length, 0);
+    $('#ftePrograms').textContent = fmt(programs.length, 0);
+    $('#fteJfaReview').textContent = fmt(records.filter((row) => !row.jfa || String(row.jfa).includes('#VALUE!')).length, 0);
+    optionsFor($('#fteLocationFilter'), locations, 'Semua prodi/unit');
+    optionsFor($('#fteRankFilter'), records.map((row) => fteJfaLabel(row.jfa)), 'Semua JFA');
+    optionsFor($('#fteStatusFilter'), records.map((row) => row.employmentStatus), 'Semua status pegawai');
+    let displayedDay = '';
+
+    const render = () => {
+      const today = jakartaToday();
+      displayedDay = isoDay(today);
+      $('#fteAsOfLabel').textContent = `Perhitungan mengikuti tanggal ${formatJakartaDate(today)} (WIB).`;
+      const query = normalized($('#fteSearch').value);
+      const location = $('#fteLocationFilter').value;
+      const rank = $('#fteRankFilter').value;
+      const status = $('#fteStatusFilter').value;
+      const filtered = records.filter((row) => {
+        const haystack = normalized([row.name, row.location, row.jfa, row.nextJfa, row.field, row.education, row.s1Program, row.s2Program, row.s3Program, row.expertiseGroup, row.employmentStatus].join(' '));
+        return (!query || haystack.includes(query)) && (!location || row.location === location) && (!rank || fteJfaLabel(row.jfa) === rank) && (!status || row.employmentStatus === status);
+      });
+      const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+      pages.fte = Math.min(pages.fte, pageCount);
+      const start = (pages.fte - 1) * PAGE_SIZE;
+      $('#fteResultCount').textContent = `${fmt(filtered.length, 0)} pegawai`;
+      $('#ftePageLabel').textContent = `Baris ${filtered.length ? start + 1 : 0}–${Math.min(start + PAGE_SIZE, filtered.length)} dari ${fmt(filtered.length, 0)}`;
+      $('#ftePrev').disabled = pages.fte <= 1;
+      $('#fteNext').disabled = pages.fte >= pageCount;
+      const shown = filtered.slice(start, start + PAGE_SIZE);
+      $('#fteTableBody').innerHTML = shown.length ? shown.map((row) => `<tr class="clickable-row" data-fte-detail="${esc(row.id)}">
+        <td class="name-cell">${esc(row.name)}<span class="sub-cell">${esc(shortText(row.education, 'Pendidikan tidak dicantumkan'))}</span></td>
+        <td>${esc(shortText(row.location))}</td>
+        <td>${esc(fteJfaLabel(row.jfa))}</td>
+        <td class="numeric">${fmt(row.jfaPoints)}</td>
+        <td>${esc(durationFromIso(row.tmtJfaDate, today))}</td>
+        <td>${esc(durationFromIso(row.joinDate, today))}</td>
+        <td>${esc(durationFromIso(row.skStartDate, today))}</td>
+        <td>${esc(durationFromIso(row.birthDate, today))}</td>
+        <td><button type="button" class="row-action" aria-label="Lihat detail ${esc(row.name)}">›</button></td>
+      </tr>`).join('') : '<tr><td colspan="9" class="empty-row">Tidak ada data yang cocok dengan filter.</td></tr>';
+      $('#fteTableBody').querySelectorAll('[data-fte-detail]').forEach((rowElement) => rowElement.addEventListener('click', () => {
+        const record = records.find((row) => String(row.id) === rowElement.dataset.fteDetail);
+        if (record) showDetails('fte', record);
+      }));
+    };
+    $('#fteSearch').addEventListener('input', () => { pages.fte = 1; render(); });
+    ['fteLocationFilter', 'fteRankFilter', 'fteStatusFilter'].forEach((id) => $(`#${id}`).addEventListener('change', () => { pages.fte = 1; render(); }));
+    $('#ftePrev').addEventListener('click', () => { pages.fte -= 1; render(); });
+    $('#fteNext').addEventListener('click', () => { pages.fte += 1; render(); });
+    render();
+    const refreshIfDayChanged = () => { if (isoDay(jakartaToday()) !== displayedDay) render(); };
+    window.setInterval(refreshIfDayChanged, 60000);
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) refreshIfDayChanged(); });
+  }
+
   async function init() {
     document.querySelectorAll('[data-view]').forEach((button) => button.addEventListener('click', () => setView(button.dataset.view)));
     window.addEventListener('hashchange', routeFromHash);
@@ -294,7 +409,8 @@
       data = await response.json();
       initJad();
       initBkd();
-      $('#sourceLabel').textContent = 'Sumber: workbook JAD dan SISTER BKD yang diunggah';
+      initFte();
+      $('#sourceLabel').textContent = 'Sumber: workbook JAD, SISTER BKD, dan DATA FTE 2026';
       routeFromHash();
     } catch (error) {
       $('#loadError').hidden = false;
