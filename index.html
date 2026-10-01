@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Dashboard monitoring JAD, BKD, dan data FTE dosen.">
   <title>Monitoring JAD & BKD</title>
-  <link rel="stylesheet" href="assets/css/styles.css">
-  <script src="assets/js/dashboard.js" defer></script>
+  <link rel="stylesheet" href="assets/css/styles.css?v=20261001-sertifikasi">
+  <script src="assets/js/dashboard.js?v=20261001-sertifikasi" defer></script>
 </head>
 <body>
   <header class="topbar">
@@ -115,6 +115,37 @@
         <div id="bkdProgramChart" class="program-chart" aria-label="Rekap BKD per prodi"></div>
       </div>
 
+      <div class="content-card chart-card">
+        <div class="card-heading"><div><h3>Sertifikasi dosen</h3><p>Pilih kelompok untuk melihat daftar dosen dan hasil BKD.</p></div></div>
+        <div class="kpi-grid certification-kpis">
+          <button class="kpi-card accent-teal kpi-button" type="button" data-bkd-certification="sudah" aria-label="Buka daftar dosen sudah tersertifikasi"><span class="kpi-label">Sudah tersertifikasi</span><strong id="bkdCertified" class="kpi-value">—</strong><span class="kpi-foot">lihat daftar dosen →</span></button>
+          <button class="kpi-card accent-amber kpi-button" type="button" data-bkd-certification="belum" aria-label="Buka daftar dosen belum tersertifikasi"><span class="kpi-label">Belum tersertifikasi</span><strong id="bkdUncertified" class="kpi-value">—</strong><span class="kpi-foot">lihat daftar dosen →</span></button>
+        </div>
+        <button class="certification-unknown-link" type="button" data-bkd-certification="belum-terdata"><span id="bkdCertificationUnknown">—</span> dosen belum memiliki data sertifikasi. Lihat daftar →</button>
+      </div>
+
+    </section>
+
+    <section id="bkdCertificationView" class="view-panel" aria-labelledby="bkdCertificationHeading" hidden>
+      <div class="section-heading">
+        <div><p class="eyebrow">SERTIFIKASI DOSEN</p><h2 id="bkdCertificationHeading">Status sertifikasi dosen</h2><p id="bkdCertificationDescription" class="section-note"></p></div>
+        <button class="page-back" type="button" data-view="bkd">← Kembali ke Rekap BKD</button>
+      </div>
+      <div class="kpi-grid certification-page-kpis">
+        <div class="kpi-card"><span class="kpi-label">Total dosen</span><strong id="bkdCertificationTotal" class="kpi-value">—</strong><span class="kpi-foot">dalam kelompok sertifikasi ini</span></div>
+        <div class="kpi-card accent-teal"><span class="kpi-label">BKD Memenuhi</span><strong id="bkdCertificationMet" class="kpi-value">—</strong><span class="kpi-foot">kesimpulan M</span></div>
+        <div class="kpi-card accent-rose"><span class="kpi-label">BKD Tidak memenuhi</span><strong id="bkdCertificationUnmet" class="kpi-value">—</strong><span class="kpi-foot">kesimpulan TM</span></div>
+      </div>
+      <div class="content-card table-card">
+        <div class="card-heading table-heading"><div><h3 id="bkdCertificationTitle">Daftar dosen</h3><p>Pilih nama dosen untuk melihat rincian BKD.</p></div><span id="bkdCertificationResultCount" class="result-count"></span></div>
+        <div class="filters certification-filters">
+          <label class="search-field"><span class="sr-only">Cari dosen berdasarkan sertifikasi</span><span class="search-icon" aria-hidden="true">⌕</span><input id="bkdCertificationSearch" type="search" placeholder="Cari nama dosen…"></label>
+          <label><span class="sr-only">Filter prodi sertifikasi</span><select id="bkdCertificationProgramFilter"><option value="">Semua prodi</option></select></label>
+          <label><span class="sr-only">Filter BKD sertifikasi</span><select id="bkdCertificationConclusionFilter"><option value="">Semua kesimpulan BKD</option><option value="M">Memenuhi</option><option value="TM">Tidak memenuhi</option></select></label>
+        </div>
+        <div class="table-wrap"><table><thead><tr><th>Nama dosen</th><th>Program studi</th><th>Jabatan fungsional</th><th>Kesimpulan BKD</th><th class="numeric">Σ Kinerja</th><th><span class="sr-only">Detail</span></th></tr></thead><tbody id="bkdCertificationTableBody"></tbody></table></div>
+        <div class="table-footer"><span id="bkdCertificationPageLabel"></span><div class="pagination"><button id="bkdCertificationPrev" type="button" class="page-button" aria-label="Halaman sertifikasi sebelumnya">‹</button><button id="bkdCertificationNext" type="button" class="page-button" aria-label="Halaman sertifikasi berikutnya">›</button></div></div>
+      </div>
     </section>
 
     <section id="bkdProgramView" class="view-panel" aria-labelledby="bkdProgramHeading" hidden>
@@ -168,3 +199,4 @@
   <div id="loadError" class="load-error" role="alert" hidden>Data dashboard tidak berhasil dimuat. Pastikan folder assets ikut diunggah bersama index.html.</div>
 </body>
 </html>
+
