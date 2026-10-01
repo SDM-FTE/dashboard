@@ -238,3 +238,67 @@ tbody tr.clickable-row:focus-within { background: #f0faf8; }
   .fte-filters .search-field { grid-column: auto; }
   .bkd-filters .search-field { grid-column: auto; }
 }
+
+
+/* Progress JAD */
+.progress-applicant-card { padding: 20px 23px 18px; }
+.progress-applicant-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 24px; margin-top: 17px; }
+.progress-applicant-item { display: grid; grid-template-columns: minmax(100px, .8fr) minmax(0, 1.2fr); gap: 10px; font-size: 11px; }
+.progress-applicant-item span { color: var(--muted); }
+.progress-applicant-item strong { color: var(--navy); font-weight: 600; white-space: pre-line; }
+.progress-stage-card { padding-bottom: 20px; }
+.progress-timeline { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); margin: 24px 3px 3px; padding: 0; list-style: none; }
+.progress-step { position: relative; min-width: 0; padding: 24px 8px 0; color: #85969c; font-size: 10px; text-align: center; }
+.progress-step::before { position: absolute; z-index: 0; top: 8px; left: 0; width: 100%; height: 2px; background: #e4eaec; content: ''; }
+.progress-step:first-child::before { left: 50%; width: 50%; }
+.progress-step:last-child::before { width: 50%; }
+.progress-step-marker { position: absolute; z-index: 1; top: 0; left: 50%; display: grid; width: 18px; height: 18px; place-items: center; transform: translateX(-50%); border: 2px solid #d6e0e3; border-radius: 50%; background: #fff; color: #fff; font-size: 11px; font-weight: 800; }
+.progress-step.done { color: #247f76; font-weight: 700; }
+.progress-step.done::before { background: var(--teal); }
+.progress-step.done .progress-step-marker { border-color: var(--teal); background: var(--teal); }
+.progress-step.current { color: var(--navy); font-weight: 700; }
+.progress-step.current .progress-step-marker { border-color: var(--teal); background: #e4f5f2; color: var(--teal); font-size: 14px; }
+.progress-step-label { display: block; overflow-wrap: anywhere; }
+.jad-requirements-card { padding: 22px 23px 17px; }
+.jad-requirements-card .card-heading { align-items: center; }
+.admin-edit-link { flex: 0 0 auto; padding: 8px 11px; border: 1px solid #cce5e1; border-radius: 7px; background: #f2faf8; color: #167f75; font-size: 10px; font-weight: 700; text-decoration: none; }
+.admin-edit-link:hover { border-color: #8fcfc5; background: #e8f7f4; }
+.jad-checklist { display: grid; gap: 8px; margin-top: 18px; }
+.jad-checklist-item { display: flex; align-items: center; gap: 12px; min-height: 58px; padding: 10px 12px; border: 1px solid #e8eef0; border-radius: 8px; background: #fcfdfd; }
+.jad-checklist-item input { width: 17px; height: 17px; margin: 0; accent-color: var(--teal); }
+.jad-checklist-item input:indeterminate { accent-color: #8b9aa0; }
+.jad-checklist-copy { flex: 1; min-width: 0; }
+.jad-checklist-copy strong, .jad-checklist-copy small { display: block; }
+.jad-checklist-copy strong { color: var(--navy); font-size: 11px; }
+.jad-checklist-copy small { margin-top: 3px; color: var(--muted); font-size: 10px; }
+.jad-checklist-state { flex: 0 0 auto; padding: 5px 8px; border-radius: 20px; background: var(--amber-soft); color: #a97117; font-size: 9px; font-weight: 700; }
+.jad-checklist-state.complete { background: var(--teal-soft); color: #168a7e; }
+.jad-checklist-state.unknown { background: #eff3f4; color: #73868e; }
+.admin-edit-note, .progress-empty-note { margin: 13px 0 0; color: var(--muted); font-size: 10px; line-height: 1.6; }
+.progress-accordion-list { display: grid; gap: 8px; margin-top: 16px; }
+.progress-accordion { overflow: hidden; border: 1px solid var(--line); border-radius: 9px; background: #fff; }
+.progress-accordion summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 48px; padding: 12px 17px; color: var(--navy); font-size: 11px; font-weight: 700; cursor: pointer; list-style: none; }
+.progress-accordion summary::-webkit-details-marker { display: none; }
+.progress-accordion summary span { color: var(--muted); font-size: 15px; transition: transform .15s ease; }
+.progress-accordion[open] summary span { transform: rotate(180deg); }
+.progress-accordion-body { padding: 0 17px 16px; border-top: 1px solid #edf1f2; }
+.progress-accordion-body .detail-grid { margin-top: 13px; }
+.progress-accordion-body .progress-empty-note { margin-top: 13px; }
+@media (max-width: 760px) {
+  .progress-applicant-card, .jad-requirements-card { padding-right: 17px; padding-left: 17px; }
+  .progress-applicant-grid { grid-template-columns: 1fr 1fr; gap: 11px 15px; }
+  .progress-timeline { grid-template-columns: 1fr; gap: 0; margin: 18px 0 0; }
+  .progress-step { min-height: 42px; padding: 1px 0 10px 32px; text-align: left; }
+  .progress-step::before, .progress-step:first-child::before, .progress-step:last-child::before { top: 9px; left: 8px; width: 2px; height: 100%; }
+  .progress-step:last-child::before { height: 0; }
+  .progress-step-marker { top: 0; left: 9px; transform: translateX(-50%); }
+  .progress-step-label { padding-top: 3px; }
+  .jad-requirements-card .card-heading { display: grid; }
+  .admin-edit-link { justify-self: start; }
+}
+@media (max-width: 420px) {
+  .progress-applicant-grid { grid-template-columns: 1fr; }
+  .progress-applicant-item { grid-template-columns: minmax(110px, .8fr) minmax(0, 1.2fr); }
+  .jad-checklist-item { align-items: flex-start; }
+  .jad-checklist-state { margin-top: 1px; }
+}

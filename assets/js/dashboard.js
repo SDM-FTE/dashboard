@@ -57,23 +57,27 @@
   const fteJfaLabel = (value) => String(value ?? '').includes('#VALUE!') ? 'Perlu diperiksa' : shortText(value);
 
   let data;
+  let jadProgress = {};
+  let activeJadNo = null;
+  const JAD_STAGES = ['Pengecekan ajuan', 'Pengesahan', 'Penugasan asesor', 'Penilaian', 'Verifikasi SK', 'Selesai'];
   const pages = { jad: 1, bkd: 1, fte: 1 };
   let activeProgramIndex = null;
   let bkdPrograms = [];
   let renderBkdProgramTable = () => {};
 
   function setView(name, updateHash = true) {
-    const view = ['home', 'jad', 'jad-detail', 'bkd', 'bkd-prodi', 'fte'].includes(name) ? name : 'home';
+    const view = ['home', 'jad', 'jad-detail', 'jad-progress', 'bkd', 'bkd-prodi', 'fte'].includes(name) ? name : 'home';
     $('#homeView').hidden = view !== 'home';
     $('#jadView').hidden = view !== 'jad';
     $('#jadDetailView').hidden = view !== 'jad-detail';
+    $('#jadProgressView').hidden = view !== 'jad-progress';
     $('#bkdView').hidden = view !== 'bkd';
     $('#bkdProgramView').hidden = view !== 'bkd-prodi';
     $('#fteView').hidden = view !== 'fte';
     if (updateHash) {
       const hash = view === 'bkd-prodi'
         ? (activeProgramIndex === null ? '#bkd-detail' : `#bkd-prodi/${activeProgramIndex}`)
-        : `#${view}`;
+        : view === 'jad-progress' && activeJadNo !== null ? `#jad-progress/${activeJadNo}` : `#${view}`;
       if (window.location.hash !== hash) window.location.hash = hash;
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -93,8 +97,69 @@
     setView('bkd-prodi', updateHash);
   }
 
+  function openJadProgress(no, updateHash = true) {
+    const record = (data?.jad || []).find((row) => String(row.no) === String(no));
+    if (!record) { setView('jad-detail', updateHash); return; }
+    activeJadNo = String(record.no);
+    renderJadProgress(record);
+    setView('jad-progress', updateHash);
+  }
+
+  function renderJadProgress(record) {
+    const saved = jadProgress[String(record.no)] || {};
+    const rawStage = Number(saved.stage);
+    const stage = saved.stage !== null && saved.stage !== undefined && saved.stage !== '' && Number.isInteger(rawStage) && rawStage >= 0 && rawStage < JAD_STAGES.length ? rawStage : null;
+    const currentRank = record.currentRank ? `${record.currentRank}${record.rankDate ? ` · ${record.rankDate}` : ''}` : null;
+    $('#jadProgressHeading').textContent = record.name;
+    $('#jadProgressPublication').className = `badge ${badgeClass(record.publication)}`;
+    $('#jadProgressPublication').textContent = shortText(record.publication, 'Status publikasi belum tersedia');
+    $('#jadProgressApplicant').innerHTML = [
+      ['Jenjang ijazah', record.degree], ['JFA saat ini', currentRank], ['Usulan JFA', record.proposedRank],
+      ['AKK baru', record.totalAkBaru], ['AKK lama + baru', record.totalAkLamaBaru], ['Rumpun ilmu', record.scienceCluster],
+    ].map(([label, value]) => `<div class="progress-applicant-item"><span>${esc(label)}</span><strong>${value === null || value === undefined || value === '' ? '—' : (typeof value === 'number' ? fmt(value) : esc(value))}</strong></div>`).join('');
+    $('#jadProgressStageLabel').textContent = stage === null ? 'Tahapan proses belum diperbarui.' : stage === JAD_STAGES.length - 1 ? 'Ajuan telah selesai.' : `Tahap berjalan: ${JAD_STAGES[stage]}.`;
+    $('#jadProgressTimeline').innerHTML = JAD_STAGES.map((label, index) => {
+      const state = stage === null ? 'pending' : stage === JAD_STAGES.length - 1 || index < stage ? 'done' : index === stage ? 'current' : 'pending';
+      const marker = state === 'done' ? '✓' : state === 'current' ? '•' : '';
+      return `<li class="progress-step ${state}" ${state === 'current' ? 'aria-current="step"' : ''}><span class="progress-step-marker" aria-hidden="true">${marker}</span><span class="progress-step-label">${esc(label)}</span></li>`;
+    }).join('');
+    const requirements = [
+      ['paperPdf', 'Paper terbit (PDF)', 'Naskah paper terbit tersedia dalam format PDF.'],
+      ['similarity', 'Hasil similarity', 'Dokumen atau hasil pemeriksaan similarity telah tersedia.'],
+      ['correspondence', 'Korespondensi syarat utama', 'Bukti korespondensi untuk pemenuhan syarat utama telah tersedia.'],
+    ];
+    const checks = saved.requirements || {};
+    $('#jadProgressRequirements').innerHTML = requirements.map(([key, label, note]) => {
+      const status = checks[key];
+      const checked = status === true;
+      const reviewed = status === true || status === false;
+      const stateLabel = !reviewed ? 'Belum diperiksa' : checked ? 'Lengkap' : 'Belum lengkap';
+      return `<label class="jad-checklist-item"><input type="checkbox" disabled ${checked ? 'checked' : ''} ${reviewed ? '' : 'data-unknown'} aria-label="${esc(label)}: ${stateLabel.toLocaleLowerCase('id-ID')}"><span class="jad-checklist-copy"><strong>${esc(label)}</strong><small>${esc(note)}</small></span><span class="jad-checklist-state ${checked ? 'complete' : reviewed ? '' : 'unknown'}">${stateLabel}</span></label>`;
+    }).join('');
+    $('#jadProgressRequirements').querySelectorAll('[data-unknown]').forEach((checkbox) => { checkbox.indeterminate = true; });
+    const skp = (record.skpByYear || []).map((value, i) => [String(2023 + i), value]);
+    const groups = [
+      ['Profil dan kepakaran', [['Jenjang ijazah', record.degree], ['Rumpun ilmu', record.scienceCluster]]],
+      ['Angka kredit', [['AK pendidikan', record.akEducation], ['AK pengajaran', record.akTeaching], ['AK penelitian', record.akResearch], ['AK pengabdian', record.akCommunity], ['AK penunjang', record.akSupport], ['AK penyetaraan', record.akPenyetaraan], ['AK SKP dan prestasi', record.akSkpPrestasi], ['Total AKK baru', record.totalAkBaru], ['Pencapaian AKK lama + baru', record.totalAkLamaBaru]]],
+      ['Proporsi penelitian', [['AK penelitian tercatat', record.akResearch]]],
+      ['IKD dan SKP', [...skp.map(([year, value]) => [`SKP ${year}`, value]), ['Rekomendasi PAK', record.pakRecommendation], ['Catatan PAK', record.pakNote], ['Rekomendasi Senat', record.senateRecommendation], ['Catatan Senat', record.senateNote]]],
+      ['Syarat BKD', []], ['Syarat khusus', []], ['Dokumen rekomendasi', [['Rekomendasi PAK', record.pakRecommendation], ['Rekomendasi Senat', record.senateRecommendation]]],
+    ];
+    $('#jadProgressSections').innerHTML = groups.map(([title, items]) => {
+      const visible = items.filter(([, value]) => value !== null && value !== undefined && value !== '');
+      const body = visible.length ? `<div class="detail-grid">${visible.map(([label, value]) => detailItem(label, typeof value === 'number' ? fmt(value) : value)).join('')}</div>` : '<p class="progress-empty-note">Data bagian ini tidak tersedia pada workbook yang digunakan.</p>';
+      return `<details class="progress-accordion"><summary>${esc(title)}<span aria-hidden="true">⌄</span></summary><div class="progress-accordion-body">${body}</div></details>`;
+    }).join('');
+  }
+
   function routeFromHash() {
     const route = window.location.hash.slice(1) || 'home';
+    const jadProgressMatch = route.match(/^jad-progress\/(\d+)$/);
+    if (jadProgressMatch) {
+      if (data) openJadProgress(jadProgressMatch[1], false);
+      else setView('jad-progress', false);
+      return;
+    }
     const programMatch = route.match(/^bkd-prodi\/(\d+)$/);
     if (programMatch) {
       if (data) openBkdProgram(programMatch[1], false);
@@ -234,7 +299,7 @@
       </tr>`).join('') : '<tr><td colspan="7" class="empty-row">Tidak ada data yang cocok dengan filter.</td></tr>';
       $('#jadTableBody').querySelectorAll('[data-jad-detail]').forEach((rowElement) => rowElement.addEventListener('click', () => {
         const record = records.find((row) => String(row.no) === rowElement.dataset.jadDetail);
-        if (record) showDetails('jad', record);
+        if (record) openJadProgress(record.no);
       }));
     };
     function clearQuickSelection() {
@@ -404,9 +469,13 @@
     $('#dialogClose').addEventListener('click', () => $('#detailDialog').close());
     $('#detailDialog').addEventListener('click', (event) => { if (event.target === $('#detailDialog')) $('#detailDialog').close(); });
     try {
-      const response = await fetch('assets/data/dashboard-data.json');
+      const [response, progressResponse] = await Promise.all([
+        fetch('assets/data/dashboard-data.json'),
+        fetch('assets/data/jad-progress.json'),
+      ]);
       if (!response.ok) throw new Error('Dashboard data is unavailable');
       data = await response.json();
+      jadProgress = progressResponse.ok ? await progressResponse.json() : {};
       initJad();
       initBkd();
       initFte();

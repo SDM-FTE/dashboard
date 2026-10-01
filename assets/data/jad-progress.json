@@ -1,0 +1,253 @@
+{
+  "description": "Status tahap dan kelengkapan syarat utama JAD. Berkas ini bersifat publik; perubahan dilakukan oleh admin repository melalui GitHub.",
+  "stages": [
+    "Pengecekan ajuan",
+    "Pengesahan",
+    "Penugasan asesor",
+    "Penilaian",
+    "Verifikasi SK",
+    "Selesai"
+  ],
+  "stageMeaning": "stage 0–4 menunjukkan tahap yang sedang berjalan; stage 5 berarti selesai. Gunakan null bila belum diperbarui.",
+  "requirements": {
+    "paperPdf": "Paper terbit (PDF)",
+    "similarity": "Hasil similarity",
+    "correspondence": "Korespondensi syarat utama"
+  },
+  "lecturers": {
+    "1": {
+      "stage": null,
+      "requirements": {
+        "paperPdf": null,
+        "similarity": null,
+        "correspondence": null
+      },
+      "name": "AGUNG SURYA WIBOWO"
+    },
+    "2": {
+      "stage": null,
+      "requirements": {
+        "paperPdf": null,
+        "similarity": null,
+        "correspondence": null
+      },
+      "name": "ANDREW BRIAN OSMOND"
+    },
+    "3": {
+      "stage": null,
+      "requirements": {
+        "paperPdf": null,
+        "similarity": null,
+        "correspondence": null
+      },
+      "name": "ASHRI DINIMAHARAWATI"
+    },
+    "4": {
+      "stage": null,
+      "requirements": {
+        "paperPdf": null,
+        "similarity": null,
+        "correspondence": null
+      },
+      "name": "AZAM ZAMHURI FUADI"
+    },
+    "5": {
+      "stage": null,
+      "requirements": {
+        "paperPdf": null,
+        "similarity": null,
+        "correspondence": null
+      },
+      "name": "DANU DWI SANJOYO"
+    },
+    "6": {
+      "stage": null,
+      "requirements": {
+        "paperPdf": null,
+        "similarity": null,
+        "correspondence": null
+      },
+      "name": "DITA PUSPITASARI"
+    },
+    "7": {
+      "stage": null,
+      "requirements": {
+        "paperPdf": null,
+        "similarity": null,
+        "correspondence": null
+      },
+      "name": "ESTANANTO"
+    },
+    "8": {
+      "stage": null,
+      "requirements": {
+        "paperPdf": null,
+        "similarity": null,
+        "correspondence": null
+      },
+      "name": "FAISAL CANDRASYAH HASIBUAN"
+    },
+    "9": {
+      "stage": null,
+      "requirements": {
+        "paperPdf": null,
+        "similarity": null,
+        "correspondence": null
+      },
+      "name": "FENTY ALIA"
+    },
+    "10": {
+      "stage": null,
+      "requirements": {
+        "paperPdf": null,
+        "similarity": null,
+        "correspondence": null
+      },
+      "name": "JUNARTHO HALOMOAN"
+    },
+    "11": {
+      "stage": null,
+      "requirements": {
+        "paperPdf": null,
+        "similarity": null,
+        "correspondence": null
+      },
+      "name": "ROSWAN LATUCONSINA"
+    },
+    "12": {
+      "stage": null,
+      "requirements": {
+        "paperPdf": null,
+        "similarity": null,
+        "correspondence": null
+      },
+      "name": "AGUSTIEN MULYANTINI"
+    },
+    "13": {
+      "stage": null,
+      "requirements": {
+        "paperPdf": null,
+        "similarity": null,
+        "correspondence": null
+      },
+      "name": "ANNISA HUMAIRANI"
+    },
+    "14": {
+      "stage": null,
+      "requirements": {
+        "paperPdf": null,
+        "similarity": null,
+        "correspondence": null
+      },
+      "name": "AURALIUS OBERMAN MANURUNG"
+    },
+    "15": {
+      "stage": null,
+      "requirements": {
+        "paperPdf": null,
+        "similarity": null,
+        "correspondence": null
+      },
+      "name": "BASITH ABDURROHMAN ASY'ARI"
+    },
+    "16": {
+      "stage": null,
+      "requirements": {
+        "paperPdf": null,
+        "similarity": null,
+        "correspondence": null
+      },
+      "name": "DZIBAN NAUFAL"
+    },
+    "17": {
+      "stage": null,
+      "requirements": {
+        "paperPdf": null,
+        "similarity": null,
+        "correspondence": null
+      },
+      "name": "FATHUR RAHMAN"
+    },
+    "18": {
+      "stage": null,
+      "requirements": {
+        "paperPdf": null,
+        "similarity": null,
+        "correspondence": null
+      },
+      "name": "FELIX CORPUTTY"
+    },
+    "19": {
+      "stage": null,
+      "requirements": {
+        "paperPdf": null,
+        "similarity": null,
+        "correspondence": null
+      },
+      "name": "HASBI ASH SHIDDIEQY A"
+    },
+    "20": {
+      "stage": null,
+      "requirements": {
+        "paperPdf": null,
+        "similarity": null,
+        "correspondence": null
+      },
+      "name": "LAILY ADE OKTAVIANA"
+    },
+    "21": {
+      "stage": null,
+      "requirements": {
+        "paperPdf": null,
+        "similarity": null,
+        "correspondence": null
+      },
+      "name": "LIANA NAFISA SAFTARI"
+    },
+    "22": {
+      "stage": null,
+      "requirements": {
+        "paperPdf": null,
+        "similarity": null,
+        "correspondence": null
+      },
+      "name": "M. DARFYMA PUTRA"
+    },
+    "23": {
+      "stage": null,
+      "requirements": {
+        "paperPdf": null,
+        "similarity": null,
+        "correspondence": null
+      },
+      "name": "MUHAMMAD AZHAR ISMAIL"
+    },
+    "24": {
+      "stage": null,
+      "requirements": {
+        "paperPdf": null,
+        "similarity": null,
+        "correspondence": null
+      },
+      "name": "MUHAMMAD KODRAT"
+    },
+    "25": {
+      "stage": null,
+      "requirements": {
+        "paperPdf": null,
+        "similarity": null,
+        "correspondence": null
+      },
+      "name": "NAUFAL HANAN LUTFIANTO"
+    },
+    "26": {
+      "stage": null,
+      "requirements": {
+        "paperPdf": null,
+        "similarity": null,
+        "correspondence": null
+      },
+      "name": "ROBIN SINURAT"
+    }
+  }
+}
