@@ -1,10 +1,10 @@
 {
   "meta": {
     "jadSource": "WORKSHOP JAD SEPTEMBER 2026_FINAL_SUM_REKAP(1).xlsx",
-    "bkdSource": "SISTER Bkd_frontend(6).xlsx",
+    "bkdSource": "SISTER Bkd_frontend.csv",
     "jadRows": 26,
     "bkdRows": 210,
-    "bkdSourceRows": 1563,
+    "bkdSourceRows": 1564,
     "bkdPrograms": 8,
     "bkdProgramNames": [
       "Teknik Telekomunikasi (S1)",
@@ -227,7 +227,7 @@
       "skpByYear": [
         0,
         3.13,
-        40.0,
+        40,
         19.060000000000002
       ],
       "akPenyetaraan": 0,
@@ -479,7 +479,7 @@
       "skpByYear": [
         0,
         3.13,
-        40.0,
+        40,
         29.997500000000002
       ],
       "akPenyetaraan": 150,
@@ -875,7 +875,7 @@
       "skpByYear": [
         0,
         12.809999999999999,
-        40.0,
+        40,
         29.997500000000002
       ],
       "akPenyetaraan": 150,
@@ -1040,20 +1040,20 @@
       "program": "Teknik Biomedis (S1)",
       "position": null,
       "activity": [
+        6.25,
+        11.5,
+        6.5125,
         0,
+        2,
         0,
-        0,
-        0,
-        0,
-        0,
-        0,
+        1,
         0
       ],
-      "totalPerformance": 0,
-      "excessLoad": 0,
-      "semesterBkd": "TM",
+      "totalPerformance": 15.7625,
+      "excessLoad": 11.5,
+      "semesterBkd": "M",
       "obligation": "Tidak memiliki fungsional",
-      "conclusion": "TM"
+      "conclusion": "M"
     },
     {
       "no": 978,
@@ -1172,20 +1172,20 @@
       "program": "Teknik Biomedis (S1)",
       "position": null,
       "activity": [
+        11.625,
+        0.875,
+        1.2,
         0,
+        2,
         0,
-        0,
-        0,
-        0,
-        0,
-        0,
+        1,
         0
       ],
-      "totalPerformance": 0,
-      "excessLoad": 0,
-      "semesterBkd": "TM",
+      "totalPerformance": 15.825,
+      "excessLoad": 0.875,
+      "semesterBkd": "M",
       "obligation": "Tidak memiliki fungsional",
-      "conclusion": "TM"
+      "conclusion": "M"
     },
     {
       "no": 984,
@@ -1216,20 +1216,20 @@
       "program": "Teknik Biomedis (S1)",
       "position": null,
       "activity": [
+        12,
+        2.25,
+        1,
+        2.1333,
+        2,
         0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
+        0.5,
         0
       ],
-      "totalPerformance": 0,
-      "excessLoad": 0,
-      "semesterBkd": "TM",
+      "totalPerformance": 15.5,
+      "excessLoad": 4.3833,
+      "semesterBkd": "M",
       "obligation": "Tidak memiliki fungsional",
-      "conclusion": "TM"
+      "conclusion": "M"
     },
     {
       "no": 986,
@@ -1876,7 +1876,7 @@
       "program": "Teknik Elektro (S1)",
       "position": "Lektor",
       "activity": [
-        0,
+        12,
         0,
         0,
         0,
@@ -1885,11 +1885,11 @@
         0,
         0
       ],
-      "totalPerformance": 0,
+      "totalPerformance": 12,
       "excessLoad": 0,
-      "semesterBkd": "TM",
+      "semesterBkd": "M",
       "obligation": "Tugas Belajar",
-      "conclusion": "TM"
+      "conclusion": "M"
     },
     {
       "no": 1031,
@@ -2998,7 +2998,7 @@
       "program": "Teknik Fisika (S1)",
       "position": "Lektor",
       "activity": [
-        0,
+        12,
         0,
         0,
         0,
@@ -3007,11 +3007,11 @@
         0,
         0
       ],
-      "totalPerformance": 0,
+      "totalPerformance": 12,
       "excessLoad": 0,
-      "semesterBkd": "TM",
+      "semesterBkd": "M",
       "obligation": "Tugas Belajar",
-      "conclusion": "TM"
+      "conclusion": "M"
     },
     {
       "no": 1082,
@@ -3306,20 +3306,20 @@
       "program": "Teknik Komputer (S1)",
       "position": null,
       "activity": [
+        13.8125,
+        0.75,
+        0.3,
         0,
+        0.25,
         0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
+        1.125,
+        0.5
       ],
-      "totalPerformance": 0,
-      "excessLoad": 0,
-      "semesterBkd": "TM",
+      "totalPerformance": 15.4875,
+      "excessLoad": 1.25,
+      "semesterBkd": "M",
       "obligation": "Tidak memiliki fungsional",
-      "conclusion": "TM"
+      "conclusion": "M"
     },
     {
       "no": 1263,
@@ -4136,29 +4136,29 @@
       "conclusion": "M"
     },
     {
-      "no": 1388,
+      "no": 1389,
       "status": "Dosen (DS)",
       "name": "ADE ADITYA RAMADHA, S.T., M.T",
       "program": "Teknik Telekomunikasi (S1)",
       "position": null,
       "activity": [
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
+        12.625,
+        7,
+        0.9,
+        0.5572,
+        1,
+        7,
+        1,
+        0.75
       ],
-      "totalPerformance": 0,
-      "excessLoad": 0,
-      "semesterBkd": "TM",
+      "totalPerformance": 15.525,
+      "excessLoad": 15.3072,
+      "semesterBkd": "M",
       "obligation": "Tidak memiliki fungsional",
-      "conclusion": "TM"
+      "conclusion": "M"
     },
     {
-      "no": 1389,
+      "no": 1390,
       "status": "Dosen (DS)",
       "name": "FARDAN, S.T., M.Sc.",
       "program": "Teknik Telekomunikasi (S1)",
@@ -4180,7 +4180,7 @@
       "conclusion": "TM"
     },
     {
-      "no": 1390,
+      "no": 1391,
       "status": "Dosen (DS)",
       "name": "FELIX CORPUTTY, S.T., M.T.",
       "program": "Teknik Telekomunikasi (S1)",
@@ -4202,7 +4202,7 @@
       "conclusion": "M"
     },
     {
-      "no": 1391,
+      "no": 1392,
       "status": "Dosen (DS)",
       "name": "M. RENDRA PERDANA KUSUMA DJAKA, S.T., M.T.",
       "program": "Teknik Telekomunikasi (S1)",
@@ -4224,7 +4224,7 @@
       "conclusion": "M"
     },
     {
-      "no": 1392,
+      "no": 1393,
       "status": "Dosen (DS)",
       "name": "NAUFAL HANAN LUTFIANTO, S.T., M.T",
       "program": "Teknik Telekomunikasi (S1)",
@@ -4246,7 +4246,7 @@
       "conclusion": "M"
     },
     {
-      "no": 1393,
+      "no": 1394,
       "status": "Dosen (DS)",
       "name": "ROBIN SINURAT, S.T., M.T.",
       "program": "Teknik Telekomunikasi (S1)",
@@ -4268,7 +4268,7 @@
       "conclusion": "M"
     },
     {
-      "no": 1394,
+      "no": 1395,
       "status": "Dosen (DS)",
       "name": "THALITA DEWI RAHMANIAR, S.T., M.T",
       "program": "Teknik Telekomunikasi (S1)",
@@ -4290,7 +4290,7 @@
       "conclusion": "M"
     },
     {
-      "no": 1395,
+      "no": 1396,
       "status": "Dosen dengan tugas tambahan (DT)",
       "name": "Dr. INUNG WIJAYANTO, S.T., M.T",
       "program": "Teknik Telekomunikasi (S1)",
@@ -4312,7 +4312,7 @@
       "conclusion": "M"
     },
     {
-      "no": 1396,
+      "no": 1397,
       "status": "Dosen (DS)",
       "name": "LEDYA NOVAMIZANTI, M.T",
       "program": "Teknik Telekomunikasi (S1)",
@@ -4334,7 +4334,7 @@
       "conclusion": "M"
     },
     {
-      "no": 1397,
+      "no": 1398,
       "status": "Dosen (DS)",
       "name": "Dr. NYOMAN BOGI ADITYA KARNA, S.T., MSc",
       "program": "Teknik Telekomunikasi (S1)",
@@ -4356,7 +4356,7 @@
       "conclusion": "M"
     },
     {
-      "no": 1398,
+      "no": 1399,
       "status": "Dosen dengan tugas tambahan (DT)",
       "name": "Dr.Eng. FAVIAN DEWANTA, S.T., M.Eng",
       "program": "Teknik Telekomunikasi (S1)",
@@ -4378,7 +4378,7 @@
       "conclusion": "M"
     },
     {
-      "no": 1399,
+      "no": 1400,
       "status": "Dosen (DS)",
       "name": "Dr. ISTIKMAL, S.T., S.T., M.T",
       "program": "Teknik Telekomunikasi (S1)",
@@ -4400,7 +4400,7 @@
       "conclusion": "M"
     },
     {
-      "no": 1400,
+      "no": 1401,
       "status": "Dosen dengan tugas tambahan (DT)",
       "name": "Dr. IWAN IWUT TRITOASMORO, M.T",
       "program": "Teknik Telekomunikasi (S1)",
@@ -4422,7 +4422,7 @@
       "conclusion": "M"
     },
     {
-      "no": 1401,
+      "no": 1402,
       "status": "Dosen dengan tugas tambahan (DT)",
       "name": "Dr.Eng. KHOIRUL ANWAR, S.T., M.Eng",
       "program": "Teknik Telekomunikasi (S1)",
@@ -4444,29 +4444,29 @@
       "conclusion": "M"
     },
     {
-      "no": 1402,
+      "no": 1403,
       "status": "Dosen (DS)",
       "name": "Dr. KOREDIANTO USMAN, S.T",
       "program": "Teknik Telekomunikasi (S1)",
       "position": "Lektor Kepala",
       "activity": [
+        10.5,
+        9.75,
+        4,
         0,
+        0.875,
         0,
-        0,
-        0,
-        0,
-        0,
-        0,
+        0.5,
         0
       ],
-      "totalPerformance": 0,
-      "excessLoad": 0,
-      "semesterBkd": "TM",
-      "obligation": "TM",
-      "conclusion": "TM"
+      "totalPerformance": 15.875,
+      "excessLoad": 9.75,
+      "semesterBkd": "M",
+      "obligation": "M",
+      "conclusion": "M"
     },
     {
-      "no": 1403,
+      "no": 1404,
       "status": "Dosen (DS)",
       "name": "Dr. LEVY OLIVIA NUR, S.T., M.T",
       "program": "Teknik Telekomunikasi (S1)",
@@ -4488,7 +4488,7 @@
       "conclusion": "M"
     },
     {
-      "no": 1404,
+      "no": 1405,
       "status": "Dosen dengan tugas tambahan (DT)",
       "name": "Dr. LINDA MEYLANI, S.T., M.T",
       "program": "Teknik Telekomunikasi (S1)",
@@ -4510,7 +4510,7 @@
       "conclusion": "M"
     },
     {
-      "no": 1405,
+      "no": 1406,
       "status": "Dosen (DS)",
       "name": "Dr. NACHWAN MUFTI ADRIANSYAH",
       "program": "Teknik Telekomunikasi (S1)",
@@ -4532,7 +4532,7 @@
       "conclusion": "M"
     },
     {
-      "no": 1406,
+      "no": 1407,
       "status": "Dosen (DS)",
       "name": "Ir. RITA MAGDALENA, M.T",
       "program": "Teknik Telekomunikasi (S1)",
@@ -4554,7 +4554,7 @@
       "conclusion": "M"
     },
     {
-      "no": 1407,
+      "no": 1408,
       "status": "Dosen (DS)",
       "name": "AGUS DWI PRASETYO, S.T., M.T",
       "program": "Teknik Telekomunikasi (S1)",
@@ -4576,7 +4576,7 @@
       "conclusion": "M"
     },
     {
-      "no": 1408,
+      "no": 1409,
       "status": "Dosen (DS)",
       "name": "Ir. AHMAD TRI HANURANTO, M.T",
       "program": "Teknik Telekomunikasi (S1)",
@@ -4598,7 +4598,7 @@
       "conclusion": "M"
     },
     {
-      "no": 1409,
+      "no": 1410,
       "status": "Dosen (DS)",
       "name": "BRIAN PAMUKTI, S.T., M.T., Ph.D",
       "program": "Teknik Telekomunikasi (S1)",
@@ -4620,7 +4620,7 @@
       "conclusion": "M"
     },
     {
-      "no": 1410,
+      "no": 1411,
       "status": "Dosen dengan tugas tambahan (DT)",
       "name": "Dr. BUDI SYIHABUDDIN, S.T., M.T",
       "program": "Teknik Telekomunikasi (S1)",
@@ -4642,7 +4642,7 @@
       "conclusion": "M"
     },
     {
-      "no": 1411,
+      "no": 1412,
       "status": "Dosen (DS)",
       "name": "EDWAR, S.T., M.T",
       "program": "Teknik Telekomunikasi (S1)",
@@ -4664,7 +4664,7 @@
       "conclusion": "M"
     },
     {
-      "no": 1412,
+      "no": 1413,
       "status": "Dosen dengan tugas tambahan (DT)",
       "name": "Dr. GELAR BUDIMAN, S.T., M.T",
       "program": "Teknik Telekomunikasi (S1)",
@@ -4686,7 +4686,7 @@
       "conclusion": "M"
     },
     {
-      "no": 1413,
+      "no": 1414,
       "status": "Dosen (DS)",
       "name": "IRMA SAFITRI, S.T., M. Sc.",
       "program": "Teknik Telekomunikasi (S1)",
@@ -4708,31 +4708,9 @@
       "conclusion": "M"
     },
     {
-      "no": 1414,
+      "no": 1415,
       "status": "Dosen (DS)",
       "name": "NOR KUMALASARI CAECAR PRATIWI, S.T., M.T",
-      "program": "Teknik Telekomunikasi (S1)",
-      "position": "Lektor",
-      "activity": [
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
-      ],
-      "totalPerformance": 0,
-      "excessLoad": 0,
-      "semesterBkd": "TM",
-      "obligation": "Tugas Belajar",
-      "conclusion": "TM"
-    },
-    {
-      "no": 1415,
-      "status": "Dosen dengan tugas tambahan (DT)",
-      "name": "RATNA MAYASARI, S.T., M.T",
       "program": "Teknik Telekomunikasi (S1)",
       "position": "Lektor",
       "activity": [
@@ -4754,6 +4732,28 @@
     {
       "no": 1416,
       "status": "Dosen dengan tugas tambahan (DT)",
+      "name": "RATNA MAYASARI, S.T., M.T",
+      "program": "Teknik Telekomunikasi (S1)",
+      "position": "Lektor",
+      "activity": [
+        12,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "totalPerformance": 12,
+      "excessLoad": 0,
+      "semesterBkd": "M",
+      "obligation": "Tugas Belajar",
+      "conclusion": "M"
+    },
+    {
+      "no": 1417,
+      "status": "Dosen dengan tugas tambahan (DT)",
       "name": "Dr. RIDHA MULDINA NEGARA, S.T., M.T",
       "program": "Teknik Telekomunikasi (S1)",
       "position": "Lektor",
@@ -4774,7 +4774,7 @@
       "conclusion": "M"
     },
     {
-      "no": 1417,
+      "no": 1418,
       "status": "Dosen (DS)",
       "name": "SOFIA SA'IDAH, S.T., M.T",
       "program": "Teknik Telekomunikasi (S1)",
@@ -4796,7 +4796,7 @@
       "conclusion": "M"
     },
     {
-      "no": 1418,
+      "no": 1419,
       "status": "Dosen (DS)",
       "name": "SUSSI, S.Si., M.T",
       "program": "Teknik Telekomunikasi (S1)",
@@ -4818,7 +4818,7 @@
       "conclusion": "M"
     },
     {
-      "no": 1419,
+      "no": 1420,
       "status": "Dosen dengan tugas tambahan (DT)",
       "name": "Ir. AKHMAD HAMBALI, M.T",
       "program": "Teknik Telekomunikasi (S1)",
@@ -4840,7 +4840,7 @@
       "conclusion": "M"
     },
     {
-      "no": 1420,
+      "no": 1421,
       "status": "Dosen (DS)",
       "name": "Ir. BAMBANG SUMAJUDIN, M.T",
       "program": "Teknik Telekomunikasi (S1)",
@@ -4862,7 +4862,7 @@
       "conclusion": "M"
     },
     {
-      "no": 1421,
+      "no": 1422,
       "status": "Dosen (DS)",
       "name": "DESTI MADYA SAPUTRI, S.T., M.T",
       "program": "Teknik Telekomunikasi (S1)",
@@ -4884,7 +4884,7 @@
       "conclusion": "M"
     },
     {
-      "no": 1422,
+      "no": 1423,
       "status": "Dosen (DS)",
       "name": "DHARU ARSENO, S.T., M.T",
       "program": "Teknik Telekomunikasi (S1)",
@@ -4906,7 +4906,7 @@
       "conclusion": "M"
     },
     {
-      "no": 1423,
+      "no": 1424,
       "status": "Dosen dengan tugas tambahan (DT)",
       "name": "DHONI PUTRA SETIAWAN, S.T., M.T.., Ph.D",
       "program": "Teknik Telekomunikasi (S1)",
@@ -4928,7 +4928,7 @@
       "conclusion": "M"
     },
     {
-      "no": 1424,
+      "no": 1425,
       "status": "Dosen (DS)",
       "name": "HARFAN HIAN RYANU, S.T., M.T",
       "program": "Teknik Telekomunikasi (S1)",
@@ -4950,7 +4950,7 @@
       "conclusion": "M"
     },
     {
-      "no": 1425,
+      "no": 1426,
       "status": "Dosen (DS)",
       "name": "HURIANTI VIDYANINGTYAS, S.T., M.T",
       "program": "Teknik Telekomunikasi (S1)",
@@ -4972,29 +4972,29 @@
       "conclusion": "M"
     },
     {
-      "no": 1426,
+      "no": 1427,
       "status": "Dosen (DS)",
       "name": "Dr. IMAN HEDI SANTOSO, S.T., M.T",
       "program": "Teknik Telekomunikasi (S1)",
       "position": "Lektor",
       "activity": [
+        6.375,
+        4.25,
+        4.5,
         0,
+        2,
         0,
-        0,
-        0,
-        0,
-        0,
-        0,
+        0.5,
         0
       ],
-      "totalPerformance": 0,
-      "excessLoad": 0,
-      "semesterBkd": "TM",
-      "obligation": "TM",
-      "conclusion": "TM"
+      "totalPerformance": 13.375,
+      "excessLoad": 4.25,
+      "semesterBkd": "M",
+      "obligation": "M",
+      "conclusion": "M"
     },
     {
-      "no": 1427,
+      "no": 1428,
       "status": "Dosen (DS)",
       "name": "JASPAR HASUDUNGAN, S.T., M.Sn",
       "program": "Teknik Telekomunikasi (S1)",
@@ -5016,7 +5016,7 @@
       "conclusion": "TM"
     },
     {
-      "no": 1428,
+      "no": 1429,
       "status": "Dosen (DS)",
       "name": "Dr. KHAERUDIN SALEH, S.Si., M.Si",
       "program": "Teknik Telekomunikasi (S1)",
@@ -5038,7 +5038,7 @@
       "conclusion": "M"
     },
     {
-      "no": 1429,
+      "no": 1430,
       "status": "Dosen (DS)",
       "name": "KRIS SUJATMOKO, S.T., M.T., M.T.",
       "program": "Teknik Telekomunikasi (S1)",
@@ -5060,7 +5060,7 @@
       "conclusion": "TM"
     },
     {
-      "no": 1430,
+      "no": 1431,
       "status": "Dosen dengan tugas tambahan (DT)",
       "name": "Dr. LEANNA VIDYA YOVITA, M.T",
       "program": "Teknik Telekomunikasi (S1)",
@@ -5082,7 +5082,7 @@
       "conclusion": "M"
     },
     {
-      "no": 1431,
+      "no": 1432,
       "status": "Dosen (DS)",
       "name": "Dr. MUHAMMAD IMAM NASHIRUDDIN, S.T., M.T",
       "program": "Teknik Telekomunikasi (S1)",
@@ -5104,7 +5104,7 @@
       "conclusion": "M"
     },
     {
-      "no": 1432,
+      "no": 1433,
       "status": "Dosen dengan tugas tambahan (DT)",
       "name": "Dr. NUR IBRAHIM, S.T., M.T",
       "program": "Teknik Telekomunikasi (S1)",
@@ -5126,7 +5126,7 @@
       "conclusion": "M"
     },
     {
-      "no": 1433,
+      "no": 1434,
       "status": "Dosen (DS)",
       "name": "RADITIANA PATMASARI, S.T., M.T",
       "program": "Teknik Telekomunikasi (S1)",
@@ -5148,7 +5148,7 @@
       "conclusion": "M"
     },
     {
-      "no": 1434,
+      "no": 1435,
       "status": "Dosen (DS)",
       "name": "Dr. RATRI DWI ATMAJA, S.T., M.T",
       "program": "Teknik Telekomunikasi (S1)",
@@ -5170,7 +5170,7 @@
       "conclusion": "M"
     },
     {
-      "no": 1435,
+      "no": 1436,
       "status": "Dosen (DS)",
       "name": "RETNO HENDRYANTI, S.S.., M.Pd., Ph.D",
       "program": "Teknik Telekomunikasi (S1)",
@@ -5192,7 +5192,7 @@
       "conclusion": "M"
     },
     {
-      "no": 1436,
+      "no": 1437,
       "status": "Dosen (DS)",
       "name": "Dr. RITA PURNAMASARI, S.T., M.T",
       "program": "Teknik Telekomunikasi (S1)",
@@ -5214,7 +5214,7 @@
       "conclusion": "M"
     },
     {
-      "no": 1437,
+      "no": 1438,
       "status": "Dosen (DS)",
       "name": "Dr. RUSTAM, S.Si., M.Si",
       "program": "Teknik Telekomunikasi (S1)",
@@ -5236,7 +5236,7 @@
       "conclusion": "M"
     },
     {
-      "no": 1438,
+      "no": 1439,
       "status": "Dosen dengan tugas tambahan (DT)",
       "name": "R YUNENDAH NUR FU'ADAH, S.T., M.T., Ph.D",
       "program": "Teknik Telekomunikasi (S1)",
@@ -5258,7 +5258,7 @@
       "conclusion": "M"
     },
     {
-      "no": 1439,
+      "no": 1440,
       "status": "Dosen (DS)",
       "name": "SURYO ADHI WIBOWO, S.T., S.T., M.T., Doctor of Philosophy",
       "program": "Teknik Telekomunikasi (S1)",
@@ -5280,7 +5280,7 @@
       "conclusion": "TM"
     },
     {
-      "no": 1440,
+      "no": 1441,
       "status": "Dosen (DS)",
       "name": "SYAMSUL RIZAL, A.Md., S.T., M.Eng., PhD",
       "program": "Teknik Telekomunikasi (S1)",
@@ -5302,7 +5302,7 @@
       "conclusion": "TM"
     },
     {
-      "no": 1441,
+      "no": 1442,
       "status": "Dosen (DS)",
       "name": "VINSENSIUS SIGIT WIDHI PRABOWO, S.T., M.T",
       "program": "Teknik Telekomunikasi (S1)",
@@ -5324,7 +5324,7 @@
       "conclusion": "M"
     },
     {
-      "no": 1442,
+      "no": 1443,
       "status": "Dosen (DS)",
       "name": "Dr. ZULFI",
       "program": "Teknik Telekomunikasi (S1)",
@@ -5346,7 +5346,7 @@
       "conclusion": "M"
     },
     {
-      "no": 1443,
+      "no": 1444,
       "status": "Dosen (DS)",
       "name": "AMINAH INDAHSARI MARSUKI, S.T., M.T",
       "program": "Teknik Telekomunikasi (S1)",
@@ -5368,7 +5368,7 @@
       "conclusion": "M"
     },
     {
-      "no": 1444,
+      "no": 1445,
       "status": "Dosen (DS)",
       "name": "ARIF INDRA IRAWAN , S.T., M.T",
       "program": "Teknik Telekomunikasi (S1)",
@@ -5390,7 +5390,7 @@
       "conclusion": "M"
     },
     {
-      "no": 1445,
+      "no": 1446,
       "status": "Dosen (DS)",
       "name": "BAGUS ADITYA, S.T., M.T",
       "program": "Teknik Telekomunikasi (S1)",
@@ -5412,7 +5412,7 @@
       "conclusion": "M"
     },
     {
-      "no": 1446,
+      "no": 1447,
       "status": "Dosen dengan tugas tambahan (DT)",
       "name": "Dr.Eng. DANU DWI SANJOYO, S.T., M.T.",
       "program": "Teknik Telekomunikasi (S1)",
@@ -5434,7 +5434,7 @@
       "conclusion": "M"
     },
     {
-      "no": 1447,
+      "no": 1448,
       "status": "Dosen (DS)",
       "name": "ERFANSYAH YUDHI EKA ALI, S.T., M.T., Ph.D",
       "program": "Teknik Telekomunikasi (S1)",
@@ -5456,7 +5456,7 @@
       "conclusion": "M"
     },
     {
-      "no": 1448,
+      "no": 1449,
       "status": "Dosen (DS)",
       "name": "NUR ANDINI, S.T., M.T",
       "program": "Teknik Telekomunikasi (S1)",
@@ -5478,7 +5478,7 @@
       "conclusion": "M"
     },
     {
-      "no": 1449,
+      "no": 1450,
       "status": "Dosen (DS)",
       "name": "SRI ASTUTI, S.T., M.T",
       "program": "Teknik Telekomunikasi (S1)",
@@ -5500,7 +5500,7 @@
       "conclusion": "M"
     },
     {
-      "no": 1450,
+      "no": 1451,
       "status": "Dosen (DS)",
       "name": "TRASMA YUNITA, M.T",
       "program": "Teknik Telekomunikasi (S1)",
@@ -5522,7 +5522,7 @@
       "conclusion": "M"
     },
     {
-      "no": 1451,
+      "no": 1452,
       "status": "Dosen (DS)",
       "name": "YUSSI PERDANA SAPUTERA, S.T., M.T",
       "program": "Teknik Telekomunikasi (S1)",
@@ -5544,7 +5544,7 @@
       "conclusion": "TM"
     },
     {
-      "no": 1452,
+      "no": 1453,
       "status": "Dosen dengan tugas tambahan (DT)",
       "name": "Dr. TODY ARIEFIANTO WIBOWO, M.T",
       "program": "Teknik Telekomunikasi (S1)",
@@ -5566,7 +5566,7 @@
       "conclusion": "M"
     },
     {
-      "no": 1453,
+      "no": 1454,
       "status": "Dosen (DS)",
       "name": "YULINDA ELISKAR, S.Si., M.Si",
       "program": "Teknik Telekomunikasi (S1)",
