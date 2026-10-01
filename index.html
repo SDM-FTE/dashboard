@@ -6,7 +6,7 @@
   <meta name="description" content="Dashboard monitoring JAD, BKD, dan data FTE dosen.">
   <title>Monitoring JAD & BKD</title>
   <link rel="stylesheet" href="assets/css/styles.css?v=20261001-sertifikasi">
-  <script src="assets/js/dashboard.js?v=20261001-sertifikasi" defer></script>
+  <script src="assets/js/dashboard.js?v=20261001-filter-bkd" defer></script>
 </head>
 <body>
   <header class="topbar">
@@ -110,8 +110,8 @@
       </div>
 
       <div class="content-card chart-card">
-        <div class="card-heading"><div><h3>Rekap per prodi</h3><p>Klik nama prodi untuk membuka daftar dosennya.</p></div><span class="chart-caption">8 PRODI</span></div>
-        <div class="legend"><span><i class="legend-dot met"></i> Memenuhi</span><span><i class="legend-dot unmet"></i> Tidak memenuhi</span></div>
+        <div class="card-heading"><div><h3>Rekap per prodi</h3><p id="bkdProgramChartDescription" aria-live="polite">Semua dosen. Klik prodi untuk membuka daftar dosen sesuai pilihan ini.</p></div><span id="bkdProgramChartCaption" class="chart-caption">8 PRODI</span></div>
+        <div id="bkdProgramLegend" class="legend"><span><i class="legend-dot met"></i> Memenuhi</span><span><i class="legend-dot unmet"></i> Tidak memenuhi</span></div>
         <div id="bkdProgramChart" class="program-chart" aria-label="Rekap BKD per prodi"></div>
       </div>
 
@@ -199,4 +199,5 @@
   <div id="loadError" class="load-error" role="alert" hidden>Data dashboard tidak berhasil dimuat. Pastikan folder assets ikut diunggah bersama index.html.</div>
 </body>
 </html>
+
 
