@@ -6,7 +6,7 @@ Paket untuk repository GitHub Pages `SDM-FTE/dashboard`. Halaman utama berisi pi
 
 - **JAD:** daftar usulan dan rincian angka kredit/SKP.
 - **BKD:** rekap 210 dosen pada 8 prodi pilihan, dengan daftar dosen dan rincian kinerja.
-- **FTE:** 260 baris pegawai dari sheet `2026 (ganjil 26-27)`, pencarian, filter prodi/unit, JFA, status pegawai, detail pendidikan/keahlian, dan pagination.
+- **FTE:** 225 dosen dari sheet `2026 (ganjil 26-27)`, pencarian, filter prodi/unit, JFA, status dosen, detail pendidikan/keahlian, dan pagination. Baris selain dosen telah dihapus dari data dashboard.
 - Masa TMT JFA, masa kerja, masa kerja SK, dan umur dihitung ulang di halaman menggunakan tanggal berjalan zona WIB. Halaman terbuka lama memeriksa perubahan tanggal dan memperbarui hitungan.
 
 ## Data yang ditampilkan

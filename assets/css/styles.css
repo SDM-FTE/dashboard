@@ -302,3 +302,5 @@ tbody tr.clickable-row:focus-within { background: #f0faf8; }
   .jad-checklist-item { align-items: flex-start; }
   .jad-checklist-state { margin-top: 1px; }
 }
+
+.fte-kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); }
