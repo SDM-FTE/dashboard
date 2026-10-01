@@ -106,7 +106,7 @@
   }
 
   function renderJadProgress(record) {
-    const saved = jadProgress[String(record.no)] || {};
+    const saved = jadProgress.lecturers?.[String(record.no)] ?? jadProgress[String(record.no)] ?? {};
     const rawStage = Number(saved.stage);
     const stage = saved.stage !== null && saved.stage !== undefined && saved.stage !== '' && Number.isInteger(rawStage) && rawStage >= 0 && rawStage < JAD_STAGES.length ? rawStage : null;
     const currentRank = record.currentRank ? `${record.currentRank}${record.rankDate ? ` · ${record.rankDate}` : ''}` : null;
