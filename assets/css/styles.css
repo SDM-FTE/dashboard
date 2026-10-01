@@ -143,6 +143,7 @@ tbody tr.clickable-row:focus-within { background: #f0faf8; }
 .legend-dot.unmet { background: var(--rose); }
 .program-chart { display: grid; gap: 13px; margin-top: 18px; }
 .program-row { display: grid; grid-template-columns: minmax(170px, 255px) minmax(120px, 1fr) 54px; align-items: center; gap: 13px; }
+.program-row[hidden] { display: none; }
 .program-open-button { width: 100%; padding: 0; border: 0; background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer; }
 .program-open-button:hover .program-name { color: var(--teal); text-decoration: underline; }
 .program-name { overflow: hidden; color: #526771; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
