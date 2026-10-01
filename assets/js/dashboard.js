@@ -60,23 +60,28 @@
   let jadProgress = {};
   let activeJadNo = null;
   const JAD_STAGES = ['Pengecekan ajuan', 'Pengesahan', 'Penugasan asesor', 'Penilaian', 'Verifikasi SK', 'Selesai'];
-  const pages = { jad: 1, bkd: 1, fte: 1 };
+  const pages = { jad: 1, bkd: 1, bkdCertification: 1, fte: 1 };
   let activeProgramIndex = null;
+  let activeCertification = null;
+  const CERTIFICATION_LABELS = { sudah: 'Sudah tersertifikasi', belum: 'Belum tersertifikasi', 'belum-terdata': 'Belum terdata' };
   let bkdPrograms = [];
   let renderBkdProgramTable = () => {};
+  let renderBkdCertificationTable = () => {};
 
   function setView(name, updateHash = true) {
-    const view = ['home', 'jad', 'jad-detail', 'jad-progress', 'bkd', 'bkd-prodi', 'fte'].includes(name) ? name : 'home';
+    const view = ['home', 'jad', 'jad-detail', 'jad-progress', 'bkd', 'bkd-prodi', 'bkd-sertifikasi', 'fte'].includes(name) ? name : 'home';
     $('#homeView').hidden = view !== 'home';
     $('#jadView').hidden = view !== 'jad';
     $('#jadDetailView').hidden = view !== 'jad-detail';
     $('#jadProgressView').hidden = view !== 'jad-progress';
     $('#bkdView').hidden = view !== 'bkd';
     $('#bkdProgramView').hidden = view !== 'bkd-prodi';
+    if ($('#bkdCertificationView')) $('#bkdCertificationView').hidden = view !== 'bkd-sertifikasi';
     $('#fteView').hidden = view !== 'fte';
     if (updateHash) {
       const hash = view === 'bkd-prodi'
         ? (activeProgramIndex === null ? '#bkd-detail' : `#bkd-prodi/${activeProgramIndex}`)
+        : view === 'bkd-sertifikasi' ? (activeCertification === null ? '#bkd' : `#bkd-sertifikasi/${activeCertification}`)
         : view === 'jad-progress' && activeJadNo !== null ? `#jad-progress/${activeJadNo}` : `#${view}`;
       if (window.location.hash !== hash) window.location.hash = hash;
     }
@@ -95,6 +100,27 @@
     pages.bkd = 1;
     renderBkdProgramTable();
     setView('bkd-prodi', updateHash);
+  }
+
+  function openBkdCertification(category, updateHash = true) {
+    if (!$('#bkdCertificationView')) { setView('bkd', updateHash); return; }
+    if (!Object.prototype.hasOwnProperty.call(CERTIFICATION_LABELS, category)) { setView('bkd', updateHash); return; }
+    const changedCategory = activeCertification !== category;
+    activeCertification = category;
+    const label = CERTIFICATION_LABELS[category];
+    $('#bkdCertificationHeading').textContent = `Dosen ${label.toLocaleLowerCase('id-ID')}`;
+    $('#bkdCertificationTitle').textContent = `Daftar dosen: ${label.toLocaleLowerCase('id-ID')}`;
+    $('#bkdCertificationDescription').textContent = category === 'belum-terdata'
+      ? 'Daftar dosen yang belum memiliki data sertifikasi pada sumber BKD.'
+      : 'Daftar dosen berdasarkan status sertifikasi pada 8 program studi pilihan.';
+    if (changedCategory) {
+      $('#bkdCertificationSearch').value = '';
+      $('#bkdCertificationProgramFilter').value = '';
+      $('#bkdCertificationConclusionFilter').value = '';
+      pages.bkdCertification = 1;
+    }
+    renderBkdCertificationTable();
+    setView('bkd-sertifikasi', updateHash);
   }
 
   function openJadProgress(no, updateHash = true) {
@@ -154,6 +180,16 @@
 
   function routeFromHash() {
     const route = window.location.hash.slice(1) || 'home';
+    const certificationMatch = route.match(/^bkd-sertifikasi\/(sudah|belum|belum-terdata)$/);
+    if (certificationMatch) {
+      if (data) openBkdCertification(certificationMatch[1], false);
+      else setView('bkd-sertifikasi', false);
+      return;
+    }
+    if (route === 'bkd-sertifikasi' || route.startsWith('bkd-sertifikasi/')) {
+      setView('bkd', false);
+      return;
+    }
     const jadProgressMatch = route.match(/^jad-progress\/(\d+)$/);
     if (jadProgressMatch) {
       if (data) openJadProgress(jadProgressMatch[1], false);
@@ -242,7 +278,7 @@
       $('#dialogContent').innerHTML =
         detailSection('Identitas dan status', [
           ['No.', record.no], ['Program studi', record.program], ['Status dosen', record.status],
-          ['Jabatan fungsional', record.position], ['BKD semester', record.semesterBkd],
+          ['Jabatan fungsional', record.position], ['Sertifikasi dosen', shortText(record.certification, 'Data sertifikasi belum tersedia')], ['BKD semester', record.semesterBkd],
           ['Kewajiban dosen', record.obligation], ['Kesimpulan', record.conclusion === 'M' ? 'Memenuhi (M)' : record.conclusion === 'TM' ? 'Tidak memenuhi (TM)' : record.conclusion],
         ]) + detailSection('Rincian kinerja', [
           ...activityLabels.map((label, index) => [label, fmt((record.activity || [])[index])]),
@@ -334,6 +370,52 @@
   function initBkd() {
     const records = data.bkd || [];
     bkdPrograms = data.focusPrograms || data.meta.bkdProgramNames || [];
+    if ($('#bkdCertificationView')) {
+      const certificationRecords = records.filter((row) => bkdPrograms.includes(row.program));
+      $('#bkdCertified').textContent = fmt(certificationRecords.filter((row) => row.certification === CERTIFICATION_LABELS.sudah).length, 0);
+      $('#bkdUncertified').textContent = fmt(certificationRecords.filter((row) => row.certification === CERTIFICATION_LABELS.belum).length, 0);
+      $('#bkdCertificationUnknown').textContent = fmt(certificationRecords.filter((row) => row.certification === CERTIFICATION_LABELS['belum-terdata']).length, 0);
+      document.querySelectorAll('[data-bkd-certification]').forEach((button) => button.addEventListener('click', () => openBkdCertification(button.dataset.bkdCertification)));
+      optionsFor($('#bkdCertificationProgramFilter'), bkdPrograms, 'Semua program studi');
+      renderBkdCertificationTable = () => {
+        const label = CERTIFICATION_LABELS[activeCertification];
+        const categoryRecords = certificationRecords.filter((row) => label && row.certification === label);
+        $('#bkdCertificationTotal').textContent = fmt(categoryRecords.length, 0);
+        $('#bkdCertificationMet').textContent = fmt(categoryRecords.filter((row) => row.conclusion === 'M').length, 0);
+        $('#bkdCertificationUnmet').textContent = fmt(categoryRecords.filter((row) => row.conclusion === 'TM').length, 0);
+        const query = normalized($('#bkdCertificationSearch').value);
+        const program = $('#bkdCertificationProgramFilter').value;
+        const conclusion = $('#bkdCertificationConclusionFilter').value;
+        const filtered = categoryRecords.filter((row) =>
+          (!query || normalized([row.name, row.program, row.position, row.status, row.obligation].join(' ')).includes(query)) &&
+          (!program || row.program === program) && (!conclusion || row.conclusion === conclusion));
+        const pagesTotal = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+        pages.bkdCertification = Math.min(pages.bkdCertification, pagesTotal);
+        const start = (pages.bkdCertification - 1) * PAGE_SIZE;
+        $('#bkdCertificationResultCount').textContent = `${fmt(filtered.length, 0)} dosen`;
+        $('#bkdCertificationPageLabel').textContent = `Baris ${filtered.length ? start + 1 : 0}–${Math.min(start + PAGE_SIZE, filtered.length)} dari ${fmt(filtered.length, 0)}`;
+        $('#bkdCertificationPrev').disabled = pages.bkdCertification <= 1;
+        $('#bkdCertificationNext').disabled = pages.bkdCertification >= pagesTotal;
+        const shown = filtered.slice(start, start + PAGE_SIZE);
+        $('#bkdCertificationTableBody').innerHTML = shown.length ? shown.map((row) => `<tr class="clickable-row" data-bkd-certification-detail="${esc(row.no)}">
+          <td class="name-cell">${esc(row.name)}</td>
+          <td>${esc(shortText(row.program))}</td>
+          <td>${esc(shortText(row.position))}</td>
+          <td>${badge(row.conclusion, row.conclusion === 'M' ? 'Memenuhi' : row.conclusion === 'TM' ? 'Tidak memenuhi' : shortText(row.conclusion))}</td>
+          <td class="numeric">${fmt(row.totalPerformance)}</td>
+          <td><button type="button" class="row-action" aria-label="Lihat detail ${esc(row.name)}">›</button></td>
+        </tr>`).join('') : '<tr><td colspan="6" class="empty-row">Tidak ada data yang cocok dengan filter.</td></tr>';
+        $('#bkdCertificationTableBody').querySelectorAll('[data-bkd-certification-detail]').forEach((rowElement) => rowElement.addEventListener('click', () => {
+          const record = filtered.find((row) => String(row.no) === rowElement.dataset.bkdCertificationDetail);
+          if (record) showDetails('bkd', record);
+        }));
+      };
+      $('#bkdCertificationSearch').addEventListener('input', () => { pages.bkdCertification = 1; renderBkdCertificationTable(); });
+      ['bkdCertificationProgramFilter', 'bkdCertificationConclusionFilter'].forEach((id) => $(`#${id}`).addEventListener('change', () => { pages.bkdCertification = 1; renderBkdCertificationTable(); }));
+      $('#bkdCertificationPrev').addEventListener('click', () => { pages.bkdCertification -= 1; renderBkdCertificationTable(); });
+      $('#bkdCertificationNext').addEventListener('click', () => { pages.bkdCertification += 1; renderBkdCertificationTable(); });
+      renderBkdCertificationTable();
+    }
     const met = records.filter((row) => row.conclusion === 'M').length;
     const unmet = records.filter((row) => row.conclusion === 'TM').length;
     const complianceRate = records.length ? met / records.length * 100 : 0;
@@ -488,4 +570,5 @@
 
   document.addEventListener('DOMContentLoaded', init);
 })();
+
 
