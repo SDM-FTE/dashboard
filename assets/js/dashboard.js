@@ -65,6 +65,7 @@
   let activeBkdConclusion = '';
   let renderBkdProgramChart = () => {};
   let activeCertification = null;
+  let activeCertificationConclusion = '';
   const CERTIFICATION_LABELS = { sudah: 'Sudah tersertifikasi', belum: 'Belum tersertifikasi', 'belum-terdata': 'Belum terdata' };
   let bkdPrograms = [];
   let renderBkdProgramTable = () => {};
@@ -126,7 +127,7 @@
     if (changedCategory) {
       $('#bkdCertificationSearch').value = '';
       $('#bkdCertificationProgramFilter').value = '';
-      $('#bkdCertificationConclusionFilter').value = '';
+      activeCertificationConclusion = '';
       pages.bkdCertification = 1;
     }
     renderBkdCertificationTable();
@@ -383,25 +384,28 @@
     bkdPrograms = data.focusPrograms || data.meta.bkdProgramNames || [];
     if ($('#bkdCertificationView')) {
       const certificationRecords = records.filter((row) => bkdPrograms.includes(row.program));
-      $('#bkdCertified').textContent = fmt(certificationRecords.filter((row) => row.certification === CERTIFICATION_LABELS.sudah).length, 0);
-      $('#bkdUncertified').textContent = fmt(certificationRecords.filter((row) => row.certification === CERTIFICATION_LABELS.belum).length, 0);
-      $('#bkdCertificationUnknown').textContent = fmt(certificationRecords.filter((row) => row.certification === CERTIFICATION_LABELS['belum-terdata']).length, 0);
+      const certificationCategory = (row) => row.certification === CERTIFICATION_LABELS.sudah ? 'sudah' : row.certification === CERTIFICATION_LABELS.belum ? 'belum' : 'belum-terdata';
+      $('#bkdCertified').textContent = fmt(certificationRecords.filter((row) => certificationCategory(row) === 'sudah').length, 0);
+      $('#bkdUncertified').textContent = fmt(certificationRecords.filter((row) => certificationCategory(row) === 'belum').length, 0);
+      $('#bkdCertificationUnknown').textContent = fmt(certificationRecords.filter((row) => certificationCategory(row) === 'belum-terdata').length, 0);
       const unknownButton = document.querySelector('[data-bkd-certification="belum-terdata"]');
-      if (unknownButton) unknownButton.hidden = !certificationRecords.some((row) => row.certification === CERTIFICATION_LABELS['belum-terdata']);
+      if (unknownButton) unknownButton.hidden = !certificationRecords.some((row) => certificationCategory(row) === 'belum-terdata');
       document.querySelectorAll('[data-bkd-certification]').forEach((button) => button.addEventListener('click', () => openBkdCertification(button.dataset.bkdCertification)));
       optionsFor($('#bkdCertificationProgramFilter'), bkdPrograms, 'Semua program studi');
       renderBkdCertificationTable = () => {
-        const label = CERTIFICATION_LABELS[activeCertification];
-        const categoryRecords = certificationRecords.filter((row) => label && row.certification === label);
-        $('#bkdCertificationTotal').textContent = fmt(categoryRecords.length, 0);
-        $('#bkdCertificationMet').textContent = fmt(categoryRecords.filter((row) => row.conclusion === 'M').length, 0);
-        $('#bkdCertificationUnmet').textContent = fmt(categoryRecords.filter((row) => row.conclusion === 'TM').length, 0);
         const query = normalized($('#bkdCertificationSearch').value);
         const program = $('#bkdCertificationProgramFilter').value;
-        const conclusion = $('#bkdCertificationConclusionFilter').value;
-        const filtered = categoryRecords.filter((row) =>
+        const categoryRecords = certificationRecords.filter((row) => certificationCategory(row) === activeCertification);
+        const eligible = categoryRecords.filter((row) =>
           (!query || normalized([row.name, row.program, row.position, row.status, row.obligation].join(' ')).includes(query)) &&
-          (!program || row.program === program) && (!conclusion || row.conclusion === conclusion));
+          (!program || row.program === program));
+        $('#bkdCertificationTotal').textContent = fmt(eligible.length, 0);
+        ['M', 'TM'].forEach((conclusion) => {
+          const counter = $(conclusion === 'M' ? '#bkdCertificationMet' : '#bkdCertificationUnmet');
+          (counter.querySelector('.kpi-value') || counter).textContent = fmt(eligible.filter((row) => row.conclusion === conclusion).length, 0);
+        });
+        document.querySelectorAll('[data-bkd-certification-conclusion]').forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.bkdCertificationConclusion === activeCertificationConclusion)));
+        const filtered = eligible.filter((row) => !activeCertificationConclusion || row.conclusion === activeCertificationConclusion);
         const pagesTotal = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
         pages.bkdCertification = Math.min(pages.bkdCertification, pagesTotal);
         const start = (pages.bkdCertification - 1) * PAGE_SIZE;
@@ -424,7 +428,14 @@
         }));
       };
       $('#bkdCertificationSearch').addEventListener('input', () => { pages.bkdCertification = 1; renderBkdCertificationTable(); });
-      ['bkdCertificationProgramFilter', 'bkdCertificationConclusionFilter'].forEach((id) => $(`#${id}`).addEventListener('change', () => { pages.bkdCertification = 1; renderBkdCertificationTable(); }));
+      $('#bkdCertificationProgramFilter').addEventListener('change', () => { pages.bkdCertification = 1; renderBkdCertificationTable(); });
+      document.querySelectorAll('[data-bkd-certification-conclusion]').forEach((button) => button.addEventListener('click', () => {
+        const conclusion = button.dataset.bkdCertificationConclusion;
+        if (conclusion !== 'M' && conclusion !== 'TM') return;
+        activeCertificationConclusion = activeCertificationConclusion === conclusion ? '' : conclusion;
+        pages.bkdCertification = 1;
+        renderBkdCertificationTable();
+      }));
       $('#bkdCertificationPrev').addEventListener('click', () => { pages.bkdCertification -= 1; renderBkdCertificationTable(); });
       $('#bkdCertificationNext').addEventListener('click', () => { pages.bkdCertification += 1; renderBkdCertificationTable(); });
       renderBkdCertificationTable();
@@ -432,32 +443,30 @@
     const met = records.filter((row) => row.conclusion === 'M').length;
     const unmet = records.filter((row) => row.conclusion === 'TM').length;
     const complianceRate = records.length ? met / records.length * 100 : 0;
-    $('#bkdTotal').textContent = fmt(records.length, 0);
-    $('#bkdMet').textContent = fmt(met, 0);
-    $('#bkdMetFoot').textContent = `${fmt(complianceRate, 1)}% dari data yang dipilih`;
-    $('#bkdUnmet').textContent = fmt(unmet, 0);
-    $('#bkdUnmetFoot').textContent = `${fmt(records.length ? unmet / records.length * 100 : 0, 1)}% dari data yang dipilih`;
-    $('#bkdPrograms').textContent = fmt(bkdPrograms.length, 0);
+    const overview = { bkdTotal: fmt(records.length, 0), bkdMet: fmt(met, 0), bkdMetFoot: `${fmt(complianceRate, 1)}% dari data yang dipilih`, bkdUnmet: fmt(unmet, 0), bkdUnmetFoot: `${fmt(records.length ? unmet / records.length * 100 : 0, 1)}% dari data yang dipilih`, bkdPrograms: fmt(bkdPrograms.length, 0) };
+    Object.entries(overview).forEach(([id, value]) => { const element = $(`#${id}`); if (element) element.textContent = value; });
 
     const byProgram = bkdPrograms.map((program, index) => {
       const group = records.filter((row) => row.program === program);
       return { program, index, total: group.length, met: group.filter((row) => row.conclusion === 'M').length, unmet: group.filter((row) => row.conclusion === 'TM').length };
     });
     renderBkdProgramChart = () => {
+      const chart = $('#bkdProgramChart');
+      if (!chart) return;
       const mode = activeBkdConclusion || 'all';
       const statusLabel = mode === 'M' ? 'Memenuhi' : mode === 'TM' ? 'Tidak memenuhi' : 'Semua dosen';
       document.querySelectorAll('[data-bkd-quick-filter]').forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.bkdQuickFilter === mode)));
       if ($('#bkdProgramChartDescription')) $('#bkdProgramChartDescription').textContent = `${statusLabel}. Klik prodi untuk membuka daftar dosen sesuai pilihan ini.`;
       if ($('#bkdProgramChartCaption')) $('#bkdProgramChartCaption').textContent = `${fmt(byProgram.reduce((sum, group) => sum + (mode === 'M' ? group.met : mode === 'TM' ? group.unmet : group.total), 0), 0)} DOSEN · ${bkdPrograms.length} PRODI`;
       if ($('#bkdProgramLegend')) $('#bkdProgramLegend').innerHTML = `${mode !== 'TM' ? '<span><i class="legend-dot met"></i> Memenuhi</span>' : ''}${mode !== 'M' ? '<span><i class="legend-dot unmet"></i> Tidak memenuhi</span>' : ''}`;
-      $('#bkdProgramChart').setAttribute('aria-label', `Rekap BKD per prodi: ${statusLabel.toLocaleLowerCase('id-ID')}`);
-      $('#bkdProgramChart').innerHTML = byProgram.map((group) => {
+      chart.setAttribute('aria-label', `Rekap BKD per prodi: ${statusLabel.toLocaleLowerCase('id-ID')}`);
+      chart.innerHTML = byProgram.map((group) => {
         const count = mode === 'M' ? group.met : mode === 'TM' ? group.unmet : group.total;
         const goodWidth = mode !== 'TM' && group.total ? group.met / group.total * 100 : 0;
         const badWidth = mode !== 'M' && group.total ? group.unmet / group.total * 100 : 0;
         return `<button type="button" class="program-row program-open-button" data-open-program="${group.index}" aria-label="Buka daftar ${esc(group.program)}, ${fmt(count, 0)} dosen${mode === 'all' ? '' : ` ${statusLabel.toLocaleLowerCase('id-ID')}`}"><span class="program-name">${esc(group.program)}</span><span class="stack-track" aria-hidden="true"><span class="stack-met" style="width:${goodWidth}%"></span><span class="stack-unmet" style="width:${badWidth}%"></span></span><span class="program-numbers">${fmt(count, 0)} dosen</span></button>`;
       }).join('');
-      $('#bkdProgramChart').querySelectorAll('[data-open-program]').forEach((button) => button.addEventListener('click', () => openBkdProgram(button.dataset.openProgram)));
+      chart.querySelectorAll('[data-open-program]').forEach((button) => button.addEventListener('click', () => openBkdProgram(button.dataset.openProgram)));
     };
     document.querySelectorAll('[data-bkd-quick-filter]').forEach((button) => button.addEventListener('click', () => {
       const mode = button.dataset.bkdQuickFilter;
