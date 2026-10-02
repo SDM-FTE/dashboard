@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Akses pengelolaan dashboard JAD, BKD, dan FTE melalui akun GitHub admin.">
+  <meta name="description" content="Akses pengelolaan dashboard untuk akun admin yang terverifikasi.">
   <meta name="color-scheme" content="light">
   <title>Masuk Admin · Monitoring Dosen</title>
   <style>
@@ -113,22 +113,35 @@
       .login-card { padding: 23px 19px; }
     }
     @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
-  </style>
+  
+    button,input { font:inherit; }
+    button { cursor:pointer; }
+    button:focus-visible { outline:3px solid #0f9e9180;outline-offset:4px; }
+    .status-message { margin:0 0 18px;padding:12px 14px;border:1px solid #d8e9e6;border-radius:8px;background:#f1faf7;color:#456e68;font-size:12px;line-height:1.65;overflow-wrap:anywhere; }
+    .status-message:empty { display:none; }
+    .verified-label { display:inline-flex;align-items:center;gap:6px;padding:6px 9px;border-radius:20px;background:#e2f5f1;color:#147e72;font-size:9px;font-weight:750;letter-spacing:.04em; }
+    .verified-label svg { width:13px;height:13px; }
+    .admin-account { display:block;margin:0 0 18px;color:#568079;font-size:12px;overflow-wrap:anywhere; }
+    .admin-menu { padding-top:0;border-top:0; }
+    .logout-form { margin:23px 0 0; padding-top:19px;border-top:1px solid #e8eef0;text-align:center; }
+    .logout-button { min-height:36px;padding:8px 19px;border:1px solid #d8e4e6;border-radius:7px;background:#fff;color:#627e87;font-size:12px;font-weight:600; }
+    .logout-button:hover { color:#087a70;border-color:#9dcfc5;background:#f4fbf8; }
+    .login-note { margin-bottom:5px; }
+</style>
 </head>
 <body>
   <header class="topbar">
-    <a class="brand" href="../#top" aria-label="Beranda Monitoring Dosen">
+    <a class="brand" href="/#top" aria-label="Beranda Monitoring Dosen">
       <span class="brand-mark" aria-hidden="true">J</span>
       <span><strong>MONITORING DOSEN</strong><small>JAD, BKD &amp; FTE</small></span>
     </a>
-    <a class="back-link" href="../#top">
+    <a class="back-link" href="/#top">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m14 6-6 6 6 6M8 12h12"/></svg>
       Lihat dashboard
     </a>
   </header>
-  <main>
-    <div class="entry-layout">
-      <section class="intro" aria-labelledby="page-title">
+  <main><div class="entry-layout">
+    <section class="intro" aria-labelledby="page-title">
         <p class="eyebrow">PENGELOLAAN DASHBOARD</p>
         <h1 id="page-title">Kelola dashboard,<br><span>dengan akses admin.</span></h1>
         <p class="intro-copy">Perbarui progres usulan dan data dosen agar informasi JAD, BKD, dan FTE tetap sesuai.</p>
@@ -141,40 +154,15 @@
           <div><h2>Data BKD dan FTE</h2><p>Hasil beban kerja dan data dosen.</p></div>
         </div>
       </section>
-      <section class="login-card" aria-labelledby="login-title">
-        <div class="card-topline">
-          <span class="access-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3"/></svg></span>
-          <span class="admin-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6l-8-3Z"/></svg>KHUSUS ADMIN</span>
-        </div>
-        <h2 id="login-title">Masuk ke pengelolaan</h2>
-        <p class="login-copy">Gunakan akun GitHub yang memiliki akses pengelolaan dashboard.</p>
-        <a class="github-button" href="https://github.com/SDM-FTE/dashboard/edit/main/assets/data/jad-progress.json">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .8a11.2 11.2 0 0 0-3.54 21.82c.56.1.77-.24.77-.54v-2.08c-3.13.68-3.79-1.33-3.79-1.33-.51-1.3-1.25-1.65-1.25-1.65-1.02-.7.08-.69.08-.69 1.13.08 1.72 1.16 1.72 1.16 1 .1 1.73-.24 2.15-.62.1-.73.39-1.23.71-1.51-2.5-.28-5.13-1.25-5.13-5.57 0-1.23.44-2.23 1.16-3.02-.12-.29-.5-1.43.11-2.98 0 0 .95-.3 3.08 1.15a10.67 10.67 0 0 1 5.6 0c2.13-1.45 3.08-1.15 3.08-1.15.61 1.55.23 2.69.11 2.98.72.79 1.16 1.79 1.16 3.02 0 4.33-2.64 5.29-5.15 5.57.4.35.76 1.04.76 2.09v3.18c0 .3.2.65.78.54A11.2 11.2 0 0 0 12 .8Z"/></svg>
-          Masuk dengan GitHub
-        </a>
-        <p class="login-note">Anda akan melanjutkan di GitHub untuk masuk dan menyimpan perubahan.</p>
-        <div class="manage-section">
-        <h3>Pilih pembaruan</h3>
-          <p>Pilih data yang ingin diperbarui. Hak edit mengikuti akses akun Anda di GitHub.</p>
-          <div class="manage-links">
-            <a class="manage-link" href="./bkd.html">
-              <span><strong>Perbarui BKD</strong><small>Unggah Excel SISTER dan periksa hasilnya</small></span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5"/></svg>
-            </a>
-            <a class="manage-link" href="https://github.com/SDM-FTE/dashboard/edit/main/assets/data/jad-progress.json">
-              <span><strong>Perbarui progres JAD</strong><small>Tahap ajuan dan status dokumen</small></span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg>
-            </a>
-            <a class="manage-link" href="https://github.com/SDM-FTE/dashboard/edit/main/assets/data/dashboard-data.json">
-              <span><strong>Perbarui data BKD dan FTE</strong><small>Hasil BKD dan data dosen</small></span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg>
-            </a>
-          </div>
-          <a class="repo-link" href="https://github.com/SDM-FTE/dashboard">Buka pengelolaan di GitHub<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></a>
-        </div>
-      </section>
-    </div>
-  </main>
+    <section class="login-card" aria-labelledby="login-title">
+      <div class="card-topline"><span class="access-symbol"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3"/></svg></span><span class="admin-label">KHUSUS ADMIN</span></div>
+      <h2 id="login-title">Masuk ke pengelolaan</h2>
+      <p class="login-copy">Gunakan akun GitHub yang memiliki akses pengelolaan dashboard.</p>
+      <p class="status-message" id="adminStatus" role="status" aria-live="polite"></p>
+      <a class="github-button" href="/api/admin/login"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .8a11.2 11.2 0 0 0-3.54 21.82c.56.1.77-.24.77-.54v-2.08c-3.13.68-3.79-1.33-3.79-1.33-.51-1.3-1.25-1.65-1.25-1.65-1.02-.7.08-.69.08-.69 1.13.08 1.72 1.16 1.72 1.16 1 .1 1.73-.24 2.15-.62.1-.73.39-1.23.71-1.51-2.5-.28-5.13-1.25-5.13-5.57 0-1.23.44-2.23 1.16-3.02-.12-.29-.5-1.43.11-2.98 0 0 .95-.3 3.08 1.15a10.67 10.67 0 0 1 5.6 0c2.13-1.45 3.08-1.15 3.08-1.15.61 1.55.23 2.69.11 2.98.72.79 1.16 1.79 1.16 3.02 0 4.33-2.64 5.29-5.15 5.57.4.35.76 1.04.76 2.09v3.18c0 .3.2.65.78.54A11.2 11.2 0 0 0 12 .8Z"/></svg>Masuk dengan GitHub</a>
+      <p class="login-note">Menu pembaruan tersedia setelah akun admin diverifikasi.</p>
+    </section>
+  </div></main>
   <footer>Monitoring Dosen · JAD, BKD &amp; FTE</footer>
 </body>
 </html>

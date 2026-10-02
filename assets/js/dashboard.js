@@ -147,6 +147,7 @@
     const stage = saved.stage !== null && saved.stage !== undefined && saved.stage !== '' && Number.isInteger(rawStage) && rawStage >= 0 && rawStage < JAD_STAGES.length ? rawStage : null;
     const currentRank = record.currentRank ? `${record.currentRank}${record.rankDate ? ` · ${record.rankDate}` : ''}` : null;
     $('#jadProgressHeading').textContent = record.name;
+    $('#jadAdminEdit').href = '/admin/jad?dosen=' + encodeURIComponent(String(record.no));
     $('#jadProgressPublication').className = `badge ${badgeClass(record.publication)}`;
     $('#jadProgressPublication').textContent = shortText(record.publication, 'Status publikasi belum tersedia');
     $('#jadProgressApplicant').innerHTML = [
@@ -594,6 +595,7 @@
 
   document.addEventListener('DOMContentLoaded', init);
 })();
+
 
 
 
