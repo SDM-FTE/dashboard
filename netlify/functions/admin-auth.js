@@ -20,7 +20,8 @@ const COOKIE_OPTIONS = '; Path=/; HttpOnly; Secure; SameSite=Lax';
 const SECURITY_HEADERS = {
   'Cache-Control': 'private, no-store, max-age=0',
   'Pragma': 'no-cache',
-  'Referrer-Policy': 'no-referrer',
+  // Native same-origin logout forms must send Origin; no-referrer makes it null.
+  'Referrer-Policy': 'same-origin',
   'X-Content-Type-Options': 'nosniff',
   'X-Frame-Options': 'DENY',
   'Content-Security-Policy': "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://api.github.com; object-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'"
