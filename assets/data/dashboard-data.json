@@ -1,6 +1,6 @@
 {
   "meta": {
-    "jadSource": "WORKSHOP JAD SEPTEMBER 2026_FINAL_SUM_REKAP(1).xlsx",
+    "jadSource": "SharePoint workbook (PAK / sum)",
     "bkdSource": "SISTER Bkd_frontend.csv",
     "jadRows": 26,
     "bkdRows": 210,
@@ -17,7 +17,8 @@
       "Teknik Biomedis (S1)"
     ],
     "privacyNote": "Static dashboard data is readable by anyone who can access the published site or repository.",
-    "fteRows": 225
+    "fteRows": 225,
+    "jadUpdatedAt": "2026-10-02T07:21:55+00:00"
   },
   "focusPrograms": [
     "Teknik Telekomunikasi (S1)",
@@ -75,7 +76,7 @@
       "rankDate": "1 Juli 2017",
       "oldAk": 150,
       "proposedRank": "Lektor\n200",
-      "scienceCluster": null,
+      "scienceCluster": "Smart Algorithm",
       "akEducation": 50,
       "akTeaching": 11,
       "akResearch": 16,
@@ -147,7 +148,7 @@
       "rankDate": null,
       "oldAk": 150,
       "proposedRank": "Lektor\n300",
-      "scienceCluster": null,
+      "scienceCluster": "Sensor-Based Navigation System",
       "akEducation": 0,
       "akTeaching": 16.5,
       "akResearch": 30.5333,
@@ -228,7 +229,7 @@
       "skpByYear": [
         0,
         3.13,
-        40,
+        40.0,
         19.060000000000002
       ],
       "akPenyetaraan": 0,
@@ -480,7 +481,7 @@
       "skpByYear": [
         0,
         3.13,
-        40,
+        40.0,
         29.997500000000002
       ],
       "akPenyetaraan": 150,
@@ -876,7 +877,7 @@
       "skpByYear": [
         0,
         12.809999999999999,
-        40,
+        40.0,
         29.997500000000002
       ],
       "akPenyetaraan": 150,
@@ -10302,4 +10303,3 @@
     }
   ]
 }
-
