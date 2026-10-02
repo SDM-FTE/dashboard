@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Dashboard monitoring JAD, BKD, dan data FTE dosen.">
-  <title>Monitoring JAD & BKD</title>
-  <link rel="stylesheet" href="assets/css/styles.css?v=20261002-bkd-ringkas">
-  <script src="assets/js/dashboard.js?v=20261002-bkd-ringkas" defer></script>
+  <title>Portal Informasi Dosen · SDM FTE</title>
+  <link rel="stylesheet" href="assets/css/styles.css?v=20261002-beranda-dosen">
+  <script src="assets/js/dashboard.js?v=20261002-beranda-dosen" defer></script>
   <style>
     .topbar-meta { display: flex; gap: 20px; }
     .public-status { display: inline-flex; align-items: center; gap: 9px; }
@@ -23,30 +23,52 @@
       <span class="brand-mark">J</span>
       <span><strong>MONITORING DOSEN</strong><small>JAD, BKD &amp; FTE</small></span>
     </a>
-    <div class="topbar-meta"><span class="public-status"><span class="live-dot"></span><span>Ringkasan data</span></span><a class="admin-entry" href="admin/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>Admin</a></div>
+    <div class="topbar-meta"><span class="public-status"><span class="live-dot"></span><span>Akses tanpa login</span></span><a class="admin-entry" href="admin/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>Admin</a></div>
   </header>
 
   <main id="top" class="shell">
     <section id="homeView" class="view-panel active home-panel" aria-labelledby="homeHeading">
-      <div class="home-pages-heading"><div><p class="eyebrow">PILIH HALAMAN</p><h3 id="homeHeading">Jelajahi dashboard</h3></div></div>
+      <div class="home-welcome">
+        <p class="home-greeting">Selamat datang, Bapak/Ibu Dosen</p>
+        <h1 id="homeHeading">Informasi Anda, lebih mudah ditemukan.</h1>
+        <p class="home-intro">Cek progres jabatan akademik, hasil beban kerja, dan data kepegawaian Anda di sini.</p>
+      </div>
+
+      <div class="home-search-card">
+        <form id="homeSearchForm" role="search" aria-label="Cari data dosen di dashboard">
+          <label class="home-search-label" for="homeSearch">Cari nama Anda</label>
+          <div class="home-search-controls">
+            <div class="home-search-input-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4 4"/></svg>
+              <input id="homeSearch" type="search" placeholder="Ketik nama Anda…" autocomplete="off" aria-describedby="homeSearchStatus" aria-controls="homeSearchResults">
+              <button id="homeSearchClear" class="home-search-clear" type="button" aria-label="Hapus pencarian nama" hidden>×</button>
+            </div>
+            <button class="home-search-submit" type="submit">Cari nama <span aria-hidden="true">→</span></button>
+          </div>
+          <p id="homeSearchStatus" class="home-search-status" role="status" aria-live="polite">Memuat data dosen…</p>
+        </form>
+        <div id="homeSearchResults" class="home-search-results" hidden></div>
+      </div>
+
+      <div class="home-pages-heading"><h2>Pilih informasi yang ingin dilihat</h2><p>Anda juga bisa membuka daftar lengkap melalui pilihan berikut.</p></div>
       <div class="home-page-grid">
         <article class="home-page-card jad-home-card">
-          <span class="home-page-number">01 / JAD</span>
-          <h3>Detail Usulan JAD</h3>
-          <p>Lihat daftar usulan dosen, filter publikasi dan usulan JFA, lalu buka rincian angka kredit serta SKP per tahun.</p>
-          <button type="button" class="home-link-button" data-view="jad">Buka Detail Usulan JAD <span aria-hidden="true">→</span></button>
+          <span class="home-page-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M9 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-3"/><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M8 11h8M8 15h5M8 19h3"/></svg></span>
+          <h3>Cek progres JAD</h3>
+          <p>Lihat tahap pengajuan jabatan akademik dan kelengkapan syarat penelitian Anda.</p>
+          <button type="button" class="home-link-button" data-view="jad-detail">Lihat pengajuan JAD <span aria-hidden="true">→</span></button>
         </article>
         <article class="home-page-card bkd-home-card">
-          <span class="home-page-number">02 / BKD</span>
-          <h3>Rekap BKD</h3>
-          <p>Lihat hasil BKD berdasarkan sertifikasi dosen, lalu pilih memenuhi atau tidak memenuhi pada kelompok tersebut.</p>
-          <button type="button" class="home-link-button" data-view="bkd">Buka Rekap BKD <span aria-hidden="true">→</span></button>
+          <span class="home-page-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="m8 11 3 3 5-5M8 17h8"/></svg></span>
+          <h3>Lihat hasil BKD</h3>
+          <p>Cek hasil beban kerja dosen: memenuhi atau tidak memenuhi, sesuai kelompok sertifikasi.</p>
+          <button type="button" class="home-link-button" data-view="bkd">Lihat hasil BKD <span aria-hidden="true">→</span></button>
         </article>
         <article class="home-page-card fte-home-card">
-          <span class="home-page-number">03 / FTE</span>
-          <h3>Data FTE 2026</h3>
-          <p>Cari data dosen, jabatan fungsional, prodi, dan masa kerja yang dihitung mengikuti tanggal hari ini.</p>
-          <button type="button" class="home-link-button" data-view="fte">Buka Data FTE <span aria-hidden="true">→</span></button>
+          <span class="home-page-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="7" r="4"/><path d="M4 21v-3a8 8 0 0 1 16 0v3"/></svg></span>
+          <h3>Cari data saya</h3>
+          <p>Lihat jabatan fungsional, program studi, dan masa kerja Anda pada data FTE 2026.</p>
+          <button type="button" class="home-link-button" data-view="fte">Lihat data dosen <span aria-hidden="true">→</span></button>
         </article>
       </div>
     </section>
