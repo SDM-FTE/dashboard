@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Dashboard monitoring JAD, BKD, dan data FTE dosen.">
   <title>Monitoring JAD & BKD</title>
-  <link rel="stylesheet" href="assets/css/styles.css?v=20261001-sertifikasi">
-  <script src="assets/js/dashboard.js?v=20261002-admin-jad" defer></script>
+  <link rel="stylesheet" href="assets/css/styles.css?v=20261002-bkd-ringkas">
+  <script src="assets/js/dashboard.js?v=20261002-bkd-ringkas" defer></script>
   <style>
     .topbar-meta { display: flex; gap: 20px; }
     .public-status { display: inline-flex; align-items: center; gap: 9px; }
@@ -39,7 +39,7 @@
         <article class="home-page-card bkd-home-card">
           <span class="home-page-number">02 / BKD</span>
           <h3>Rekap BKD</h3>
-          <p>Lihat hasil BKD per prodi, buka daftar dosen tiap kelompok, atau cari data lintas 8 program studi pilihan.</p>
+          <p>Lihat hasil BKD berdasarkan sertifikasi dosen, lalu pilih memenuhi atau tidak memenuhi pada kelompok tersebut.</p>
           <button type="button" class="home-link-button" data-view="bkd">Buka Rekap BKD <span aria-hidden="true">→</span></button>
         </article>
         <article class="home-page-card fte-home-card">
@@ -111,21 +111,8 @@
         <div><p class="eyebrow">BEBAN KERJA DOSEN</p><h2 id="bkdHeading">Rekap BKD</h2></div>
         <div class="section-tools"><p class="section-note">Rekap dosen pada 8 program studi pilihan.</p><button class="page-back" type="button" data-view="home">← Kembali ke Beranda</button></div>
       </div>
-      <div class="kpi-grid">
-        <button class="kpi-card kpi-button" type="button" data-bkd-quick-filter="all" aria-pressed="true" aria-label="Tampilkan seluruh dosen BKD per prodi"><span class="kpi-label">Total dosen</span><strong id="bkdTotal" class="kpi-value">—</strong><span class="kpi-foot">klik untuk detail per prodi</span></button>
-        <button class="kpi-card accent-teal kpi-button" type="button" data-bkd-quick-filter="M" aria-pressed="false" aria-label="Tampilkan prodi yang dosennya memenuhi BKD"><span class="kpi-label">Memenuhi</span><strong id="bkdMet" class="kpi-value">—</strong><span id="bkdMetFoot" class="kpi-foot">klik untuk sorot prodi</span></button>
-        <button class="kpi-card accent-rose kpi-button" type="button" data-bkd-quick-filter="TM" aria-pressed="false" aria-label="Tampilkan prodi yang dosennya tidak memenuhi BKD"><span class="kpi-label">Tidak memenuhi</span><strong id="bkdUnmet" class="kpi-value">—</strong><span id="bkdUnmetFoot" class="kpi-foot">klik untuk sorot prodi</span></button>
-        <button class="kpi-card accent-blue kpi-button" type="button" data-bkd-quick-filter="prodi" aria-pressed="false" aria-label="Buka semua kelompok program studi"><span class="kpi-label">Prodi</span><strong id="bkdPrograms" class="kpi-value">—</strong><span class="kpi-foot">klik untuk membuka kelompok</span></button>
-      </div>
-
       <div class="content-card chart-card">
-        <div class="card-heading"><div><h3>Rekap per prodi</h3><p id="bkdProgramChartDescription" aria-live="polite">Semua dosen. Klik prodi untuk membuka daftar dosen sesuai pilihan ini.</p></div><span id="bkdProgramChartCaption" class="chart-caption">8 PRODI</span></div>
-        <div id="bkdProgramLegend" class="legend"><span><i class="legend-dot met"></i> Memenuhi</span><span><i class="legend-dot unmet"></i> Tidak memenuhi</span></div>
-        <div id="bkdProgramChart" class="program-chart" aria-label="Rekap BKD per prodi"></div>
-      </div>
-
-      <div class="content-card chart-card">
-        <div class="card-heading"><div><h3>Sertifikasi dosen</h3><p>Pilih kelompok untuk melihat daftar dosen dan hasil BKD.</p></div></div>
+        <div class="card-heading"><div><h3>Sertifikasi dosen</h3><p>Pilih kelompok untuk melihat hasil BKD dan daftar dosennya.</p></div></div>
         <div class="kpi-grid certification-kpis">
           <button class="kpi-card accent-teal kpi-button" type="button" data-bkd-certification="sudah" aria-label="Buka daftar dosen sudah tersertifikasi"><span class="kpi-label">Sudah tersertifikasi</span><strong id="bkdCertified" class="kpi-value">—</strong><span class="kpi-foot">lihat daftar dosen →</span></button>
           <button class="kpi-card accent-amber kpi-button" type="button" data-bkd-certification="belum" aria-label="Buka daftar dosen belum tersertifikasi"><span class="kpi-label">Belum tersertifikasi</span><strong id="bkdUncertified" class="kpi-value">—</strong><span class="kpi-foot">lihat daftar dosen →</span></button>
@@ -141,16 +128,14 @@
         <button class="page-back" type="button" data-view="bkd">← Kembali ke Rekap BKD</button>
       </div>
       <div class="kpi-grid certification-page-kpis">
-        <div class="kpi-card"><span class="kpi-label">Total dosen</span><strong id="bkdCertificationTotal" class="kpi-value">—</strong><span class="kpi-foot">dalam kelompok sertifikasi ini</span></div>
-        <div class="kpi-card accent-teal"><span class="kpi-label">BKD Memenuhi</span><strong id="bkdCertificationMet" class="kpi-value">—</strong><span class="kpi-foot">kesimpulan M</span></div>
-        <div class="kpi-card accent-rose"><span class="kpi-label">BKD Tidak memenuhi</span><strong id="bkdCertificationUnmet" class="kpi-value">—</strong><span class="kpi-foot">kesimpulan TM</span></div>
+        <button class="kpi-card accent-teal kpi-button" type="button" data-bkd-certification-conclusion="M" aria-pressed="false" aria-label="Tampilkan dosen memenuhi BKD dalam kelompok sertifikasi ini"><span class="kpi-label">Memenuhi</span><strong id="bkdCertificationMet" class="kpi-value">—</strong><span class="kpi-foot">klik untuk melihat daftar dosen</span></button>
+        <button class="kpi-card accent-rose kpi-button" type="button" data-bkd-certification-conclusion="TM" aria-pressed="false" aria-label="Tampilkan dosen tidak memenuhi BKD dalam kelompok sertifikasi ini"><span class="kpi-label">Tidak memenuhi</span><strong id="bkdCertificationUnmet" class="kpi-value">—</strong><span class="kpi-foot">klik untuk melihat daftar dosen</span></button>
       </div>
       <div class="content-card table-card">
-        <div class="card-heading table-heading"><div><h3 id="bkdCertificationTitle">Daftar dosen</h3><p>Pilih nama dosen untuk melihat rincian BKD.</p></div><span id="bkdCertificationResultCount" class="result-count"></span></div>
+        <div class="card-heading table-heading"><div><h3 id="bkdCertificationTitle">Daftar dosen</h3><p><span id="bkdCertificationTotal">—</span> dosen dalam kelompok ini. Pilih nama untuk melihat rincian BKD.</p></div><span id="bkdCertificationResultCount" class="result-count" aria-live="polite"></span></div>
         <div class="filters certification-filters">
           <label class="search-field"><span class="sr-only">Cari dosen berdasarkan sertifikasi</span><span class="search-icon" aria-hidden="true">⌕</span><input id="bkdCertificationSearch" type="search" placeholder="Cari nama dosen…"></label>
           <label><span class="sr-only">Filter prodi sertifikasi</span><select id="bkdCertificationProgramFilter"><option value="">Semua prodi</option></select></label>
-          <label><span class="sr-only">Filter BKD sertifikasi</span><select id="bkdCertificationConclusionFilter"><option value="">Semua kesimpulan BKD</option><option value="M">Memenuhi</option><option value="TM">Tidak memenuhi</option></select></label>
         </div>
         <div class="table-wrap"><table><thead><tr><th>Nama dosen</th><th>Program studi</th><th>Jabatan fungsional</th><th>Kesimpulan BKD</th><th class="numeric">Σ Kinerja</th><th><span class="sr-only">Detail</span></th></tr></thead><tbody id="bkdCertificationTableBody"></tbody></table></div>
         <div class="table-footer"><span id="bkdCertificationPageLabel"></span><div class="pagination"><button id="bkdCertificationPrev" type="button" class="page-button" aria-label="Halaman sertifikasi sebelumnya">‹</button><button id="bkdCertificationNext" type="button" class="page-button" aria-label="Halaman sertifikasi berikutnya">›</button></div></div>
