@@ -6,7 +6,7 @@
   <meta name="description" content="Dashboard monitoring JAD, BKD, dan data FTE dosen.">
   <title>Monitoring JAD & BKD</title>
   <link rel="stylesheet" href="assets/css/styles.css?v=20261001-sertifikasi">
-  <script src="assets/js/dashboard.js?v=20261001-filter-bkd" defer></script>
+  <script src="assets/js/dashboard.js?v=20261002-admin-jad" defer></script>
   <style>
     .topbar-meta { display: flex; gap: 20px; }
     .public-status { display: inline-flex; align-items: center; gap: 9px; }
@@ -99,9 +99,9 @@
         <ol id="jadProgressTimeline" class="progress-timeline" aria-label="Tahapan proses usulan JAD"></ol>
       </div>
       <div class="content-card chart-card jad-requirements-card">
-        <div class="card-heading"><div><h3>Syarat utama penelitian</h3><p>Status kelengkapan dokumen. Pembaruan hanya dapat disimpan oleh admin repository.</p></div><a class="admin-edit-link" href="admin/">Masuk admin →</a></div>
+        <div class="card-heading"><div><h3>Syarat utama penelitian</h3><p>Status kelengkapan dokumen. Pembaruan hanya dapat disimpan oleh admin.</p></div><a id="jadAdminEdit" class="admin-edit-link" href="/admin/jad">Ubah progres (admin) →</a></div>
         <div id="jadProgressRequirements" class="jad-checklist"></div>
-        <p class="admin-edit-note">Ceklis di halaman ini hanya untuk dilihat. Admin dengan akses tulis repository mengubah berkas progres di GitHub lalu melakukan commit.</p>
+        <p class="admin-edit-note">Status ditampilkan untuk umum. Admin memperbarui status ajuan dan kelengkapan dokumen melalui form Progres JAD.</p>
       </div>
       <div id="jadProgressSections" class="progress-accordion-list"></div>
     </section>
