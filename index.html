@@ -7,6 +7,15 @@
   <title>Monitoring JAD & BKD</title>
   <link rel="stylesheet" href="assets/css/styles.css?v=20261001-sertifikasi">
   <script src="assets/js/dashboard.js?v=20261001-filter-bkd" defer></script>
+  <style>
+    .topbar-meta { display: flex; gap: 20px; }
+    .public-status { display: inline-flex; align-items: center; gap: 9px; }
+    .admin-entry { display: inline-flex; align-items: center; gap: 7px; padding: 9px 13px; border: 1px solid #ffffff40; border-radius: 8px; color: #e8f4f5; text-decoration: none; font-size: 12px; font-weight: 600; }
+    .admin-entry:hover { border-color: #7ce0d1; background: #ffffff0a; }
+    .admin-entry:focus-visible { outline: 3px solid #7ce0d1; outline-offset: 3px; }
+    .admin-entry svg { width: 15px; height: 15px; }
+    @media (max-width: 600px) { .topbar-meta { display: flex; } .public-status { display: none; } .admin-entry { padding: 9px 10px; } }
+  </style>
 </head>
 <body>
   <header class="topbar">
@@ -14,7 +23,7 @@
       <span class="brand-mark">J</span>
       <span><strong>MONITORING DOSEN</strong><small>JAD, BKD &amp; FTE</small></span>
     </a>
-    <div class="topbar-meta"><span class="live-dot"></span><span>Ringkasan data</span></div>
+    <div class="topbar-meta"><span class="public-status"><span class="live-dot"></span><span>Ringkasan data</span></span><a class="admin-entry" href="admin/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>Admin</a></div>
   </header>
 
   <main id="top" class="shell">
@@ -90,7 +99,7 @@
         <ol id="jadProgressTimeline" class="progress-timeline" aria-label="Tahapan proses usulan JAD"></ol>
       </div>
       <div class="content-card chart-card jad-requirements-card">
-        <div class="card-heading"><div><h3>Syarat utama penelitian</h3><p>Status kelengkapan dokumen. Pembaruan hanya dapat disimpan oleh admin repository.</p></div><a class="admin-edit-link" href="https://github.com/SDM-FTE/dashboard/edit/main/assets/data/jad-progress.json" target="_blank" rel="noopener">Ubah status (admin GitHub) ↗</a></div>
+        <div class="card-heading"><div><h3>Syarat utama penelitian</h3><p>Status kelengkapan dokumen. Pembaruan hanya dapat disimpan oleh admin repository.</p></div><a class="admin-edit-link" href="admin/">Masuk admin →</a></div>
         <div id="jadProgressRequirements" class="jad-checklist"></div>
         <p class="admin-edit-note">Ceklis di halaman ini hanya untuk dilihat. Admin dengan akses tulis repository mengubah berkas progres di GitHub lalu melakukan commit.</p>
       </div>
@@ -199,5 +208,6 @@
   <div id="loadError" class="load-error" role="alert" hidden>Data dashboard tidak berhasil dimuat. Pastikan folder assets ikut diunggah bersama index.html.</div>
 </body>
 </html>
+
 
 
