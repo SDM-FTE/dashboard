@@ -70,6 +70,71 @@
   let bkdPrograms = [];
   let renderBkdProgramTable = () => {};
   let renderBkdCertificationTable = () => {};
+  let homeSearchInitialized = false;
+  let renderHomeSearch = () => {};
+
+  function initHome() {
+    const form = $('#homeSearchForm');
+    const input = $('#homeSearch');
+    const clear = $('#homeSearchClear');
+    const status = $('#homeSearchStatus');
+    const results = $('#homeSearchResults');
+    if (!form || !input || !clear || !status || !results) return;
+    if (homeSearchInitialized) { renderHomeSearch(); return; }
+    homeSearchInitialized = true;
+    const searchName = (value) => String(value ?? '').normalize('NFD').replace(/\p{M}/gu, '').toLocaleLowerCase('id-ID').replace(/[^\p{L}\p{N}]/gu, '');
+    const expanded = new Set();
+    let lastQuery = '';
+    let loadFailed = false;
+    renderHomeSearch = (failed = false) => {
+      loadFailed = loadFailed || failed;
+      clear.hidden = input.value.length === 0;
+      form.setAttribute('aria-busy', String(!data && !loadFailed));
+      if (!data) {
+        results.hidden = true;
+        results.innerHTML = '';
+        status.textContent = loadFailed ? 'Data dosen belum dapat dimuat. Muat ulang halaman untuk mencoba lagi.' : 'Memuat data dosen…';
+        return;
+      }
+      const query = searchName(input.value);
+      if (query !== lastQuery) { expanded.clear(); lastQuery = query; }
+      if (query.length < 2) {
+        results.hidden = true;
+        results.innerHTML = '';
+        status.textContent = 'Ketik minimal 2 huruf dari nama dosen.';
+        return;
+      }
+      const programs = data.focusPrograms || data.meta?.bkdProgramNames || [];
+      const groups = [
+        { key: 'jad', label: 'Pengajuan JAD', action: 'Lihat progres JAD', records: data.jad || [], context: (row) => row.proposedRank ? `Usulan ${row.proposedRank}` : 'Data pengajuan JAD', open: (row) => openJadProgress(row.no) },
+        { key: 'bkd', label: 'Hasil BKD', action: 'Lihat hasil BKD', records: (data.bkd || []).filter((row) => !programs.length || programs.includes(row.program)), context: (row) => [row.program, row.conclusion === 'M' ? 'Memenuhi' : row.conclusion === 'TM' ? 'Tidak memenuhi' : row.conclusion].filter(Boolean).join(' · '), open: (row) => showDetails('bkd', row) },
+        { key: 'fte', label: 'Data dosen', action: 'Lihat data dosen', records: (data.fte || []).filter((row) => normalized(row.employmentStatus).startsWith('dosen')), context: (row) => [row.location, row.jfa ? fteJfaLabel(row.jfa) : ''].filter(Boolean).join(' · '), open: (row) => showDetails('fte', row) },
+      ].map((group) => ({ ...group, matches: group.records.filter((row) => searchName(row.name).includes(query)) })).filter((group) => group.matches.length);
+      const total = groups.reduce((sum, group) => sum + group.matches.length, 0);
+      results.hidden = false;
+      status.textContent = total ? `${fmt(total, 0)} hasil ditemukan untuk “${input.value.trim()}” di ${groups.length} kategori.` : `Tidak ditemukan hasil untuk “${input.value.trim()}”.`;
+      results.innerHTML = total ? groups.map((group) => {
+        const shown = expanded.has(group.key) ? group.matches : group.matches.slice(0, 6);
+        return `<section class="home-search-group" aria-labelledby="home-search-heading-${group.key}"><h3 id="home-search-heading-${group.key}" class="home-search-group-heading">${esc(group.label)} <span>${fmt(group.matches.length, 0)} hasil</span></h3><ul class="home-search-list">${shown.map((row, index) => `<li class="home-search-row"><div class="home-search-person"><strong>${esc(row.name)}</strong><span>${esc(shortText(group.context(row)))}</span></div><button id="home-search-action-${group.key}-${index}" class="home-search-action" type="button" data-home-search-source="${group.key}" data-home-search-index="${index}" aria-label="${esc(group.action)}: ${esc(row.name)}">${esc(group.action)}</button></li>`).join('')}</ul>${shown.length < group.matches.length ? `<button class="home-search-more" type="button" data-home-search-more="${group.key}" aria-label="Tampilkan semua ${fmt(group.matches.length, 0)} hasil ${esc(group.label)}">Tampilkan semua (${fmt(group.matches.length, 0)})</button>` : ''}</section>`;
+      }).join('') : '<p class="home-empty">Tidak ada nama yang cocok. Coba bagian lain dari nama dosen.</p>';
+      results.querySelectorAll('[data-home-search-source]').forEach((button) => button.addEventListener('click', () => {
+        const group = groups.find((item) => item.key === button.dataset.homeSearchSource);
+        const record = group?.matches[Number(button.dataset.homeSearchIndex)];
+        if (record) group.open(record);
+      }));
+      results.querySelectorAll('[data-home-search-more]').forEach((button) => button.addEventListener('click', () => {
+        const source = button.dataset.homeSearchMore;
+        if (!groups.some((group) => group.key === source)) return;
+        expanded.add(source);
+        renderHomeSearch();
+        $(`#home-search-action-${source}-6`)?.focus();
+      }));
+    };
+    input.addEventListener('input', () => renderHomeSearch());
+    form.addEventListener('submit', (event) => { event.preventDefault(); renderHomeSearch(); });
+    clear.addEventListener('click', () => { input.value = ''; renderHomeSearch(); input.focus(); });
+    renderHomeSearch();
+  }
 
   function setView(name, updateHash = true) {
     const view = ['home', 'jad', 'jad-detail', 'jad-progress', 'bkd', 'bkd-prodi', 'bkd-sertifikasi', 'fte'].includes(name) ? name : 'home';
@@ -583,6 +648,7 @@
     window.addEventListener('hashchange', routeFromHash);
     $('#dialogClose').addEventListener('click', () => $('#detailDialog').close());
     $('#detailDialog').addEventListener('click', (event) => { if (event.target === $('#detailDialog')) $('#detailDialog').close(); });
+    initHome();
     try {
       const [response, progressResponse] = await Promise.all([
         fetch('assets/data/dashboard-data.json'),
@@ -594,10 +660,12 @@
       initJad();
       initBkd();
       initFte();
+      initHome();
       $('#sourceLabel').textContent = 'Sumber: workbook JAD, SISTER BKD, dan DATA FTE 2026';
       routeFromHash();
     } catch (error) {
       $('#loadError').hidden = false;
+      renderHomeSearch(true);
       console.error(error);
     }
   }
