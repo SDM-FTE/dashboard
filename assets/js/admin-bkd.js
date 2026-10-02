@@ -14,6 +14,8 @@
     draft = null; $('previewContent').hidden = true; $('emptyPreview').hidden = false; $('draftBadge').textContent = 'Belum ada draf'; $('draftBadge').className = 'badge'; $('confirmRemoval').checked = false; $('removalField').hidden = true; controls();
   }
   async function readLatest() {
+    if (!window.AdminAccess) throw new Error('Verifikasi admin belum tersedia. Buka halaman admin untuk masuk kembali.');
+    await window.AdminAccess.ensure();
     const controller = new AbortController(); const timer = setTimeout(() => controller.abort(), 20000);
     try {
       const response = await fetch(contentUrl + '&_=' + Date.now(), {cache:'no-store', credentials:'omit', headers:{Accept:'application/vnd.github+json'}, signal:controller.signal});
