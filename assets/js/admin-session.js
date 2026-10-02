@@ -59,13 +59,4 @@
   window.addEventListener('pageshow', check);
   document.addEventListener('visibilitychange', () => { if (!document.hidden) check(); });
   setInterval(() => { if (!document.hidden) check(); }, 60000);
-  document.addEventListener('click', event => {
-    const link = event.target.closest?.('a[href^="https://github.com/"]');
-    if (!link) return;
-    event.preventDefault();
-    ensure().then(() => {
-      if (link.target === '_blank') window.open(link.href, '_blank', 'noopener,noreferrer');
-      else window.location.assign(link.href);
-    }).catch(() => {});
-  });
 })();
