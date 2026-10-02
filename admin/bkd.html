@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Siapkan pembaruan rekap BKD dari ekspor SISTER terbaru.">
+  <title>Perbarui BKD · Admin Monitoring Dosen</title>
+  <link rel="stylesheet" href="../assets/css/admin-bkd.css?v=20261002">
+  <script src="../assets/js/bkd-import.js?v=20261002" defer></script>
+  <script src="../assets/js/bkd-xlsx.js?v=20261002" defer></script>
+  <script src="../assets/js/admin-bkd.js?v=20261002" defer></script>
+</head>
+<body>
+  <header class="topbar"><a class="brand" href="../#top"><span class="brand-mark">J</span><span><strong>MONITORING DOSEN</strong><small>JAD, BKD &amp; FTE</small></span></a><a class="back-link" href="./">← Halaman admin</a></header>
+  <main class="shell">
+    <div class="page-heading"><div><p class="eyebrow">PENGELOLAAN DATA / BKD</p><h1>Perbarui rekap BKD</h1><p>Gunakan ekspor SISTER terbaru. Periksa hasil untuk 8 prodi sebelum menerbitkan pembaruan.</p></div><a class="view-link" href="../#bkd" target="_blank" rel="noopener">Lihat dashboard ↗</a></div>
+    <ol class="steps" aria-label="Langkah pembaruan"><li><span>1</span> Pilih file</li><li><span>2</span> Periksa hasil</li><li><span>3</span> Terbitkan</li></ol>
+    <div class="workspace">
+      <section class="card upload-card" aria-labelledby="uploadHeading">
+        <p class="eyebrow">LANGKAH 1</p><h2 id="uploadHeading">Pilih file BKD terbaru</h2><p class="muted">CSV atau Excel (.xlsx) hasil ekspor SISTER, maksimal 10 MB.</p>
+        <label class="file-zone" for="bkdFile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 16V3m-5 5 5-5 5 5M4 15v5a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-5"/></svg><strong>Pilih file dari komputer</strong><span>File akan diperiksa di halaman ini.</span><input id="bkdFile" type="file" accept=".csv,.xlsx" aria-label="Pilih file BKD terbaru"></label>
+        <p id="fileInfo" class="file-info" aria-live="polite">Belum ada file dipilih.</p>
+        <label id="sheetField" class="sheet-field" hidden>Lembar Excel<select id="sheetSelect" aria-label="Pilih lembar BKD"></select></label>
+        <div class="baseline-box"><span class="status-dot" aria-hidden="true"></span><div><strong>Dasar pembaruan</strong><p id="baselineStatus" role="status">Memuat data dashboard terbaru…</p></div><button id="reloadBaseline" class="text-button" type="button">Muat ulang</button></div>
+        <p class="helper">Hanya 8 prodi yang digunakan dashboard yang diambil dari file. Kesimpulan M/TM mengikuti ekspor SISTER.</p>
+        <details class="format-help"><summary>Format file yang digunakan</summary><p>Gunakan ekspor lengkap SISTER dengan kolom nama dosen, prodi, status, jabatan fungsional, kinerja, beban lebih, dan kesimpulan. Jika memakai Excel, pertahankan judul kolom dari CSV SISTER.</p><p>Nomor sertifikat, NIDN, dan NUPTK tidak dimasukkan ke hasil untuk dashboard.</p></details>
+      </section>
+      <section class="card preview-card" aria-labelledby="previewHeading">
+        <div class="card-heading"><div><p class="eyebrow">LANGKAH 2</p><h2 id="previewHeading">Periksa hasil pembaruan</h2></div><span id="draftBadge" class="badge">Belum ada draf</span></div>
+        <div id="emptyPreview" class="empty-preview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M4 4h16v16H4zM4 10h16M10 4v16"/></svg><h3>Rekap muncul setelah file dipilih</h3><p>Anda dapat memeriksa jumlah dosen, M/TM, dan perubahan data sebelum mengunduh hasil.</p></div>
+        <div id="previewContent" hidden>
+          <div class="kpis"><div><span>Total dosen</span><strong id="previewTotal">—</strong></div><div class="met"><span>Memenuhi</span><strong id="previewMet">—</strong></div><div class="unmet"><span>Tidak memenuhi</span><strong id="previewUnmet">—</strong></div></div>
+          <p id="comparisonSummary" class="comparison-summary"></p>
+          <div class="table-wrap"><table><caption>Rekap 8 prodi dari file terbaru</caption><thead><tr><th>Program studi</th><th>Saat ini</th><th>Terbaru</th><th>M</th><th>TM</th></tr></thead><tbody id="programRows"></tbody></table></div>
+          <p id="certificationSummary" class="helper"></p><p id="sourceSummary" class="helper"></p>
+          <details id="changeDetails" class="change-details"><summary>Daftar perubahan</summary><div id="changeLists"></div></details>
+          <label id="removalField" class="removal-field" hidden><input id="confirmRemoval" type="checkbox"><span id="removalText"></span></label>
+        </div>
+      </section>
+    </div>
+    <p id="pageMessage" class="message" role="status" aria-live="polite" hidden></p>
+    <section class="card publish-card" aria-labelledby="publishHeading"><div><p class="eyebrow">LANGKAH 3</p><h2 id="publishHeading">Terbitkan melalui GitHub</h2><p>Unduh hasil, lalu unggah sebagai <strong>dashboard-data.json</strong> ke folder data dan pilih <strong>Commit changes</strong>. GitHub memeriksa izin akun admin Anda.</p><p class="helper">Data JAD dan FTE dimuat ulang dari GitHub sebelum hasil diunduh. File sumber CSV/Excel tetap di komputer Anda.</p></div><div class="publish-actions"><button id="downloadResult" class="primary-button" type="button" disabled>1. Unduh hasil BKD</button><a class="secondary-button" href="https://github.com/SDM-FTE/dashboard/upload/main/assets/data" target="_blank" rel="noopener">2. Unggah ke GitHub ↗</a><a class="text-link" href="../#bkd" target="_blank" rel="noopener">Periksa dashboard setelah diterbitkan ↗</a></div></section>
+    <footer>MONITORING DOSEN <span>Pengelolaan BKD melalui akun GitHub admin</span></footer>
+  </main>
+</body>
+</html>
