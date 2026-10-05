@@ -1,0 +1,7 @@
+{
+  "name": "sdm-fte-dashboard",
+  "private": true,
+  "version": "1.0.0",
+  "engines": { "node": ">=22.12.0" },
+  "dependencies": { "@netlify/blobs": "11.1.3" }
+}
