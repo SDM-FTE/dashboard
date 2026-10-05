@@ -369,3 +369,7 @@ tbody tr.clickable-row:focus-within { background: #f0faf8; }
 .fte-kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 
 
+
+.jad-queue-entry { display: inline-flex; align-items: center; min-height: 44px; margin-top: 10px; color: #007f86; font-size: 14px; font-weight: 600; text-decoration: none; }
+.jad-queue-entry:hover { text-decoration: underline; }
+.jad-queue-entry:focus-visible { outline: 3px solid #008f98; outline-offset: 4px; }
