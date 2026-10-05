@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Ajukan jabatan akademik dan lihat antrean ajuan JAD dosen FTE.">
+  <title>Antrean Ajuan JAD · Monitoring Dosen</title>
+  <link rel="stylesheet" href="/assets/css/jad-queue.css?v=20261005">
+  <script src="/assets/js/jad-queue.js?v=20261005" defer></script>
+</head>
+<body>
+  <header class="queue-topbar"><a class="queue-brand" href="/#top"><span class="queue-brand-mark">J</span><span><strong>MONITORING DOSEN</strong><small>JAD, BKD &amp; FTE</small></span></a><a class="queue-admin-link" href="/admin/antrian">Admin</a></header>
+  <main class="queue-shell">
+    <div class="queue-page-heading"><div><p class="queue-eyebrow">JABATAN AKADEMIK DOSEN</p><h1>Antrean ajuan JAD</h1><p>Ajukan jabatan akademik Anda dan lihat posisi antrean setelah divalidasi admin.</p></div><a class="queue-back" href="/#top">← Kembali ke beranda</a></div>
+    <nav class="queue-navigation" aria-label="Menu antrean JAD"><a href="#daftarAntrean">Lihat antrean</a><a href="#formAjuan">Input ajuan</a><a href="/#jad-detail">Lihat progres JAD ↗</a></nav>
+    <p id="queuePageMessage" class="queue-message" role="status" aria-live="polite" hidden></p>
+    <div class="queue-workspace">
+      <section id="daftarAntrean" class="queue-card queue-list-card" aria-labelledby="queueListHeading">
+        <div class="queue-card-heading"><div><h2 id="queueListHeading">Ajuan yang sudah divalidasi</h2><p>Nomor ajuan tetap. Posisi antrean bergerak saat ajuan sebelumnya selesai.</p></div><button id="refreshQueue" class="queue-text-button" type="button">Muat ulang</button></div>
+        <div class="queue-filters"><label><span>Cari nama atau nomor ajuan</span><input id="queueSearch" type="search" placeholder="Cari nama atau nomor…" autocomplete="off"></label><label><span>Status ajuan</span><select id="queueStatusFilter"><option value="">Semua status</option><option value="queued">Dalam antrean</option><option value="processing">Diproses</option><option value="completed">Selesai</option><option value="cancelled">Dibatalkan</option></select></label></div>
+        <p id="queueResultCount" class="queue-helper" role="status">Memuat antrean…</p>
+        <div class="queue-table-wrap"><table><caption class="queue-sr-only">Daftar antrean ajuan JAD yang sudah divalidasi admin</caption><thead><tr><th>Posisi</th><th>Nama dosen / nomor ajuan</th><th>Usulan JFA</th><th>Status</th></tr></thead><tbody id="queueTableBody"></tbody></table></div>
+        <p id="queueEmpty" class="queue-empty" hidden></p>
+        <p class="queue-helper queue-list-note">Ajuan baru tampil di sini setelah disetujui admin. Pengajuan sebelumnya dapat dilihat pada <a href="/#jad-detail">halaman progres JAD</a>.</p>
+      </section>
+
+      <div class="queue-form-column">
+        <section id="formAjuan" class="queue-card" aria-labelledby="queueFormHeading">
+          <p class="queue-eyebrow">UNTUK DOSEN</p><h2 id="queueFormHeading">Input ajuan JAD</h2><p class="queue-helper">Isi tanpa login. Admin memeriksa ajuan sebelum memberikan nomor antrean.</p>
+          <form id="queueApplicationForm">
+            <fieldset id="queueApplicationFields" disabled>
+              <label class="queue-form-label" for="queueNameSearch">Cari nama Anda</label><input id="queueNameSearch" class="queue-form-input" type="search" placeholder="Ketik bagian nama Anda…" autocomplete="off">
+              <label class="queue-form-label" for="queueLecturer">Nama dosen</label><select id="queueLecturer" class="queue-form-input" required><option value="">Memuat daftar dosen…</option></select>
+              <div id="queueSelectedLecturer" class="queue-selected" hidden><strong id="queueSelectedName"></strong><span id="queueSelectedProgram"></span><span id="queueSelectedRank"></span></div>
+              <label class="queue-form-label" for="queueProposedRank">Jabatan akademik yang diajukan</label><select id="queueProposedRank" class="queue-form-input" required><option value="">Pilih usulan jabatan…</option><option>Asisten Ahli</option><option>Lektor</option><option>Lektor Kepala</option><option>Guru Besar</option></select>
+              <div class="queue-honeypot" aria-hidden="true"><label for="queueWebsite">Website</label><input id="queueWebsite" name="website" type="text" tabindex="-1" autocomplete="off"></div>
+              <button id="submitApplication" class="queue-primary-button" type="submit">Kirim untuk validasi</button>
+            </fieldset>
+          </form>
+          <div id="queueSubmissionReceipt" class="queue-receipt" role="status" tabindex="-1" hidden><strong>Ajuan berhasil dikirim</strong><p id="queueReceiptMessage"></p><span>Kode ajuan Anda</span><code id="queueReceiptCode"></code><p>Simpan kode ini untuk memeriksa hasil validasi di bawah.</p></div>
+          <noscript><p class="queue-message error">Aktifkan JavaScript untuk mengirim ajuan dan melihat antrean terbaru.</p></noscript>
+        </section>
+        <section class="queue-card queue-track-card" aria-labelledby="queueTrackHeading"><h2 id="queueTrackHeading">Cek ajuan Anda</h2><p class="queue-helper">Sudah mengirim form? Gunakan kode ajuan untuk melihat hasil validasi.</p><form id="queueTrackForm"><label class="queue-form-label" for="queueReference">Kode ajuan</label><input id="queueReference" class="queue-form-input" type="text" placeholder="Tempel kode dari form sebelumnya" maxlength="36" autocomplete="off" required><button id="trackApplication" class="queue-secondary-button" type="submit">Periksa status ajuan</button></form><p id="queueTrackResult" class="queue-helper" role="status" aria-live="polite"></p></section>
+      </div>
+    </div>
+    <footer class="queue-footer">MONITORING DOSEN <span>Input oleh dosen · Validasi oleh admin</span></footer>
+  </main>
+</body>
+</html>

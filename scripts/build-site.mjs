@@ -10,11 +10,13 @@ if (path.dirname(publish) !== root || path.basename(publish) !== 'dist') {
   throw new Error('Unexpected publish directory');
 }
 const files = [
-  'index.html', '404.html', 'admin/index.html', 'admin/bkd.html',
+  'index.html', '404.html', 'admin/index.html', 'admin/bkd.html', 'antrian-jad/index.html',
   'assets/css/styles.css', 'assets/css/admin-bkd.css', 'assets/css/admin-jad.css',
+  'assets/css/jad-queue.css', 'assets/css/admin-queue.css',
   'assets/js/dashboard.js', 'assets/js/admin-bkd.js',
   'assets/js/bkd-import.js', 'assets/js/bkd-xlsx.js',
   'assets/js/admin-session.js', 'assets/js/admin-jad.js',
+  'assets/js/jad-queue.js', 'assets/js/admin-queue.js',
   'assets/data/dashboard-data.json', 'assets/data/jad-progress.json',
 ];
 const sources = await Promise.all(files.map(async file => {

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Dashboard monitoring JAD, BKD, dan data FTE dosen.">
   <title>Portal Informasi Dosen · SDM FTE</title>
-  <link rel="stylesheet" href="assets/css/styles.css?v=20261005-status-penelitian">
+  <link rel="stylesheet" href="assets/css/styles.css?v=20261005-antrean-jad">
   <script src="assets/js/dashboard.js?v=20261005-status-penelitian" defer></script>
   <style>
     .topbar-meta { display: flex; gap: 20px; }
@@ -57,6 +57,7 @@
           <h3>Cek progres JAD</h3>
           <p>Lihat tahap pengajuan jabatan akademik dan kelengkapan syarat penelitian Anda.</p>
           <button type="button" class="home-link-button" data-view="jad-detail">Lihat pengajuan JAD <span aria-hidden="true">→</span></button>
+          <a class="jad-queue-entry" href="/antrian-jad/">Lihat antrean &amp; ajukan JAD →</a>
         </article>
         <article class="home-page-card bkd-home-card">
           <span class="home-page-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="m8 11 3 3 5-5M8 17h8"/></svg></span>
@@ -93,7 +94,7 @@
     <section id="jadDetailView" class="view-panel" aria-labelledby="jadDetailHeading" hidden>
       <div class="section-heading">
         <div><p class="eyebrow">JABATAN AKADEMIK DOSEN</p><h2 id="jadDetailHeading">Detail Usulan JAD</h2></div>
-        <button class="page-back" type="button" data-view="jad">← Kembali ke Ringkasan JAD</button>
+        <div class="section-tools"><a class="page-back" href="/antrian-jad/">Antrean &amp; input ajuan JAD →</a><button class="page-back" type="button" data-view="jad">← Kembali ke Ringkasan JAD</button></div>
       </div>
       <div class="content-card table-card">
         <div class="card-heading table-heading"><div><h3>Detail usulan JAD</h3><p>Pilih nama dosen untuk melihat rincian penilaian.</p></div><span id="jadResultCount" class="result-count"></span></div>
