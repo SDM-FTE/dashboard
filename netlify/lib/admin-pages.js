@@ -336,6 +336,7 @@ const admin = `<!doctype html>
         <div class="manage-links">
           <a class="manage-link" href="/admin/bkd"><span><strong>Perbarui BKD</strong><small>Unggah Excel SISTER dan periksa hasilnya</small></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
           <a class="manage-link" href="/admin/jad"><span><strong>Progres JAD</strong><small>Tahap ajuan dan status dokumen</small></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+          <a class="manage-link" href="/admin/antrian"><span><strong>Antrean ajuan JAD</strong><small>Validasi ajuan dan kelola nomor antrean</small></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
         </div>
         <a class="repo-link" href="https://telkomuniversityofficial-my.sharepoint.com/:x:/g/personal/see_resources_telkomuniversity_ac_id/IQAItpnZubYrTJAjVgcQqKWnAXnbg5YhtknKilLcw7798Gw?e=i6LdBF" target="_blank" rel="noopener noreferrer">Kelola data FTE di Excel <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></a>
         <p class="login-note">Gunakan sheet 2026 (ganjil 26-27).</p>
@@ -465,3 +466,4 @@ exports.login = login;
 exports.admin = admin;
 exports.bkd = bkd;
 exports.jad = jad;
+exports.queue = require('./admin-queue-page.js');

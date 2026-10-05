@@ -2,9 +2,18 @@
   command = "node scripts/build-site.mjs"
   publish = "dist"
 
+[build.environment]
+  NODE_VERSION = "22"
+
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"
+
+[[redirects]]
+  from = "/api/jad-applications"
+  to = "/.netlify/functions/jad-applications"
+  status = 200
+  force = true
 
 [[redirects]]
   from = "/api/admin/*"
