@@ -88,11 +88,12 @@ function route(event) {
   if (path === '/admin' || path === '/admin/index' || path === '/admin/index.html') return { action: 'page', page: 'login' };
   if (path === '/admin/bkd' || path === '/admin/bkd.html') return { action: 'page', page: 'bkd' };
   if (path === '/admin/jad' || path === '/admin/jad.html') return { action: 'page', page: 'jad' };
+  if (path === '/admin/antrian' || path === '/admin/antrian.html') return { action: 'page', page: 'queue' };
   if (path === '/admin/manage' || path === '/admin/manage.html') return { action: 'page', page: 'admin' };
   if (path.startsWith('/api/admin/')) return { action: path.slice('/api/admin/'.length), page: '' };
   if (path === '/.netlify/functions/admin-auth') {
     const page = String(params.page || '').replace(/\/+$/, '');
-    return { action: String(params.action || ''), page: ({ '': 'login', index: 'login', 'index.html': 'login', manage: 'admin', 'manage.html': 'admin', bkd: 'bkd', 'bkd.html': 'bkd', jad: 'jad', 'jad.html': 'jad', login: 'login', admin: 'admin' })[page] || 'unknown' };
+    return { action: String(params.action || ''), page: ({ '': 'login', index: 'login', 'index.html': 'login', manage: 'admin', 'manage.html': 'admin', bkd: 'bkd', 'bkd.html': 'bkd', jad: 'jad', 'jad.html': 'jad', antrian: 'queue', 'antrian.html': 'queue', login: 'login', admin: 'admin' })[page] || 'unknown' };
   }
   return { action: 'unknown', page: 'unknown' };
 }
@@ -286,7 +287,7 @@ function createHandler(options) {
 
     if (selected.action === 'page') {
       if (!['GET', 'HEAD'].includes(method)) return response(405, '', undefined, { Allow: 'GET, HEAD' });
-      if (!['login', 'admin', 'bkd', 'jad'].includes(selected.page)) return response(404, 'Halaman tidak ditemukan.');
+      if (!['login', 'admin', 'bkd', 'jad', 'queue'].includes(selected.page)) return response(404, 'Halaman tidak ditemukan.');
       if (selected.page !== 'login' && !authenticated) return redirect('/admin/?error=' + (config ? 'expired' : 'unavailable'), [clearCookie(SESSION_COOKIE)]);
       const page = selected.page === 'login' && authenticated ? 'admin' : selected.page;
       const reason = !config ? 'unavailable' : String(params.error || '');
@@ -306,6 +307,14 @@ function createHandler(options) {
       if (!authenticated) return jsonError(401, 'unauthenticated', MESSAGES.expired);
       try { return await progressRequest(event, authenticated, method); }
       catch (_) { return jsonError(502, 'github', 'Perubahan belum dapat disimpan di GitHub. Draf Anda tetap tersedia; coba kembali setelah koneksi pulih.'); }
+    }
+
+    if (selected.action === 'queue') {
+      if (!['GET', 'POST'].includes(method)) return jsonError(405, 'method', 'Metode pengelolaan antrean tidak didukung.');
+      if (!config) return jsonError(503, 'unavailable', MESSAGES.unavailable);
+      if (!authenticated) return jsonError(401, 'unauthenticated', MESSAGES.expired);
+      const queue = dependencies.queue || require('../lib/jad-queue.js').createQueueService({ env: dependencies.env, fetch: fetcher, now, storeFactory: dependencies.storeFactory });
+      return queue.adminRequest(event, authenticated);
     }
 
     if (selected.action === 'logout') {
@@ -331,7 +340,7 @@ function createHandler(options) {
       const time = now();
       const state = random(32).toString('base64url');
       const verifier = random(32).toString('base64url');
-      const next = ['bkd', 'jad'].includes(params.next) ? params.next : 'admin';
+      const next = ['bkd', 'jad', 'antrian'].includes(params.next) ? params.next : 'admin';
       const challenge = crypto.createHash('sha256').update(verifier).digest('base64url');
       const authorization = new URL('https://github.com/login/oauth/authorize');
       authorization.search = new URLSearchParams({ client_id: config.clientId, redirect_uri: ORIGIN + '/api/admin/callback', scope: '', state, code_challenge: challenge, code_challenge_method: 'S256', allow_signup: 'false', prompt: 'select_account' }).toString();
@@ -356,7 +365,7 @@ function createHandler(options) {
         if (!await verifyAdmin(token.access_token)) return redirect('/admin/?error=denied', discarded);
         const time = now();
         const value = seal({ iat: time, exp: time + SESSION_SECONDS, id: OWNER_ID, login: OWNER_LOGIN, token: token.access_token, csrf: random(32).toString('base64url') }, 'session', config);
-        return redirect(['bkd', 'jad'].includes(flow.next) ? '/admin/' + flow.next : '/admin/', [clearCookie(STATE_COOKIE), cookie(SESSION_COOKIE, value, SESSION_SECONDS)]);
+        return redirect(['bkd', 'jad', 'antrian'].includes(flow.next) ? '/admin/' + flow.next : '/admin/', [clearCookie(STATE_COOKIE), cookie(SESSION_COOKIE, value, SESSION_SECONDS)]);
       } catch (_) {
         return redirect('/admin/?error=github', discarded);
       }
