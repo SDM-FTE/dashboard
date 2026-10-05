@@ -237,9 +237,10 @@
       const checked = status === true;
       const reviewed = status === true || status === false;
       const stateLabel = !reviewed ? 'Belum diperiksa' : checked ? 'Lengkap' : 'Belum lengkap';
-      return `<label class="jad-checklist-item"><input type="checkbox" disabled ${checked ? 'checked' : ''} ${reviewed ? '' : 'data-unknown'} aria-label="${esc(label)}: ${stateLabel.toLocaleLowerCase('id-ID')}"><span class="jad-checklist-copy"><strong>${esc(label)}</strong><small>${esc(note)}</small></span><span class="jad-checklist-state ${checked ? 'complete' : reviewed ? '' : 'unknown'}">${stateLabel}</span></label>`;
+      const stateClass = !reviewed ? 'unknown' : checked ? 'complete' : 'incomplete';
+      const marker = !reviewed ? '—' : checked ? '✓' : '×';
+      return `<div class="jad-checklist-item"><span class="jad-checklist-marker ${stateClass}" aria-hidden="true">${marker}</span><span class="jad-checklist-copy"><strong>${esc(label)}</strong><small>${esc(note)}</small></span><span class="jad-checklist-state ${stateClass}">${stateLabel}</span></div>`;
     }).join('');
-    $('#jadProgressRequirements').querySelectorAll('[data-unknown]').forEach((checkbox) => { checkbox.indeterminate = true; });
     const skp = (record.skpByYear || []).map((value, i) => [String(2023 + i), value]);
     const groups = [
       ['Profil dan kepakaran', [['Jenjang ijazah', record.degree], ['Rumpun ilmu', record.scienceCluster]]],
