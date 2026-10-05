@@ -325,15 +325,18 @@ tbody tr.clickable-row:focus-within { background: #f0faf8; }
 .admin-edit-link:hover { border-color: #8fcfc5; background: #e8f7f4; }
 .jad-checklist { display: grid; gap: 8px; margin-top: 18px; }
 .jad-checklist-item { display: flex; align-items: center; gap: 12px; min-height: 58px; padding: 10px 12px; border: 1px solid #e8eef0; border-radius: 8px; background: #fcfdfd; }
-.jad-checklist-item input { width: 17px; height: 17px; margin: 0; accent-color: var(--teal); }
-.jad-checklist-item input:indeterminate { accent-color: #8b9aa0; }
+.jad-checklist-marker { display: grid; flex: 0 0 24px; width: 24px; height: 24px; place-items: center; border-radius: 6px; font: 800 18px/1 'Segoe UI', sans-serif; }
+.jad-checklist-marker.complete { background: #e7f5ec; color: #15803d; }
+.jad-checklist-marker.incomplete { background: #fcebed; color: #c62828; }
+.jad-checklist-marker.unknown { background: #eff3f4; color: #73868e; font-size: 15px; }
 .jad-checklist-copy { flex: 1; min-width: 0; }
 .jad-checklist-copy strong, .jad-checklist-copy small { display: block; }
 .jad-checklist-copy strong { color: var(--navy); font-size: 11px; }
 .jad-checklist-copy small { margin-top: 3px; color: var(--muted); font-size: 10px; }
 .jad-checklist-state { flex: 0 0 auto; padding: 5px 8px; border-radius: 20px; background: var(--amber-soft); color: #a97117; font-size: 9px; font-weight: 700; }
-.jad-checklist-state.complete { background: var(--teal-soft); color: #168a7e; }
-.jad-checklist-state.unknown { background: #eff3f4; color: #73868e; }
+.jad-checklist-state.complete { background: #e7f5ec; color: #166534; }
+.jad-checklist-state.incomplete { background: #fcebed; color: #c62828; }
+.jad-checklist-state.unknown { background: #eff3f4; color: #526870; }
 .admin-edit-note, .progress-empty-note { margin: 13px 0 0; color: var(--muted); font-size: 10px; line-height: 1.6; }
 .progress-accordion-list { display: grid; gap: 8px; margin-top: 16px; }
 .progress-accordion { overflow: hidden; border: 1px solid var(--line); border-radius: 9px; background: #fff; }
