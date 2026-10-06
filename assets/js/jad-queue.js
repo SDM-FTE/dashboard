@@ -2,6 +2,9 @@
   'use strict';
   const $ = id => document.getElementById(id);
   const endpoint = '/api/jad-applications';
+  const readOnly = window.location.hostname === 'sdm-fte.github.io';
+  const publicLedger = new URL('../assets/data/jad-applications.json', window.location.href).href;
+  const readOnlyNotice = 'Pengiriman ajuan dan pengecekan kode belum tersedia pada halaman ini. Antrean yang sudah disetujui tetap dapat dilihat.';
   const labels = {pending: 'Menunggu validasi', rejected: 'Belum disetujui admin', queued: 'Dalam antrean', processing: 'Diproses', completed: 'Selesai', cancelled: 'Dibatalkan'};
   const ranks = ['Asisten Ahli', 'Lektor', 'Lektor Kepala', 'Guru Besar'];
   const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -23,6 +26,7 @@
     const timer = setTimeout(() => controller.abort(), 15000);
     try {
       const response = await fetch(url, {...options, credentials: 'same-origin', cache: 'no-store', signal: controller.signal});
+      if (options.allowMissing && response.status === 404) return {schemaVersion: 1, applications: []};
       let body;
       try { body = await response.json(); } catch { throw new Error('Layanan belum dapat dibaca. Coba muat ulang beberapa saat lagi.'); }
       if (!response.ok) {
@@ -42,6 +46,17 @@
     if (!data.roster.every(row => row && (typeof row.id === 'string' || Number.isInteger(row.id)) && typeof row.name === 'string' && typeof row.program === 'string' && typeof row.currentRank === 'string')) throw new Error('Daftar dosen belum dapat dibaca. Coba lagi.');
     if (!data.applications.every(row => row && typeof row.id === 'string' && Number.isInteger(row.number) && row.number > 0 && typeof row.name === 'string' && typeof row.program === 'string' && typeof row.proposedRank === 'string' && ['queued', 'processing', 'completed', 'cancelled'].includes(row.status) && (row.position == null || Number.isInteger(row.position) && row.position > 0))) throw new Error('Data antrean belum dapat dibaca. Coba lagi.');
   }
+  function publicApplications(data) {
+    if (!data || data.schemaVersion !== 1 || !Array.isArray(data.applications) || data.applications.length > 5000) throw new Error('Data antrean belum dapat dibaca. Pengelola perlu memeriksa data.');
+    const ids = new Set(), numbers = new Set();
+    const rows = data.applications.map(row => {
+      if (!row || typeof row.id !== 'string' || !uuid.test(row.id) || !Number.isSafeInteger(row.number) || row.number < 1 || ids.has(row.id) || numbers.has(row.number) || !['name', 'program', 'currentRank', 'proposedRank'].every(key => typeof row[key] === 'string' && row[key].trim()) || !['queued', 'processing', 'completed', 'cancelled'].includes(row.status)) throw new Error('Identitas atau nomor antrean belum dapat dibaca. Pengelola perlu memeriksa data.');
+      ids.add(row.id); numbers.add(row.number);
+      return {id: row.id, number: row.number, name: row.name, program: row.program, currentRank: row.currentRank, proposedRank: row.proposedRank, status: row.status};
+    }).sort((a, b) => a.number - b.number);
+    let position = 0;
+    return rows.map(row => ({...row, position: ['queued', 'processing'].includes(row.status) ? ++position : null}));
+  }
   function renderQueue() {
     const term = normal($('queueSearch').value);
     const status = $('queueStatusFilter').value;
@@ -60,7 +75,7 @@
       $('queueTableBody').append(tr);
     }
     $('queueEmpty').hidden = rows.length !== 0;
-    $('queueEmpty').textContent = applications.length ? 'Tidak ada ajuan yang sesuai pencarian ini.' : 'Belum ada ajuan yang disetujui admin. Anda dapat mengirim ajuan melalui form di halaman ini.';
+    $('queueEmpty').textContent = applications.length ? 'Tidak ada ajuan yang sesuai pencarian ini.' : readOnly ? 'Belum ada antrean yang diterbitkan.' : 'Belum ada ajuan yang disetujui admin. Anda dapat mengirim ajuan melalui form di halaman ini.';
     $('queueResultCount').textContent = rows.length + ' ajuan ditampilkan' + (applications.length !== rows.length ? ' dari ' + applications.length : '');
   }
   function renderRoster() {
@@ -97,6 +112,14 @@
     $('refreshQueue').textContent = 'Memuat…';
     message('');
     try {
+      if (readOnly) {
+        const data = await request(publicLedger, {allowMissing: true});
+        applications = publicApplications(data);
+        ready = true;
+        renderQueue();
+        message(readOnlyNotice);
+        return;
+      }
       const data = await request(endpoint);
       validateData(data);
       applications = data.applications;
@@ -117,7 +140,7 @@
   }
   $('queueApplicationForm').addEventListener('submit', async event => {
     event.preventDefault();
-    if (!ready || submitting || loading) return;
+    if (readOnly || !ready || submitting || loading) return;
     const lecturerId = $('queueLecturer').value;
     const proposedRank = $('queueProposedRank').value;
     if (!roster.some(row => String(row.id) === lecturerId) || !ranks.includes(proposedRank)) {
@@ -156,7 +179,7 @@
   });
   $('queueTrackForm').addEventListener('submit', async event => {
     event.preventDefault();
-    if (tracking) return;
+    if (readOnly || tracking) return;
     const reference = $('queueReference').value.trim();
     if (!uuid.test(reference)) { $('queueTrackResult').textContent = 'Periksa kembali kode ajuan yang Anda simpan.'; return; }
     tracking = true;
@@ -184,5 +207,14 @@
   $('queueStatusFilter').addEventListener('change', () => { if (ready) renderQueue(); });
   $('queueNameSearch').addEventListener('input', renderRoster);
   $('queueLecturer').addEventListener('change', renderSelection);
+  if (readOnly) {
+    $('queueIntro').textContent = 'Lihat dosen yang sudah divalidasi admin dan posisi antrean pengajuan jabatan akademik.';
+    $('queueFormColumn').hidden = true;
+    $('queueInputLink').hidden = true;
+    $('queueWorkspace').classList.add('queue-workspace-read-only');
+    $('queueAdminLink').href = 'https://sdm-fte.netlify.app/admin/';
+    $('queueListNote').textContent = 'Daftar ini hanya memuat ajuan yang sudah disetujui admin. Data pengajuan sebelumnya tersedia melalui menu Lihat progres JAD.';
+    $('queueFooterText').textContent = 'Antrean yang sudah divalidasi admin';
+  }
   loadQueue();
 })();
