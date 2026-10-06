@@ -18,7 +18,7 @@
     ],
     "privacyNote": "Static dashboard data is readable by anyone who can access the published site or repository.",
     "fteRows": 225,
-    "jadUpdatedAt": "2026-10-02T07:21:55+00:00"
+    "jadUpdatedAt": "2026-10-06T02:21:21+00:00"
   },
   "focusPrograms": [
     "Teknik Telekomunikasi (S1)",
@@ -472,7 +472,7 @@
       "rankDate": null,
       "oldAk": 0,
       "proposedRank": "Asisten Ahli 150",
-      "scienceCluster": null,
+      "scienceCluster": "Biomedical Image and Signal Processing",
       "akEducation": 150,
       "akTeaching": 0,
       "akResearch": 0,
