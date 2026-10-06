@@ -1,0 +1,79 @@
+.topbar,
+.queue-topbar {
+  height: auto;
+  min-height: 82px;
+  gap: 16px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.brand,
+.queue-brand {
+  min-width: 0;
+}
+
+.institution-logo {
+  display: block;
+  flex: 0 0 auto;
+  width: 248px;
+  height: auto;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.institution-brand-text {
+  display: block;
+  min-width: 0;
+}
+
+.institution-brand-text strong {
+  white-space: nowrap;
+}
+
+.topbar-meta,
+.queue-admin-link {
+  flex-shrink: 0;
+}
+
+.queue-admin-link {
+  display: inline-flex;
+  align-items: center;
+}
+
+@media (max-width: 760px) {
+  .topbar .public-status {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .topbar,
+  .queue-topbar {
+    gap: 12px;
+  }
+
+  .brand,
+  .queue-brand {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .institution-logo {
+    width: 200px;
+    max-width: 60vw;
+    padding: 5px 8px;
+  }
+
+  .brand .institution-brand-text strong,
+  .queue-brand .institution-brand-text strong {
+    font-size: 10px;
+    line-height: 1.3;
+  }
+
+  .institution-brand-text small,
+  .topbar .admin-entry svg {
+    display: none;
+  }
+}
