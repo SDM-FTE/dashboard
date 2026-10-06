@@ -11,6 +11,7 @@ if (path.dirname(publish) !== root || path.basename(publish) !== 'dist') {
 }
 const files = [
   'index.html', '404.html', 'admin/index.html', 'admin/bkd.html', 'antrian-jad/index.html',
+  'assets/images/fte-official.png', 'assets/css/branding.css',
   'assets/css/styles.css', 'assets/css/admin-bkd.css', 'assets/css/admin-jad.css',
   'assets/css/jad-queue.css', 'assets/css/admin-queue.css',
   'assets/js/dashboard.js', 'assets/js/admin-bkd.js',
