@@ -20,6 +20,12 @@ const files = [
   'assets/js/jad-queue.js', 'assets/js/admin-queue.js',
   'assets/data/dashboard-data.json', 'assets/data/jad-progress.json',
 ];
+// Personnel workbooks are not part of the public dashboard. Fail closed if an
+// old data export is accidentally restored before a deploy.
+const master = JSON.parse(await fs.readFile(path.join(root, 'assets/data/dashboard-data.json'), 'utf8'));
+if (Object.hasOwn(master, 'fte') || Object.keys(master.meta || {}).some(key => /^fte/i.test(key))) {
+  throw new Error('Retired personnel data must be removed before publishing.');
+}
 const sources = await Promise.all(files.map(async file => {
   const source = path.join(root, file);
   if (!(await fs.lstat(source)).isFile()) throw new Error('Expected regular public file: ' + file);
