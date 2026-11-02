@@ -260,9 +260,14 @@
     });
     const removedLecturers = baseline.bkd.filter(row => !imported.has(recordKey(row))).map(row => ({ no: row.no, name: row.name, program: row.program }));
     const addedLecturers = additions.map(row => ({ no: row.no, name: row.name, program: row.program, conclusion: row.conclusion, certification: row.certification }));
-    const changed = JSON.stringify(bkd) !== JSON.stringify(baseline.bkd);
+    const bkdChanged = JSON.stringify(bkd) !== JSON.stringify(baseline.bkd);
     const candidate = clone(baseline);
-    if (changed) {
+    // Never carry the retired personnel dataset back into a public export.
+    const privacyRemoved = Object.prototype.hasOwnProperty.call(candidate, 'fte') || Object.keys(candidate.meta || {}).some(key => /^fte/i.test(key));
+    delete candidate.fte;
+    for (const key of Object.keys(candidate.meta || {})) if (/^fte/i.test(key)) delete candidate.meta[key];
+    const changed = bkdChanged || privacyRemoved;
+    if (bkdChanged) {
       const now = options.now == null ? new Date() : new Date(options.now);
       if (!Number.isFinite(now.getTime())) fail('DATE_INVALID', 'Waktu pembaruan tidak valid.');
       candidate.bkd = bkd;
@@ -292,6 +297,7 @@
         certificationPreserved,
         certificationUnknown,
         warnings: [
+          ...(privacyRemoved ? ['Data FTE lama dikeluarkan dari hasil pembaruan.'] : []),
           ...(certificationPreserved.length ? [certificationPreserved.length + ' status sertifikasi dari dashboard dipertahankan karena file terbaru belum mencatatnya.'] : []),
           ...(certificationUnknown.some(row => !row.retained) ? [certificationUnknown.filter(row => !row.retained).length + ' dosen belum memiliki status sertifikasi yang dapat dikenali.'] : []),
           ...(bkd.some(row => row.activity.some(value => value == null) || row.totalPerformance == null || row.excessLoad == null) ? ['Angka yang kosong tetap ditandai belum terdata, bukan diubah menjadi 0.'] : []),

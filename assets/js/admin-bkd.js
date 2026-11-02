@@ -24,7 +24,7 @@
       if (file.encoding !== 'base64' || typeof file.content !== 'string' || !file.sha) throw new Error('Format data GitHub tidak dikenali. Coba muat ulang.');
       const bytes = Uint8Array.from(atob(file.content.replace(/\s/g, '')), ch => ch.charCodeAt(0));
       const data = JSON.parse(new TextDecoder('utf-8', {fatal:true}).decode(bytes));
-      if (!data || !Array.isArray(data.jad) || !Array.isArray(data.fte) || !Array.isArray(data.bkd) || !data.meta || !Array.isArray(data.focusPrograms) || data.focusPrograms.length !== 8) throw new Error('Data dashboard belum lengkap. Pembaruan dibatalkan agar data lain tidak tertimpa.');
+      if (!data || !Array.isArray(data.jad) || !Array.isArray(data.bkd) || !data.meta || !Array.isArray(data.focusPrograms) || data.focusPrograms.length !== 8) throw new Error('Data dashboard belum lengkap. Pembaruan dibatalkan agar data lain tidak tertimpa.');
       return {data, sha:file.sha};
     } catch (error) {
       if (error.name === 'AbortError') throw new Error('Pembacaan GitHub terlalu lama. Periksa koneksi, lalu pilih Muat ulang.');
