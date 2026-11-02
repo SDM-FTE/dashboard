@@ -10,10 +10,10 @@ module.exports = `<!doctype html>
   <title>Kelola antrean JAD · Admin Monitoring Dosen</title>
   <link rel="stylesheet" href="/assets/css/admin-queue.css?v=20261005">
   <script src="/assets/js/admin-session.js?v=20261005" defer></script>
-  <script src="/assets/js/admin-queue.js?v=20261005" defer></script>
+  <script src="/assets/js/admin-queue.js?v=20261102-fte-removed" defer></script>
 </head>
 <body>
-  <header class="queue-topbar"><a class="queue-brand" href="/#top"><span class="queue-brand-mark">J</span><span><strong>MONITORING DOSEN</strong><small>JAD, BKD &amp; FTE</small></span></a><div class="queue-header-actions"><span>Admin <strong>__ADMIN_LOGIN__</strong></span><a href="/admin/">← Menu admin</a><form action="/api/admin/logout" method="post"><input type="hidden" name="csrf" value="__CSRF_TOKEN__"><button type="submit">Keluar</button></form></div></header>
+  <header class="queue-topbar"><a class="queue-brand" href="/#top"><span class="queue-brand-mark">J</span><span><strong>MONITORING DOSEN</strong><small>JAD &amp; BKD</small></span></a><div class="queue-header-actions"><span>Admin <strong>__ADMIN_LOGIN__</strong></span><a href="/admin/">← Menu admin</a><form action="/api/admin/logout" method="post"><input type="hidden" name="csrf" value="__CSRF_TOKEN__"><button type="submit">Keluar</button></form></div></header>
   <main class="queue-shell" data-admin-editor>
     <div class="queue-heading"><div><p class="queue-eyebrow">PENGELOLAAN DATA / JAD</p><h1>Kelola antrean JAD</h1><p>Periksa pengajuan dosen, berikan nomor antrean, dan perbarui status penanganannya.</p></div><a class="queue-secondary" href="/antrian-jad/" target="_blank" rel="noopener">Lihat antrean publik ↗</a></div>
     <div class="queue-load-bar"><p id="queueLoadState" role="status">Memuat data terbaru…</p><button id="queueReload" class="queue-text-button" type="button" disabled>Muat ulang</button></div>

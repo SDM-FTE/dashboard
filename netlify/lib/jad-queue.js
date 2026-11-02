@@ -13,16 +13,6 @@ const STATUSES = ['queued', 'processing', 'completed', 'cancelled'];
 const PUBLIC_KEYS = ['id', 'number', 'name', 'program', 'currentRank', 'proposedRank', 'status', 'submittedAt', 'approvedAt'];
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
 const HEADERS = { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'private, no-store, max-age=0', 'X-Content-Type-Options': 'nosniff', 'X-Robots-Tag': 'noindex, nofollow', 'Referrer-Policy': 'same-origin' };
-const LOCATIONS = {
-  'PRODI S1 TEKNIK FISIKA (TF)': 'Teknik Fisika (S1)',
-  'PRODI S2 ELEKTRO (PASCA TE)': 'Teknik Elektro (S2)',
-  'PRODI S3 TEKNIK ELEKTRO (DOCTORAL TE)': 'Teknik Elektro (S3)',
-  'PRODI S1 TEKNIK TELEKOMUNIKASI (TT)': 'Teknik Telekomunikasi (S1)',
-  'PRODI S1 TEKNIK KOMPUTER (TK)': 'Teknik Komputer (S1)',
-  'PRODI S1 TEKNIK ELEKTRO (TE)': 'Teknik Elektro (S1)',
-  'PRODI S1 TEKNIK BIOMEDIS (TB)': 'Teknik Biomedis (S1)',
-  'PRODI S1 TEKNIK SISTEM ENERGI (TSE)': 'Teknik Sistem Energi (S1)',
-};
 class QueueError extends Error {
   constructor(status, code, message, extra) { super(message); this.status = status; this.code = code; this.extra = extra || {}; }
 }
@@ -31,7 +21,7 @@ const canonical = value => Array.isArray(value) ? '[' + value.map(canonical).joi
 const version = value => crypto.createHash('sha256').update(canonical(value)).digest('hex');
 const tidy = value => String(value == null ? '' : value).normalize('NFKC').trim().replace(/\s+/g, ' ');
 const validText = value => typeof value === 'string' && value.trim().length > 0 && value.length <= 200 && !/[\u0000-\u001f\u007f]/.test(value);
-const rank = value => ({ AA: RANKS[0], L: RANKS[1], LK: RANKS[2], GB: RANKS[3] })[value] || (RANKS.includes(value) ? value : null);
+const rank = value => ({ AA: RANKS[0], L: RANKS[1], LK: RANKS[2], GB: RANKS[3], PROFESOR: RANKS[3], 'ASISTEN AHLI': RANKS[0], LEKTOR: RANKS[1], 'LEKTOR KEPALA': RANKS[2], 'GURU BESAR': RANKS[3] })[tidy(value).toUpperCase()] || null;
 const active = row => row.status === 'queued' || row.status === 'processing';
 const samePerson = (left, right) => tidy(left.name).toLowerCase() === tidy(right.name).toLowerCase() && tidy(left.program).toLowerCase() === tidy(right.program).toLowerCase();
 const exactKeys = (value, keys) => value && typeof value === 'object' && !Array.isArray(value) && Object.keys(value).sort().join(',') === keys.slice().sort().join(',');
@@ -45,7 +35,7 @@ function validateLedger(data) {
   if (!exactKeys(data, ['schemaVersion', 'nextNumber', 'applications']) || data.schemaVersion !== 1 || !Number.isSafeInteger(data.nextNumber) || data.nextNumber < 1 || !Array.isArray(data.applications) || data.applications.length > 5000) error(503, 'ledger', 'Data antrean belum dapat dibaca. Coba kembali setelah pengelola memeriksa data.');
   const ids = new Set(), numbers = new Set(), activePeople = new Set();
   for (const row of data.applications) {
-    if (!exactKeys(row, PUBLIC_KEYS) || !UUID.test(row.id) || !Number.isSafeInteger(row.number) || row.number < 1 || row.number >= data.nextNumber || ids.has(row.id) || numbers.has(row.number) || !['name', 'program', 'currentRank'].every(key => validText(row[key])) || ![...RANKS, 'Belum memiliki JFA'].includes(row.currentRank) || !RANKS.includes(row.proposedRank) || RANKS.indexOf(row.proposedRank) <= RANKS.indexOf(row.currentRank) || !STATUSES.includes(row.status) || !Number.isFinite(Date.parse(row.submittedAt)) || !Number.isFinite(Date.parse(row.approvedAt))) error(503, 'ledger', 'Identitas atau nomor antrean pada data tersimpan tidak valid. Pembaruan dibatalkan.');
+    if (!exactKeys(row, PUBLIC_KEYS) || !UUID.test(row.id) || !Number.isSafeInteger(row.number) || row.number < 1 || row.number >= data.nextNumber || ids.has(row.id) || numbers.has(row.number) || !['name', 'program', 'currentRank'].every(key => validText(row[key])) || ![...RANKS, 'Belum memiliki JFA', 'Belum terdata'].includes(row.currentRank) || !RANKS.includes(row.proposedRank) || RANKS.indexOf(row.proposedRank) <= RANKS.indexOf(row.currentRank) || !STATUSES.includes(row.status) || !Number.isFinite(Date.parse(row.submittedAt)) || !Number.isFinite(Date.parse(row.approvedAt))) error(503, 'ledger', 'Identitas atau nomor antrean pada data tersimpan tidak valid. Pembaruan dibatalkan.');
     const person = tidy(row.name).toLowerCase() + '\u0000' + tidy(row.program).toLowerCase();
     if (active(row) && activePeople.has(person)) error(503, 'ledger', 'Dosen memiliki lebih dari satu ajuan aktif pada antrean tersimpan.');
     if (active(row)) activePeople.add(person);
@@ -55,13 +45,14 @@ function validateLedger(data) {
 }
 
 function rosterFrom(data) {
-  if (!data || !Array.isArray(data.fte) || !Array.isArray(data.focusPrograms) || data.focusPrograms.length !== 8 || data.fte.length > 5000) error(503, 'roster', 'Daftar dosen terbaru belum dapat dibaca. Coba kembali.');
-  const seen = new Set();
-  const roster = data.fte.map(row => {
-    const id = String(row.id), program = LOCATIONS[tidy(row.location).toUpperCase()];
-    if (!/^[1-9][0-9]{0,6}$/.test(id) || seen.has(id) || !validText(row.name) || !program || !data.focusPrograms.includes(program)) error(503, 'roster', 'Identitas dosen atau prodi pada data master belum dapat dicocokkan.');
-    seen.add(id);
-    const currentRank = rank(tidy(row.jfa).toUpperCase()) || (['', 'NJFA'].includes(tidy(row.jfa).toUpperCase()) ? 'Belum memiliki JFA' : null);
+  if (!data || !Array.isArray(data.bkd) || !Array.isArray(data.focusPrograms) || data.focusPrograms.length !== 8 || new Set(data.focusPrograms).size !== 8 || data.bkd.length > 5000) error(503, 'roster', 'Daftar dosen terbaru belum dapat dibaca. Coba kembali.');
+  const seen = new Set(), people = new Set();
+  const roster = data.bkd.map(row => {
+    if (!row || !Number.isSafeInteger(row.no)) error(503, 'roster', 'Identitas dosen atau prodi pada data master belum dapat dicocokkan.');
+    const id = String(row.no), program = tidy(row.program), person = tidy(row.name).toLowerCase() + '\u0000' + program.toLowerCase();
+    if (!/^[1-9][0-9]{0,6}$/.test(id) || seen.has(id) || people.has(person) || !validText(row.name) || !validText(row.program) || !data.focusPrograms.includes(program)) error(503, 'roster', 'Identitas dosen atau prodi pada data master belum dapat dicocokkan.');
+    seen.add(id); people.add(person);
+    const position = tidy(row.position), currentRank = rank(position) || (!position ? 'Belum terdata' : position.toUpperCase() === 'NJFA' ? 'Belum memiliki JFA' : null);
     if (!currentRank) error(503, 'roster', 'Jabatan dosen pada data master tidak dikenali.');
     return { id, name: tidy(row.name), program, currentRank };
   });

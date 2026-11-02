@@ -135,7 +135,7 @@ const login = `<!doctype html>
   <header class="topbar">
     <a class="brand" href="/#top" aria-label="Beranda Monitoring Dosen">
       <span class="brand-mark" aria-hidden="true">J</span>
-      <span><strong>MONITORING DOSEN</strong><small>JAD, BKD &amp; FTE</small></span>
+      <span><strong>MONITORING DOSEN</strong><small>JAD &amp; BKD</small></span>
     </a>
     <a class="back-link" href="/#top">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m14 6-6 6 6 6M8 12h12"/></svg>
@@ -146,14 +146,14 @@ const login = `<!doctype html>
     <section class="intro" aria-labelledby="page-title">
         <p class="eyebrow">PENGELOLAAN DASHBOARD</p>
         <h1 id="page-title">Kelola dashboard,<br><span>dengan akses admin.</span></h1>
-        <p class="intro-copy">Perbarui progres usulan dan data dosen agar informasi JAD, BKD, dan FTE tetap sesuai.</p>
+        <p class="intro-copy">Perbarui progres usulan dan data dosen agar informasi JAD dan BKD tetap sesuai.</p>
         <div class="scope">
           <span class="scope-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h10a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"/><path d="m8 11 2 2 5-5M8 17h8"/></svg></span>
           <div><h2>Progres usulan JAD</h2><p>Tahap ajuan dan kelengkapan syarat utama.</p></div>
         </div>
         <div class="scope">
           <span class="scope-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V9h4v12M10 21V3h4v18M16 21V13h4v8M2 21h20"/></svg></span>
-          <div><h2>Data BKD dan FTE</h2><p>Hasil beban kerja dan data dosen.</p></div>
+          <div><h2>Data BKD</h2><p>Hasil beban kerja dan data dosen.</p></div>
         </div>
       </section>
     <section class="login-card" aria-labelledby="login-title">
@@ -165,7 +165,7 @@ const login = `<!doctype html>
       <p class="login-note">Menu pembaruan tersedia setelah akun admin diverifikasi.</p>
     </section>
   </div></main>
-  <footer>Monitoring Dosen · JAD, BKD &amp; FTE</footer>
+  <footer>Monitoring Dosen · JAD &amp; BKD</footer>
 </body>
 </html>
 `;
@@ -305,7 +305,7 @@ const admin = `<!doctype html>
   <header class="topbar">
     <a class="brand" href="/#top" aria-label="Beranda Monitoring Dosen">
       <span class="brand-mark" aria-hidden="true">J</span>
-      <span><strong>MONITORING DOSEN</strong><small>JAD, BKD &amp; FTE</small></span>
+      <span><strong>MONITORING DOSEN</strong><small>JAD &amp; BKD</small></span>
     </a>
     <a class="back-link" href="/#top">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m14 6-6 6 6 6M8 12h12"/></svg>
@@ -316,14 +316,14 @@ const admin = `<!doctype html>
     <section class="intro" aria-labelledby="page-title">
         <p class="eyebrow">PENGELOLAAN DASHBOARD</p>
         <h1 id="page-title">Kelola dashboard,<br><span>dengan akses admin.</span></h1>
-        <p class="intro-copy">Perbarui progres usulan dan data dosen agar informasi JAD, BKD, dan FTE tetap sesuai.</p>
+        <p class="intro-copy">Perbarui progres usulan dan data dosen agar informasi JAD dan BKD tetap sesuai.</p>
         <div class="scope">
           <span class="scope-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h10a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"/><path d="m8 11 2 2 5-5M8 17h8"/></svg></span>
           <div><h2>Progres usulan JAD</h2><p>Tahap ajuan dan kelengkapan syarat utama.</p></div>
         </div>
         <div class="scope">
           <span class="scope-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V9h4v12M10 21V3h4v18M16 21V13h4v8M2 21h20"/></svg></span>
-          <div><h2>Data BKD dan FTE</h2><p>Hasil beban kerja dan data dosen.</p></div>
+          <div><h2>Data BKD</h2><p>Hasil beban kerja dan data dosen.</p></div>
         </div>
       </section>
     <section class="login-card" aria-labelledby="admin-title">
@@ -338,12 +338,11 @@ const admin = `<!doctype html>
           <a class="manage-link" href="/admin/jad"><span><strong>Progres JAD</strong><small>Tahap ajuan dan status dokumen</small></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
           <a class="manage-link" href="/admin/antrian"><span><strong>Antrean ajuan JAD</strong><small>Validasi ajuan dan kelola nomor antrean</small></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
         </div>
-        <p class="login-note">Gunakan sheet 2026 (ganjil 26-27).</p>
       </div>
       <form class="logout-form" method="post" action="/api/admin/logout"><input type="hidden" name="csrf" value="__CSRF_TOKEN__"><button class="logout-button" type="submit">Keluar</button></form>
     </section>
   </div></main>
-  <footer>Monitoring Dosen · JAD, BKD &amp; FTE</footer>
+  <footer>Monitoring Dosen · JAD &amp; BKD</footer>
 </body>
 </html>
 `;
@@ -356,9 +355,9 @@ const bkd = `<!doctype html>
   <title>Perbarui BKD · Admin Monitoring Dosen</title>
   <link rel="stylesheet" href="/assets/css/admin-bkd.css?v=20261002">
   <script src="/assets/js/admin-session.js" defer></script>
-  <script src="/assets/js/bkd-import.js?v=20261002" defer></script>
+  <script src="/assets/js/bkd-import.js?v=20261102-fte-removed" defer></script>
   <script src="/assets/js/bkd-xlsx.js?v=20261002" defer></script>
-  <script src="/assets/js/admin-bkd.js?v=20261002" defer></script>
+  <script src="/assets/js/admin-bkd.js?v=20261102-fte-removed" defer></script>
 <style>
   .admin-header-actions { display:flex;align-items:center;justify-content:flex-end;gap:20px;min-width:0; }
   .verified-admin { display:inline-flex;align-items:center;gap:7px;font-size:10px;line-height:1.5;color:#b7e0d8; }
@@ -374,7 +373,7 @@ const bkd = `<!doctype html>
 </style>
 </head>
 <body>
-  <header class="topbar"><a class="brand" href="/#top"><span class="brand-mark">J</span><span><strong>MONITORING DOSEN</strong><small>JAD, BKD &amp; FTE</small></span></a><div class="admin-header-actions"><span class="verified-admin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6l-8-3Z"/><path d="m8.5 12 2.3 2.3 4.7-4.7"/></svg><span>Admin terverifikasi <strong>__ADMIN_LOGIN__</strong></span></span><a class="back-link" href="/admin/">← Menu admin</a><form method="post" action="/api/admin/logout"><input type="hidden" name="csrf" value="__CSRF_TOKEN__"><button class="admin-logout" type="submit">Keluar</button></form></div></header>
+  <header class="topbar"><a class="brand" href="/#top"><span class="brand-mark">J</span><span><strong>MONITORING DOSEN</strong><small>JAD &amp; BKD</small></span></a><div class="admin-header-actions"><span class="verified-admin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6l-8-3Z"/><path d="m8.5 12 2.3 2.3 4.7-4.7"/></svg><span>Admin terverifikasi <strong>__ADMIN_LOGIN__</strong></span></span><a class="back-link" href="/admin/">← Menu admin</a><form method="post" action="/api/admin/logout"><input type="hidden" name="csrf" value="__CSRF_TOKEN__"><button class="admin-logout" type="submit">Keluar</button></form></div></header>
   <main class="shell" data-admin-editor>
     <p class="admin-status" role="status" aria-live="polite">__STATUS_MESSAGE__</p>
     <div class="page-heading"><div><p class="eyebrow">PENGELOLAAN DATA / BKD</p><h1>Perbarui rekap BKD</h1><p>Gunakan ekspor SISTER terbaru. Periksa hasil untuk 8 prodi sebelum menerbitkan pembaruan.</p></div><a class="view-link" href="/#bkd" target="_blank" rel="noopener">Lihat dashboard ↗</a></div>
@@ -403,7 +402,7 @@ const bkd = `<!doctype html>
       </section>
     </div>
     <p id="pageMessage" class="message" role="status" aria-live="polite" hidden></p>
-    <section class="card publish-card" aria-labelledby="publishHeading"><div><p class="eyebrow">LANGKAH 3</p><h2 id="publishHeading">Terbitkan melalui GitHub</h2><p>Unduh hasil, lalu unggah sebagai <strong>dashboard-data.json</strong> ke folder data dan pilih <strong>Commit changes</strong>. GitHub memeriksa izin akun admin Anda.</p><p class="helper">Data JAD dan FTE dimuat ulang dari GitHub sebelum hasil diunduh. File sumber CSV/Excel tetap di komputer Anda.</p></div><div class="publish-actions"><button id="downloadResult" class="primary-button" type="button" disabled>1. Unduh hasil BKD</button><a class="secondary-button" href="https://github.com/SDM-FTE/dashboard/upload/main/assets/data" target="_blank" rel="noopener">2. Unggah ke GitHub ↗</a><a class="text-link" href="/#bkd" target="_blank" rel="noopener">Periksa dashboard setelah diterbitkan ↗</a></div></section>
+    <section class="card publish-card" aria-labelledby="publishHeading"><div><p class="eyebrow">LANGKAH 3</p><h2 id="publishHeading">Terbitkan melalui GitHub</h2><p>Unduh hasil, lalu unggah sebagai <strong>dashboard-data.json</strong> ke folder data dan pilih <strong>Commit changes</strong>. GitHub memeriksa izin akun admin Anda.</p><p class="helper">Data JAD dimuat ulang dari GitHub sebelum hasil diunduh. File sumber CSV/Excel tetap di komputer Anda.</p></div><div class="publish-actions"><button id="downloadResult" class="primary-button" type="button" disabled>1. Unduh hasil BKD</button><a class="secondary-button" href="https://github.com/SDM-FTE/dashboard/upload/main/assets/data" target="_blank" rel="noopener">2. Unggah ke GitHub ↗</a><a class="text-link" href="/#bkd" target="_blank" rel="noopener">Periksa dashboard setelah diterbitkan ↗</a></div></section>
     <footer>MONITORING DOSEN <span>Pengelolaan BKD melalui akun GitHub admin</span></footer>
   </main>
 </body>
@@ -423,7 +422,7 @@ const jad = `<!doctype html>
   <script src="/assets/js/admin-jad.js?v=20261002-admin" defer></script>
 </head>
 <body>
-  <header class="topbar"><a class="brand" href="/#top"><span class="brand-mark">J</span><span><strong>MONITORING DOSEN</strong><small>JAD, BKD &amp; FTE</small></span></a><a class="back-link" href="/admin/">← Halaman admin</a></header>
+  <header class="topbar"><a class="brand" href="/#top"><span class="brand-mark">J</span><span><strong>MONITORING DOSEN</strong><small>JAD &amp; BKD</small></span></a><a class="back-link" href="/admin/">← Halaman admin</a></header>
   <main class="shell jad-shell" data-admin-editor>
     <div class="page-heading"><div><p class="eyebrow">PENGELOLAAN DATA / JAD</p><h1>Perbarui progres JAD</h1><p>Pilih dosen, ubah status ajuan dan kelengkapan penelitian, lalu simpan di halaman ini.</p></div><a class="view-link" href="/#jad" target="_blank" rel="noopener">Lihat dashboard ↗</a></div>
     <div class="admin-identity">Masuk sebagai <strong>__ADMIN_LOGIN__</strong><span>Khusus admin</span><form action="/api/admin/logout" method="post"><input type="hidden" name="csrf" value="__CSRF_TOKEN__"><button type="submit">Keluar</button></form></div>
