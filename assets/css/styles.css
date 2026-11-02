@@ -77,21 +77,18 @@ h1, h2, h3 { font-family: Manrope, 'Segoe UI', sans-serif; }
 .home-pages-heading { margin: 0 0 16px; }
 .home-pages-heading h2 { margin: 0 0 7px; font-size: 21px; letter-spacing: -.025em; }
 .home-pages-heading p { margin: 0; color: #526976; font-size: 14px; line-height: 1.6; }
-.home-page-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.home-page-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
 .home-page-card { display: flex; min-height: 242px; flex-direction: column; align-items: flex-start; padding: 20px; border: 1px solid var(--line); border-radius: 14px; background: #fff; box-shadow: 0 2px 10px #183b4809; transition: border-color .15s ease, box-shadow .15s ease; }
 .home-page-card:hover, .home-page-card:focus-within { border-color: #bed9d5; box-shadow: 0 6px 20px #183b4810; }
 .home-page-icon { display: grid; width: 40px; height: 40px; place-items: center; margin-bottom: 13px; border-radius: 11px; background: var(--teal-soft); color: #167f75; }
 .home-page-icon svg { width: 24px; height: 24px; }
 .bkd-home-card .home-page-icon { color: #426fae; background: var(--blue-soft); }
-.fte-home-card .home-page-icon { color: #926418; background: var(--amber-soft); }
 .home-page-card h3 { margin: 0 0 9px; color: var(--navy); font-size: 21px; letter-spacing: -.025em; }
 .home-page-card p { max-width: 480px; margin: 0 0 18px; color: #526976; font-size: 14px; line-height: 1.6; }
 .home-link-button { display: inline-flex; width: 100%; min-height: 46px; align-items: center; justify-content: space-between; gap: 10px; margin-top: auto; padding: 11px 14px; border: 1px solid #cce5e1; border-radius: 8px; background: #f2faf8; color: #167f75; font-size: 14px; font-weight: 700; text-align: left; }
 .home-link-button:hover { border-color: #8fcfc5; background: #e8f7f4; }
 .bkd-home-card .home-link-button { border-color: #d4e0f2; background: #f4f7fc; color: #426fae; }
 .bkd-home-card .home-link-button:hover { border-color: #a8c3e8; background: #ebf1fa; }
-.fte-home-card .home-link-button { border-color: #f0dfbd; background: #fffaf0; color: #9b6b1a; }
-.fte-home-card .home-link-button:hover { border-color: #e5c98c; background: #fff4dc; }
 .home-panel button:focus-visible { outline: 3px solid #0f9e9166; outline-offset: 3px; }
 @media (prefers-reduced-motion: reduce) { .home-page-card { transition: none; } }
 .section-heading { display: flex; justify-content: space-between; align-items: end; margin-bottom: 21px; }
@@ -142,9 +139,6 @@ h1, h2, h3 { font-family: Manrope, 'Segoe UI', sans-serif; }
 .table-card { overflow: hidden; }
 .table-heading { padding: 21px 23px 13px; align-items: center; }
 .dynamic-note { margin: 0; padding: 0 23px 13px; color: #748890; font-size: 10px; }
-.fte-filters { display: grid; grid-template-columns: minmax(220px, 1.4fr) repeat(3, minmax(150px, 1fr)); }
-.fte-table { min-width: 1120px; }
-.fte-table td { white-space: nowrap; }
 .result-count { flex: 0 0 auto; color: #819198; font-size: 11px; }
 .filters { display: flex; flex-wrap: wrap; align-items: center; gap: 9px; padding: 0 23px 16px; }
 .certification-filters { display: grid; grid-template-columns: minmax(220px, 1.6fr) minmax(180px, 1fr); }
@@ -266,8 +260,6 @@ tbody tr.clickable-row:focus-within { background: #f0faf8; }
   .search-field { max-width: none; }
   .bkd-filters { display: grid; grid-template-columns: 1fr 1fr; }
   .certification-filters { grid-template-columns: 1fr; }
-  .fte-filters { grid-template-columns: 1fr 1fr; }
-  .fte-filters .search-field { grid-column: 1 / -1; }
   .dynamic-note { padding-left: 17px; padding-right: 17px; }
   .bkd-filters .search-field { grid-column: 1 / -1; }
   .program-row { grid-template-columns: minmax(110px, 1fr) minmax(70px, 1fr) 45px; gap: 9px; }
@@ -294,8 +286,6 @@ tbody tr.clickable-row:focus-within { background: #f0faf8; }
   .detail-grid { grid-template-columns: 1fr; }
   .bkd-filters { grid-template-columns: 1fr; }
   .certification-kpis { grid-template-columns: 1fr; }
-  .fte-filters { grid-template-columns: 1fr; }
-  .fte-filters .search-field { grid-column: auto; }
   .bkd-filters .search-field { grid-column: auto; }
 }
 
@@ -363,6 +353,5 @@ tbody tr.clickable-row:focus-within { background: #f0faf8; }
   .jad-checklist-state { margin-top: 1px; }
 }
 
-.fte-kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 
 
