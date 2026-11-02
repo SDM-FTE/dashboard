@@ -138,6 +138,8 @@ def main():
         raise RuntimeError("The existing dashboard JSON could not be read; it was left unchanged.") from error
     if not isinstance(data, dict) or not isinstance(data.get("meta"), dict) or not isinstance(data.get("bkd"), list):
         raise RuntimeError("The existing dashboard JSON has an unexpected structure; it was left unchanged.")
+    if "fte" in data or any(key.lower().startswith("fte") for key in data["meta"]):
+        raise RuntimeError("Retired personnel data found in the baseline; refresh was stopped to avoid republishing it.")
 
     data["jad"] = jad
     data["meta"]["jadRows"] = len(jad)
