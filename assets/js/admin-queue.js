@@ -20,7 +20,7 @@
   function rank(value, allowEmpty) {
     const found = ranks.find(item => item.label === value || item.code === value);
     if (found) return found;
-    if (allowEmpty && value === 'Belum memiliki JFA') return { code: '', label: value };
+    if (allowEmpty && ['Belum memiliki JFA', 'Belum terdata'].includes(value)) return { code: '', label: value };
     throw new Error('Jabatan pada data antrean belum dapat dibaca. Hubungi pengelola.');
   }
   function validId(value) { return typeof value === 'string' && /^[A-Za-z0-9_-]{1,100}$/.test(value); }
