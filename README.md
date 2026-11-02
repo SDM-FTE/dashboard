@@ -1,17 +1,15 @@
-# Dashboard Monitoring JAD + BKD + FTE
+# Dashboard Monitoring JAD + BKD
 
-Paket untuk repository GitHub `SDM-FTE/dashboard`. Halaman utama berisi pilihan Detail Usulan JAD, Rekap BKD, dan Data FTE 2026. Pembaruan data dilakukan melalui GitHub. URL Netlify yang dibagikan merupakan halaman yang dilihat; paket ini tidak mengubah konfigurasi penerbitan repository.
+Paket untuk repository GitHub `SDM-FTE/dashboard`. Halaman utama berisi pilihan Detail Usulan JAD dan Rekap BKD. Pembaruan data dilakukan melalui GitHub. URL Netlify yang dibagikan merupakan halaman yang dilihat; paket ini tidak mengubah konfigurasi penerbitan repository.
 
 ## Halaman
 
 - **JAD:** daftar usulan dan rincian angka kredit/SKP.
 - **BKD:** rekap 210 dosen pada 8 prodi pilihan, dengan daftar dosen dan rincian kinerja.
-- **FTE:** 225 dosen dari sheet `2026 (ganjil 26-27)`, pencarian, filter prodi/unit, JFA, status dosen, detail pendidikan/keahlian, dan pagination. Baris selain dosen telah dihapus dari data dashboard.
-- Masa TMT JFA, masa kerja, masa kerja SK, dan umur dihitung ulang di halaman menggunakan tanggal berjalan zona WIB. Halaman terbuka lama memeriksa perubahan tanggal dan memperbarui hitungan.
 
 ## Data yang ditampilkan
 
-Berkas JSON tidak menyertakan NIP, NIDN, NUPTK, nomor sertifikat, tempat lahir, atau gender. **Tanggal lahir tetap tersimpan di `assets/data/dashboard-data.json` sebagai dasar hitung umur otomatis, meskipun tidak ditampilkan di halaman.** JSON tersebut dapat dibuka siapa pun apabila situs diterbitkan secara publik. Tanggal TMT JFA, mulai kerja, dan mulai SK juga tersedia di JSON sebagai dasar perhitungan masa.
+Dataset publik hanya memuat data pengajuan JAD, rekap BKD, dan progres JAD. Data kepegawaian dari workbook FTE tidak disertakan. Logo FTE tetap digunakan sebagai identitas Fakultas Teknik Elektro.
 
 ## Pasang perbaikan situs satu kali
 
