@@ -89,6 +89,19 @@ h1, h2, h3 { font-family: Manrope, 'Segoe UI', sans-serif; }
 .home-link-button:hover { border-color: #8fcfc5; background: #e8f7f4; }
 .bkd-home-card .home-link-button { border-color: #d4e0f2; background: #f4f7fc; color: #426fae; }
 .bkd-home-card .home-link-button:hover { border-color: #a8c3e8; background: #ebf1fa; }
+.bkd-period-field { display: grid; min-width: 0; gap: 8px; width: 100%; color: #526976; font-size: 13px; font-weight: 600; }
+.bkd-period-field select { width: 100%; min-width: 0; min-height: 46px; padding: 10px 35px 10px 12px; border: 1px solid #bdcfd9; border-radius: 8px; background: #fff; color: var(--ink); font-size: 13px; font-weight: 400; text-overflow: ellipsis; }
+.bkd-period-field select:focus-visible { outline: 3px solid #5688cb55; outline-offset: 2px; border-color: #5688cb; }
+.home-bkd-period { margin-top: auto; }
+.home-page-card .bkd-period-note { margin: 7px 0 12px; min-height: 18px; color: #7c5b24; font-size: 12px; line-height: 1.5; }
+.bkd-home-card .home-link-button { margin-top: 0; }
+.bkd-period-toolbar { max-width: 660px; margin: 0 0 22px; }
+.bkd-period-context { margin: 8px 0 5px; color: #426fae; font-size: 13px; font-weight: 600; }
+.bkd-period-empty { padding: 30px 25px; border-color: #d7e2ec; }
+.bkd-period-empty h3 { margin-bottom: 10px; font-size: 19px; }
+.bkd-period-empty p { margin-bottom: 8px; color: #526976; line-height: 1.6; font-size: 14px; }
+.bkd-period-empty p:last-child { margin-bottom: 0; }
+.bkd-period-empty[hidden], #bkdPeriodSummary[hidden] { display: none; }
 .home-panel button:focus-visible { outline: 3px solid #0f9e9166; outline-offset: 3px; }
 @media (prefers-reduced-motion: reduce) { .home-page-card { transition: none; } }
 .section-heading { display: flex; justify-content: space-between; align-items: end; margin-bottom: 21px; }
