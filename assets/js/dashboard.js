@@ -23,6 +23,11 @@
   let jadProgress = {};
   let activeJadNo = null;
   const JAD_STAGES = ['Pengecekan ajuan', 'Pengesahan', 'Penugasan asesor', 'Penilaian', 'Verifikasi SK', 'Selesai'];
+  const JAD_REQUIREMENTS = [
+    ['paperPdf', 'Paper terbit (PDF)', 'Naskah paper terbit tersedia dalam format PDF.'],
+    ['similarity', 'Hasil similarity', 'Dokumen atau hasil pemeriksaan similarity telah tersedia.'],
+    ['correspondence', 'Korespondensi syarat utama', 'Bukti korespondensi untuk pemenuhan syarat utama telah tersedia.'],
+  ];
   const pages = { jad: 1, bkd: 1, bkdCertification: 1 };
   let activeProgramIndex = null;
   let activeBkdConclusion = '';
@@ -172,6 +177,7 @@
 
   function setView(name, updateHash = true) {
     let view = ['home', 'jad', 'jad-detail', 'jad-progress', 'bkd', 'bkd-prodi', 'bkd-sertifikasi'].includes(name) ? name : 'home';
+    if (view === 'jad') view = 'jad-detail';
     if (data && view.startsWith('bkd') && !bkdRecords.length) view = 'bkd';
     $('#homeView').hidden = view !== 'home';
     $('#jadView').hidden = view !== 'jad';
@@ -237,17 +243,32 @@
   function openJadProgress(no, updateHash = true) {
     const record = (data?.jad || []).find((row) => String(row.no) === String(no));
     if (!record) { setView('jad-detail', updateHash); return; }
+    if (activeJadNo !== String(record.no)) {
+      ['#jadSupplement', '#jadStageDetails'].forEach((selector) => {
+        const disclosure = $(selector);
+        if (disclosure) disclosure.open = false;
+      });
+    }
     activeJadNo = String(record.no);
     renderJadProgress(record);
     setView('jad-progress', updateHash);
   }
 
-  function renderJadProgress(record) {
+  function jadProgressFor(record) {
     const saved = jadProgress.lecturers?.[String(record.no)] ?? jadProgress[String(record.no)] ?? {};
     const rawStage = Number(saved.stage);
     const stage = saved.stage !== null && saved.stage !== undefined && saved.stage !== '' && Number.isInteger(rawStage) && rawStage >= 0 && rawStage < JAD_STAGES.length ? rawStage : null;
+    const checks = saved.requirements || {};
+    const completeCount = JAD_REQUIREMENTS.filter(([key]) => checks[key] === true).length;
+    const reviewedCount = JAD_REQUIREMENTS.filter(([key]) => checks[key] === true || checks[key] === false).length;
+    return { stage, checks, completeCount, reviewedCount };
+  }
+
+  function renderJadProgress(record) {
+    const { stage, checks } = jadProgressFor(record);
     const currentRank = record.currentRank ? `${record.currentRank}${record.rankDate ? ` · ${record.rankDate}` : ''}` : null;
     $('#jadProgressHeading').textContent = record.name;
+    $('#jadProgressSubtitle').textContent = record.proposedRank ? `Usulan jabatan: ${record.proposedRank}` : 'Usulan jabatan belum terdata';
     $('#jadAdminEdit').href = '/admin/jad?dosen=' + encodeURIComponent(String(record.no));
     $('#jadProgressPublication').className = `badge ${badgeClass(record.publication)}`;
     $('#jadProgressPublication').textContent = shortText(record.publication, 'Status publikasi belum tersedia');
@@ -255,19 +276,13 @@
       ['Jenjang ijazah', record.degree], ['JFA saat ini', currentRank], ['Usulan JFA', record.proposedRank],
       ['AKK baru', record.totalAkBaru], ['AKK lama + baru', record.totalAkLamaBaru], ['Rumpun ilmu', record.scienceCluster],
     ].map(([label, value]) => `<div class="progress-applicant-item"><span>${esc(label)}</span><strong>${value === null || value === undefined || value === '' ? '—' : (typeof value === 'number' ? fmt(value) : esc(value))}</strong></div>`).join('');
-    $('#jadProgressStageLabel').textContent = stage === null ? 'Tahapan proses belum diperbarui.' : stage === JAD_STAGES.length - 1 ? 'Ajuan telah selesai.' : `Tahap berjalan: ${JAD_STAGES[stage]}.`;
+    $('#jadProgressStageLabel').textContent = stage === null ? 'Belum diperbarui' : JAD_STAGES[stage];
     $('#jadProgressTimeline').innerHTML = JAD_STAGES.map((label, index) => {
       const state = stage === null ? 'pending' : stage === JAD_STAGES.length - 1 || index < stage ? 'done' : index === stage ? 'current' : 'pending';
       const marker = state === 'done' ? '✓' : state === 'current' ? '•' : '';
       return `<li class="progress-step ${state}" ${state === 'current' ? 'aria-current="step"' : ''}><span class="progress-step-marker" aria-hidden="true">${marker}</span><span class="progress-step-label">${esc(label)}</span></li>`;
     }).join('');
-    const requirements = [
-      ['paperPdf', 'Paper terbit (PDF)', 'Naskah paper terbit tersedia dalam format PDF.'],
-      ['similarity', 'Hasil similarity', 'Dokumen atau hasil pemeriksaan similarity telah tersedia.'],
-      ['correspondence', 'Korespondensi syarat utama', 'Bukti korespondensi untuk pemenuhan syarat utama telah tersedia.'],
-    ];
-    const checks = saved.requirements || {};
-    $('#jadProgressRequirements').innerHTML = requirements.map(([key, label, note]) => {
+    $('#jadProgressRequirements').innerHTML = JAD_REQUIREMENTS.map(([key, label, note]) => {
       const status = checks[key];
       const checked = status === true;
       const reviewed = status === true || status === false;
@@ -278,16 +293,14 @@
     }).join('');
     const skp = (record.skpByYear || []).map((value, i) => [String(2023 + i), value]);
     const groups = [
-      ['Profil dan kepakaran', [['Jenjang ijazah', record.degree], ['Rumpun ilmu', record.scienceCluster]]],
       ['Angka kredit', [['AK pendidikan', record.akEducation], ['AK pengajaran', record.akTeaching], ['AK penelitian', record.akResearch], ['AK pengabdian', record.akCommunity], ['AK penunjang', record.akSupport], ['AK penyetaraan', record.akPenyetaraan], ['AK SKP dan prestasi', record.akSkpPrestasi], ['Total AKK baru', record.totalAkBaru], ['Pencapaian AKK lama + baru', record.totalAkLamaBaru]]],
-      ['Proporsi penelitian', [['AK penelitian tercatat', record.akResearch]]],
-      ['IKD dan SKP', [...skp.map(([year, value]) => [`SKP ${year}`, value]), ['Rekomendasi PAK', record.pakRecommendation], ['Catatan PAK', record.pakNote], ['Rekomendasi Senat', record.senateRecommendation], ['Catatan Senat', record.senateNote]]],
-      ['Syarat BKD', []], ['Syarat khusus', []], ['Dokumen rekomendasi', [['Rekomendasi PAK', record.pakRecommendation], ['Rekomendasi Senat', record.senateRecommendation]]],
+      ['SKP penelitian', skp.map(([year, value]) => [`SKP ${year}`, value])],
+      ['Catatan dan rekomendasi', [['Rekomendasi PAK', record.pakRecommendation], ['Catatan PAK', record.pakNote], ['Rekomendasi Senat', record.senateRecommendation], ['Catatan Senat', record.senateNote]]],
     ];
     $('#jadProgressSections').innerHTML = groups.map(([title, items]) => {
       const visible = items.filter(([, value]) => value !== null && value !== undefined && value !== '');
-      const body = visible.length ? `<div class="detail-grid">${visible.map(([label, value]) => detailItem(label, typeof value === 'number' ? fmt(value) : value)).join('')}</div>` : '<p class="progress-empty-note">Data bagian ini tidak tersedia pada workbook yang digunakan.</p>';
-      return `<details class="progress-accordion"><summary>${esc(title)}<span aria-hidden="true">⌄</span></summary><div class="progress-accordion-body">${body}</div></details>`;
+      if (!visible.length) return '';
+      return `<section class="detail-section"><h3>${esc(title)}</h3><div class="detail-grid">${visible.map(([label, value]) => detailItem(label, typeof value === 'number' ? fmt(value) : value)).join('')}</div></section>`;
     }).join('');
   }
 
@@ -419,15 +432,21 @@
       $('#jadPrev').disabled = pages.jad <= 1;
       $('#jadNext').disabled = pages.jad >= pagesTotal;
       const shown = filtered.slice(start, start + PAGE_SIZE);
-      $('#jadTableBody').innerHTML = shown.length ? shown.map((row) => `<tr class="clickable-row" data-jad-detail="${esc(row.no)}">
-        <td class="name-cell">${esc(row.name)}<span class="sub-cell">${esc(shortText(row.degree, 'Ijazah tidak dicantumkan'))}</span></td>
-        <td>${badge(row.publication)}</td>
-        <td>${esc(shortText(row.currentRank))}</td>
-        <td>${esc(shortText(row.proposedRank))}</td>
-        <td class="numeric">${fmt(row.totalAkBaru)}</td>
-        <td class="numeric">${fmt(row.totalAkLamaBaru)}</td>
-        <td><button type="button" class="row-action" aria-label="Lihat detail ${esc(row.name)}">›</button></td>
-      </tr>`).join('') : '<tr><td colspan="7" class="empty-row">Tidak ada data yang cocok dengan filter.</td></tr>';
+      $('#jadTableBody').innerHTML = shown.length ? shown.map((row) => {
+        const { stage, completeCount, reviewedCount } = jadProgressFor(row);
+        const stageLabel = stage === null ? 'Belum diperbarui' : JAD_STAGES[stage];
+        const stageClass = stage === null ? 'neutral' : stage === JAD_STAGES.length - 1 ? 'good' : 'warn';
+        const requirementsLabel = reviewedCount ? `${completeCount} dari ${JAD_REQUIREMENTS.length} lengkap` : 'Belum diperiksa';
+        const requirementsClass = completeCount === JAD_REQUIREMENTS.length ? 'good' : reviewedCount ? 'warn' : 'neutral';
+        const remaining = JAD_REQUIREMENTS.length - reviewedCount;
+        return `<tr class="clickable-row" data-jad-detail="${esc(row.no)}">
+          <td class="name-cell" data-label="Nama dosen">${esc(row.name)}</td>
+          <td data-label="Usulan JFA">${esc(shortText(row.proposedRank))}</td>
+          <td data-label="Tahap ajuan"><span class="badge jad-stage-status ${stageClass}">${esc(stageLabel)}</span></td>
+          <td data-label="Syarat utama"><span class="badge jad-requirement-count ${requirementsClass}">${esc(requirementsLabel)}</span>${reviewedCount && remaining ? `<span class="sub-cell">${remaining} belum diperiksa</span>` : ''}</td>
+          <td data-label="Progres"><button type="button" class="row-action jad-progress-action" aria-label="Lihat progres ${esc(row.name)}">Lihat progres <span aria-hidden="true">→</span></button></td>
+        </tr>`;
+      }).join('') : '<tr><td colspan="5" class="empty-row">Tidak ada data yang cocok dengan filter.</td></tr>';
       $('#jadTableBody').querySelectorAll('[data-jad-detail]').forEach((rowElement) => rowElement.addEventListener('click', () => {
         const record = records.find((row) => String(row.no) === rowElement.dataset.jadDetail);
         if (record) openJadProgress(record.no);
