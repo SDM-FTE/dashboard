@@ -9,6 +9,8 @@ const REPOSITORY_ID = 1396958677;
 const REPOSITORY = 'SDM-FTE/dashboard';
 const API_ROOT = 'https://api.github.com/repos/' + REPOSITORY;
 const PROGRESS_PATH = 'assets/data/jad-progress.json';
+const BKD_PATH = 'assets/data/dashboard-data.json';
+const BkdPeriods = require('../../assets/js/bkd-periods.js');
 const STAGES = ['Pengecekan ajuan', 'Pengesahan', 'Penugasan asesor', 'Penilaian', 'Verifikasi SK', 'Selesai'];
 const REQUIREMENTS = { paperPdf: 'Paper terbit (PDF)', similarity: 'Hasil similarity', correspondence: 'Korespondensi syarat utama' };
 const SESSION_SECONDS = 15 * 60;
@@ -268,6 +270,82 @@ function createHandler(options) {
     }
   }
 
+  async function readBkd(token) {
+    // Raw media avoids the Contents API's base64 response limit as periods grow.
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 15000);
+    try {
+      const result = await fetcher(API_ROOT + '/contents/' + BKD_PATH + '?ref=main', {
+        method: 'GET', headers: {...githubHeaders(token), Accept: 'application/vnd.github.raw+json'},
+        signal: controller.signal, redirect: 'error',
+      });
+      if (!result.ok) { const failure = new Error('GitHub unavailable'); failure.status = result.status; throw failure; }
+      const limit = 4 * 1024 * 1024;
+      if (Number(result.headers?.get('content-length')) > limit) throw new Error('BKD file too large');
+      const text = await result.text();
+      const bytes = Buffer.from(text, 'utf8');
+      if (bytes.length > limit) throw new Error('BKD file too large');
+      const data = JSON.parse(text.replace(/^\uFEFF/, ''));
+      if (!Array.isArray(data.jad) || !data.jad.length) throw new Error('Missing JAD data');
+      BkdPeriods.initialize(data);
+      return {data, sha: crypto.createHash('sha1').update(Buffer.from('blob ' + bytes.length + '\0')).update(bytes).digest('hex')};
+    } finally { clearTimeout(timer); }
+  }
+
+  function bkdVersion(data) { return version(BkdPeriods.scope(data)); }
+
+  function validBkdUpdate(body) {
+    if (!body || typeof body !== 'object' || Array.isArray(body) || Object.keys(body).sort().join(',') !== 'academicYear,baseVersion,confirmRemoval,mode,periodId,semester,sourceName,table') return false;
+    if (!['create', 'replace'].includes(body.mode) || typeof body.periodId !== 'string' || body.periodId.length > 30 || typeof body.academicYear !== 'string' || !/^\d{4}\/\d{4}$/.test(body.academicYear) || !['Ganjil', 'Genap'].includes(body.semester) || typeof body.sourceName !== 'string' || !body.sourceName.trim() || body.sourceName.length > 250 || typeof body.confirmRemoval !== 'boolean' || !/^[0-9a-f]{64}$/.test(body.baseVersion || '')) return false;
+    return Array.isArray(body.table) && body.table.length >= 2 && body.table.length <= 10000 && body.table.every(row => Array.isArray(row) && row.length <= 64 && row.every(cell => cell === null || typeof cell === 'string' && cell.length <= 2000 || typeof cell === 'number' && Number.isFinite(cell)));
+  }
+
+  async function bkdRequest(event, authenticated, method) {
+    if (method === 'GET') {
+      const current = await readBkd(authenticated.token);
+      return response(200, JSON.stringify({data: BkdPeriods.initialize(current.data), baseVersion: bkdVersion(current.data), csrfToken: authenticated.csrf}), 'application/json; charset=utf-8');
+    }
+    if (!equal(header(event, 'origin'), ORIGIN) || !equal(header(event, 'x-csrf-token'), authenticated.csrf)) return jsonError(403, 'csrf', 'Permintaan penyimpanan tidak valid. Muat ulang halaman admin.');
+    if (!header(event, 'content-type').toLowerCase().startsWith('application/json')) return jsonError(415, 'format', 'Gunakan form unggah periode BKD yang disediakan.');
+    const raw = event.isBase64Encoded ? Buffer.from(event.body || '', 'base64').toString('utf8') : String(event.body || '');
+    if (Buffer.byteLength(raw, 'utf8') > 3 * 1024 * 1024) return jsonError(413, 'size', 'Tabel BKD terlalu besar. Gunakan file ekspor SISTER maksimal 10 MB.');
+    let update;
+    try { update = JSON.parse(raw); } catch (_) { return jsonError(422, 'invalid', 'Data unggahan BKD tidak valid.'); }
+    if (!validBkdUpdate(update)) return jsonError(422, 'invalid', 'Pilih periode, semester, dan tabel BKD yang valid.');
+    for (let attempt = 0; attempt < 2; attempt++) {
+      const current = await readBkd(authenticated.token);
+      if (!equal(bkdVersion(current.data), update.baseVersion)) return jsonError(409, 'conflict', 'Data periode BKD sudah berubah. Muat ulang data, lalu periksa draf sebelum menyimpan.');
+      let prepared;
+      try {
+        prepared = BkdPeriods.prepare(update.table, current.data, {
+          mode: update.mode, periodId: update.periodId, academicYear: update.academicYear,
+          semester: update.semester, sourceName: update.sourceName, now: now() * 1000,
+        });
+      } catch (failure) {
+        if (failure.name === 'BkdPeriodError' || failure.name === 'BkdImportError') return jsonError(422, failure.code || 'invalid', failure.message);
+        throw failure;
+      }
+      if (prepared.report.needsRemovalConfirmation && !update.confirmRemoval) return jsonError(422, 'removal_confirmation', 'Periksa daftar dosen yang tidak ada di file periode ini, lalu centang persetujuannya.');
+      const publicUrl = ORIGIN + '/#bkd?period=' + encodeURIComponent(prepared.period.id);
+      if (!prepared.report.changed) return response(200, JSON.stringify({saved: false, unchanged: true, periodId: prepared.period.id, baseVersion: bkdVersion(current.data), report: prepared.report, publicUrl}), 'application/json; charset=utf-8');
+      const content = JSON.stringify(prepared.candidate, null, 2) + '\n';
+      if (Buffer.byteLength(content, 'utf8') > 4 * 1024 * 1024) return jsonError(413, 'size', 'Arsip periode BKD sudah terlalu besar untuk disimpan dari form ini. Hubungi pengelola dashboard.');
+      try {
+        const saved = await githubJson(API_ROOT + '/contents/' + BKD_PATH, {
+          method: 'PUT', headers: {...githubHeaders(authenticated.token), 'Content-Type': 'application/json'},
+          body: JSON.stringify({message: 'Update BKD period: ' + prepared.period.label, content: Buffer.from(content, 'utf8').toString('base64'), sha: current.sha, branch: 'main'}),
+        });
+        if (!saved.commit || !/^[0-9a-f]{40}$/.test(saved.commit.sha || '')) throw new Error('Invalid commit response');
+        return response(200, JSON.stringify({saved: true, commit: saved.commit.sha, periodId: prepared.period.id, baseVersion: bkdVersion(prepared.candidate), report: prepared.report, publicUrl}), 'application/json; charset=utf-8');
+      } catch (failure) {
+        if (failure.status !== 409) throw failure;
+        if (attempt === 1) return jsonError(409, 'conflict', 'Pembaruan lain sedang disimpan. Muat ulang dan periksa draf BKD sebelum mencoba kembali.');
+        // Re-read and compare only the BKD scope. A simultaneous JAD-only edit
+        // is merged from the latest master rather than being overwritten.
+      }
+    }
+  }
+
   async function handler(event) {
     const selected = route(event);
     const params = event.queryStringParameters || {};
@@ -307,6 +385,14 @@ function createHandler(options) {
       if (!authenticated) return jsonError(401, 'unauthenticated', MESSAGES.expired);
       try { return await progressRequest(event, authenticated, method); }
       catch (_) { return jsonError(502, 'github', 'Perubahan belum dapat disimpan di GitHub. Draf Anda tetap tersedia; coba kembali setelah koneksi pulih.'); }
+    }
+
+    if (selected.action === 'bkd') {
+      if (!['GET', 'POST'].includes(method)) return jsonError(405, 'method', 'Metode pembaruan BKD tidak didukung.');
+      if (!config) return jsonError(503, 'unavailable', MESSAGES.unavailable);
+      if (!authenticated) return jsonError(401, 'unauthenticated', MESSAGES.expired);
+      try { return await bkdRequest(event, authenticated, method); }
+      catch (_) { return jsonError(502, 'github', 'Data BKD belum dapat dibaca atau disimpan. Draf Anda tetap tersedia; coba kembali setelah koneksi pulih.'); }
     }
 
     if (selected.action === 'queue') {
