@@ -1,6 +1,9 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {createRequire} from 'node:module';
+
+const require = createRequire(import.meta.url);
 
 // Publish an explicit set of public files. Server code, templates and secrets
 // must never enter the directory that Netlify serves as static content.
@@ -15,7 +18,7 @@ const files = [
   'assets/css/styles.css', 'assets/css/admin-bkd.css', 'assets/css/admin-jad.css',
   'assets/css/jad-queue.css', 'assets/css/admin-queue.css',
   'assets/js/dashboard.js', 'assets/js/admin-bkd.js',
-  'assets/js/bkd-import.js', 'assets/js/bkd-xlsx.js',
+  'assets/js/bkd-import.js', 'assets/js/bkd-xlsx.js', 'assets/js/bkd-periods.js',
   'assets/js/admin-session.js', 'assets/js/admin-jad.js',
   'assets/js/jad-queue.js', 'assets/js/admin-queue.js',
   'assets/data/dashboard-data.json', 'assets/data/jad-progress.json',
@@ -25,6 +28,23 @@ const files = [
 const master = JSON.parse(await fs.readFile(path.join(root, 'assets/data/dashboard-data.json'), 'utf8'));
 if (Object.hasOwn(master, 'fte') || Object.keys(master.meta || {}).some(key => /^fte/i.test(key))) {
   throw new Error('Retired personnel data must be removed before publishing.');
+}
+const BkdPeriods = require('../assets/js/bkd-periods.js');
+const publicBkdFields = new Set(require('../assets/js/bkd-import.js').publicFields);
+const periods = BkdPeriods.list(master);
+for (const period of periods) {
+  if (!Array.isArray(period.records)) throw new Error('Invalid BKD period records.');
+  for (const record of period.records) {
+    if (!record || Object.keys(record).some(key => !publicBkdFields.has(key))) {
+      throw new Error('Only public BKD fields may be published in a period.');
+    }
+  }
+}
+if (master.bkdPeriods) {
+  const active = periods.find(period => period.id === BkdPeriods.activeId(master));
+  if (!active || JSON.stringify(active.records) !== JSON.stringify(master.bkd)) {
+    throw new Error('The latest BKD alias does not match its period.');
+  }
 }
 const sources = await Promise.all(files.map(async file => {
   const source = path.join(root, file);
