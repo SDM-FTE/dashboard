@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Dashboard monitoring pengajuan JAD dan hasil BKD dosen.">
   <title>Portal Informasi Dosen · SDM FTE</title>
-  <link rel="stylesheet" href="assets/css/styles.css?v=20261105-jad-simple">
+  <link rel="stylesheet" href="assets/css/styles.css?v=20261105-pagination">
   <link rel="stylesheet" href="assets/css/branding.css?v=20261006">
   <script src="assets/js/bkd-periods.js?v=20261105-bkd-periode" defer></script>
-  <script src="assets/js/dashboard.js?v=20261105-jad-simple" defer></script>
+  <script src="assets/js/dashboard.js?v=20261105-pagination" defer></script>
   <style>
     .topbar-meta { display: flex; gap: 20px; }
     .public-status { display: inline-flex; align-items: center; gap: 9px; }
@@ -104,7 +104,7 @@
           </div></details>
         </div>
         <div class="table-wrap"><table class="jad-progress-table"><thead><tr><th>Nama dosen</th><th>Usulan JFA</th><th>Tahap ajuan</th><th>Syarat utama</th><th><span class="sr-only">Progres</span></th></tr></thead><tbody id="jadTableBody"></tbody></table></div>
-        <div class="table-footer"><span id="jadPageLabel"></span><div class="pagination"><button id="jadPrev" type="button" class="page-button" aria-label="Halaman sebelumnya">‹</button><button id="jadNext" type="button" class="page-button" aria-label="Halaman berikutnya">›</button></div></div>
+        <div class="table-footer"><span id="jadPageLabel"></span><nav class="pagination" aria-label="Halaman daftar JAD"><button id="jadPrev" type="button" class="page-button" aria-label="Halaman sebelumnya">‹</button><div id="jadPageNumbers" class="page-numbers"></div><button id="jadNext" type="button" class="page-button" aria-label="Halaman berikutnya">›</button></nav></div>
       </div>
       <p class="jad-queue-note">Belum ada ajuan Anda? <a href="./antrian-jad/">Lihat antrean &amp; ajukan JAD →</a></p>
     </section>
@@ -165,7 +165,7 @@
           <label><span class="sr-only">Filter prodi sertifikasi</span><select id="bkdCertificationProgramFilter"><option value="">Semua prodi</option></select></label>
         </div>
         <div class="table-wrap"><table><thead><tr><th>Nama dosen</th><th>Program studi</th><th>Jabatan fungsional</th><th>Kesimpulan BKD</th><th class="numeric">Σ Kinerja</th><th><span class="sr-only">Detail</span></th></tr></thead><tbody id="bkdCertificationTableBody"></tbody></table></div>
-        <div class="table-footer"><span id="bkdCertificationPageLabel"></span><div class="pagination"><button id="bkdCertificationPrev" type="button" class="page-button" aria-label="Halaman sertifikasi sebelumnya">‹</button><button id="bkdCertificationNext" type="button" class="page-button" aria-label="Halaman sertifikasi berikutnya">›</button></div></div>
+        <div class="table-footer"><span id="bkdCertificationPageLabel"></span><nav class="pagination" aria-label="Halaman daftar sertifikasi"><button id="bkdCertificationPrev" type="button" class="page-button" aria-label="Halaman sertifikasi sebelumnya">‹</button><div id="bkdCertificationPageNumbers" class="page-numbers"></div><button id="bkdCertificationNext" type="button" class="page-button" aria-label="Halaman sertifikasi berikutnya">›</button></nav></div>
       </div>
     </section>
 
@@ -182,7 +182,7 @@
           <label><span class="sr-only">Filter kesimpulan</span><select id="bkdProgramConclusionFilter"><option value="">Semua kesimpulan</option><option value="M">Memenuhi</option><option value="TM">Tidak memenuhi</option></select></label>
         </div>
         <div class="table-wrap"><table><thead><tr><th>Nama dosen</th><th>Status dosen</th><th>Jabatan fungsional</th><th>BKD</th><th>Kewajiban</th><th>Kesimpulan</th><th class="numeric">Σ Kinerja</th><th class="numeric">Beban lebih</th><th><span class="sr-only">Detail</span></th></tr></thead><tbody id="bkdProgramTableBody"></tbody></table></div>
-        <div class="table-footer"><span id="bkdProgramPageLabel"></span><div class="pagination"><button id="bkdProgramPrev" type="button" class="page-button" aria-label="Halaman sebelumnya">‹</button><button id="bkdProgramNext" type="button" class="page-button" aria-label="Halaman berikutnya">›</button></div></div>
+        <div class="table-footer"><span id="bkdProgramPageLabel"></span><nav class="pagination" aria-label="Halaman daftar prodi"><button id="bkdProgramPrev" type="button" class="page-button" aria-label="Halaman sebelumnya">‹</button><div id="bkdProgramPageNumbers" class="page-numbers"></div><button id="bkdProgramNext" type="button" class="page-button" aria-label="Halaman berikutnya">›</button></nav></div>
       </div>
     </section>
 
