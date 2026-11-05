@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Dashboard monitoring pengajuan JAD dan hasil BKD dosen.">
   <title>Portal Informasi Dosen · SDM FTE</title>
-  <link rel="stylesheet" href="assets/css/styles.css?v=20261105-bkd-periode">
+  <link rel="stylesheet" href="assets/css/styles.css?v=20261105-jad-simple">
   <link rel="stylesheet" href="assets/css/branding.css?v=20261006">
   <script src="assets/js/bkd-periods.js?v=20261105-bkd-periode" defer></script>
-  <script src="assets/js/dashboard.js?v=20261105-bkd-label" defer></script>
+  <script src="assets/js/dashboard.js?v=20261105-jad-simple" defer></script>
   <style>
     .topbar-meta { display: flex; gap: 20px; }
     .public-status { display: inline-flex; align-items: center; gap: 9px; }
@@ -59,7 +59,7 @@
           <h3>Cek progres JAD</h3>
           <p>Lihat tahap pengajuan jabatan akademik dan kelengkapan syarat penelitian Anda.</p>
           <a class="jad-queue-entry" href="./antrian-jad/">Antrean &amp; ajukan JAD →</a>
-          <button type="button" class="home-link-button" data-view="jad-detail">Lihat pengajuan JAD <span aria-hidden="true">→</span></button>
+          <button type="button" class="home-link-button" data-view="jad-detail">Cek progres JAD <span aria-hidden="true">→</span></button>
         </article>
         <article class="home-page-card bkd-home-card">
           <span class="home-page-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="m8 11 3 3 5-5M8 17h8"/></svg></span>
@@ -91,40 +91,43 @@
 
     <section id="jadDetailView" class="view-panel" aria-labelledby="jadDetailHeading" hidden>
       <div class="section-heading">
-        <div><p class="eyebrow">JABATAN AKADEMIK DOSEN</p><h2 id="jadDetailHeading">Detail Usulan JAD</h2></div>
-        <div class="section-tools"><a class="page-back" href="./antrian-jad/">Antrean &amp; input ajuan JAD →</a><button class="page-back" type="button" data-view="jad">← Kembali ke Ringkasan JAD</button></div>
+        <div><p class="eyebrow">JABATAN AKADEMIK DOSEN</p><h2 id="jadDetailHeading">Cek progres JAD</h2><p class="jad-page-intro">Cari nama Anda untuk melihat tahap ajuan dan kelengkapan dokumen.</p></div>
+        <div class="section-tools"><button class="page-back" type="button" data-view="home">← Kembali ke Beranda</button></div>
       </div>
       <div class="content-card table-card">
-        <div class="card-heading table-heading"><div><h3>Detail usulan JAD</h3><p>Pilih nama dosen untuk melihat rincian penilaian.</p></div><span id="jadResultCount" class="result-count"></span></div>
-        <div class="filters">
-          <label class="search-field"><span class="sr-only">Cari nama dosen</span><span class="search-icon" aria-hidden="true">⌕</span><input id="jadSearch" type="search" placeholder="Cari nama dosen…"></label>
-          <label><span class="sr-only">Filter publikasi</span><select id="jadPublicationFilter"><option value="">Semua status publikasi</option></select></label>
-          <label><span class="sr-only">Filter usulan JFA</span><select id="jadRankFilter"><option value="">Semua usulan JFA</option></select></label>
+        <div class="card-heading table-heading"><div><h3>Temukan ajuan Anda</h3><p>Pilih nama dosen atau tombol Lihat progres.</p></div><span id="jadResultCount" class="result-count" role="status"></span></div>
+        <div class="jad-find-tools">
+          <label class="search-field jad-search"><span class="sr-only">Cari nama dosen</span><span class="search-icon" aria-hidden="true">⌕</span><input id="jadSearch" type="search" placeholder="Cari nama Anda…" autocomplete="off"></label>
+          <details class="jad-filter-options"><summary>Filter tambahan</summary><div class="filters">
+            <label><span>Publikasi</span><select id="jadPublicationFilter" aria-label="Filter publikasi"><option value="">Semua status publikasi</option></select></label>
+            <label><span>Usulan jabatan</span><select id="jadRankFilter" aria-label="Filter usulan JFA"><option value="">Semua usulan JFA</option></select></label>
+          </div></details>
         </div>
-        <div class="table-wrap"><table><thead><tr><th>Nama dosen</th><th>Publikasi</th><th>JFA saat ini</th><th>Usulan JFA</th><th class="numeric">AKK baru</th><th class="numeric">AKK total</th><th><span class="sr-only">Detail</span></th></tr></thead><tbody id="jadTableBody"></tbody></table></div>
+        <div class="table-wrap"><table class="jad-progress-table"><thead><tr><th>Nama dosen</th><th>Usulan JFA</th><th>Tahap ajuan</th><th>Syarat utama</th><th><span class="sr-only">Progres</span></th></tr></thead><tbody id="jadTableBody"></tbody></table></div>
         <div class="table-footer"><span id="jadPageLabel"></span><div class="pagination"><button id="jadPrev" type="button" class="page-button" aria-label="Halaman sebelumnya">‹</button><button id="jadNext" type="button" class="page-button" aria-label="Halaman berikutnya">›</button></div></div>
       </div>
+      <p class="jad-queue-note">Belum ada ajuan Anda? <a href="./antrian-jad/">Lihat antrean &amp; ajukan JAD →</a></p>
     </section>
 
     <section id="jadProgressView" class="view-panel" aria-labelledby="jadProgressHeading" hidden>
       <div class="section-heading">
-        <div><p class="eyebrow">JABATAN AKADEMIK DOSEN</p><h2 id="jadProgressHeading">Progres Usulan JAD</h2></div>
-        <button class="page-back" type="button" data-view="jad-detail">← Kembali ke daftar JAD</button>
-      </div>
-      <div class="content-card progress-applicant-card">
-        <div class="card-heading"><div><h3>Data dosen yang diajukan</h3><p>Ringkasan berdasarkan workbook JAD.</p></div><span id="jadProgressPublication" class="badge neutral">—</span></div>
-        <div id="jadProgressApplicant" class="progress-applicant-grid"></div>
+        <div><p class="eyebrow">PROGRES JAD</p><h2 id="jadProgressHeading">Progres Usulan JAD</h2><p id="jadProgressSubtitle" class="jad-page-intro"></p></div>
+        <button class="page-back" type="button" data-view="jad-detail">← Cari dosen lain</button>
       </div>
       <div class="content-card chart-card progress-stage-card">
-        <div class="card-heading"><div><h3>Status ajuan</h3><p id="jadProgressStageLabel">Tahapan proses belum diperbarui.</p></div><span class="chart-caption">PROGRES</span></div>
-        <ol id="jadProgressTimeline" class="progress-timeline" aria-label="Tahapan proses usulan JAD"></ol>
+        <p class="jad-status-caption">TAHAP AJUAN SAAT INI</p><h3 id="jadProgressStageLabel" class="jad-current-stage">Tahapan proses belum diperbarui.</h3>
+        <details id="jadStageDetails" class="jad-stage-details"><summary>Lihat tahapan lengkap</summary><ol id="jadProgressTimeline" class="progress-timeline" aria-label="Tahapan proses usulan JAD"></ol></details>
       </div>
       <div class="content-card chart-card jad-requirements-card">
-        <div class="card-heading"><div><h3>Syarat utama penelitian</h3><p>Status kelengkapan dokumen. Pembaruan hanya dapat disimpan oleh admin.</p></div><a id="jadAdminEdit" class="admin-edit-link" href="/admin/jad">Ubah progres (admin) →</a></div>
+        <div class="card-heading"><div><h3>Syarat utama penelitian</h3><p>Periksa kelengkapan tiga dokumen berikut.</p></div></div>
         <div id="jadProgressRequirements" class="jad-checklist"></div>
-        <p class="admin-edit-note">Status ditampilkan untuk umum. Admin memperbarui status ajuan dan kelengkapan dokumen melalui form Progres JAD.</p>
       </div>
-      <div id="jadProgressSections" class="progress-accordion-list"></div>
+      <details id="jadSupplement" class="content-card jad-supplement"><summary>Rincian usulan dan angka kredit <span aria-hidden="true">⌄</span></summary><div class="jad-supplement-body">
+        <div class="card-heading"><h3>Data usulan</h3><span id="jadProgressPublication" class="badge neutral">—</span></div>
+        <div id="jadProgressApplicant" class="progress-applicant-grid"></div>
+        <div id="jadProgressSections" class="progress-accordion-list"></div>
+      </div></details>
+      <p class="jad-admin-note">Pembaruan progres dilakukan oleh admin. <a id="jadAdminEdit" href="/admin/jad">Kelola progres (admin) →</a></p>
     </section>
 
     <section id="bkdView" class="view-panel" aria-labelledby="bkdHeading" hidden>

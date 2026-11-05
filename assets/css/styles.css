@@ -375,3 +375,62 @@ tbody tr.clickable-row:focus-within { background: #f0faf8; }
 .jad-queue-entry { display: inline-flex; align-items: center; min-height: 44px; margin-top: 10px; color: #007f86; font-size: 14px; font-weight: 600; text-decoration: none; }
 .jad-queue-entry:hover { text-decoration: underline; }
 .jad-queue-entry:focus-visible { outline: 3px solid #008f98; outline-offset: 4px; }
+
+/* Public JAD: find a lecturer, then read the current stage and document checks. */
+.jad-page-intro { margin: 9px 0 0; color: #5c737e; font-size: 14px; line-height: 1.65; }
+.jad-find-tools { display: grid; gap: 12px; padding: 0 23px 21px; }
+.jad-search { width: 100%; max-width: 600px; }
+.jad-search input { height: 48px; padding: 0 15px 0 40px; border: 1px solid #bdcfd9; border-radius: 8px; background: #fff; color: var(--navy); font: inherit; font-size: 15px; }
+.jad-search .search-icon { top: 11px; left: 14px; }
+.jad-search input:focus-visible { outline: 3px solid #008f9826; outline-offset: 2px; border-color: var(--teal); }
+.jad-filter-options summary, .jad-stage-details summary { width: fit-content; color: #486974; font-size: 13px; cursor: pointer; }
+.jad-filter-options .filters { align-items: end; padding: 14px 0 0; }
+.jad-filter-options label > span { display: block; margin-bottom: 7px; color: #627781; font-size: 12px; }
+.jad-filter-options select { font-size: 13px; min-height: 42px; }
+.jad-progress-table th { padding-top: 15px; padding-bottom: 15px; font-size: 10px; }
+.jad-progress-table td { white-space: normal; font-size: 13px; line-height: 1.55; }
+.jad-progress-table .name-cell { min-width: 190px; max-width: 330px; }
+.jad-progress-table .badge { font-size: 11px; line-height: 1.5; border-radius: 8px; }
+.jad-progress-table .sub-cell { font-size: 11px; }
+.jad-progress-action { width: auto; min-width: 109px; min-height: 42px; padding: 9px 12px; background: #eef8f6; border-color: #c6e4df; color: #007f86; font-size: 12px; font-weight: 700; line-height: 1.4; }
+.jad-progress-action:focus-visible { outline: 3px solid #008f9838; outline-offset: 3px; }
+.jad-queue-note, .jad-admin-note { margin: 20px 0 0; color: #657d87; font-size: 13px; line-height: 1.7; }
+.jad-queue-note a, .jad-admin-note a { color: #007f86; text-underline-offset: 3px; }
+#jadProgressView .progress-stage-card { border-left: 4px solid var(--teal); padding: 23px; }
+.jad-status-caption { margin: 0 0 10px; color: #62828c; font-size: 10px; font-weight: 700; letter-spacing: .1em; }
+#jadProgressStageLabel { margin: 0 0 17px; color: var(--navy); font-size: 24px; font-weight: 700; line-height: 1.45; }
+.jad-stage-details .progress-timeline { margin-top: 25px; }
+#jadProgressView .jad-requirements-card { padding: 23px; }
+#jadProgressView .card-heading h3 { font-size: 17px; }
+#jadProgressView .card-heading p { font-size: 13px; }
+#jadProgressView .jad-checklist-item { min-height: 65px; padding: 14px; }
+#jadProgressView .jad-checklist-copy strong { font-size: 14px; }
+#jadProgressView .jad-checklist-copy small { font-size: 11px; line-height: 1.6; }
+#jadProgressView .jad-checklist-state { font-size: 11px; }
+.jad-supplement { margin-top: 17px; padding: 0; }
+.jad-supplement > summary { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 20px 23px; color: var(--navy); font-size: 14px; font-weight: 700; cursor: pointer; list-style: none; }
+.jad-supplement > summary::-webkit-details-marker { display: none; }
+.jad-supplement[open] > summary > span { transform: rotate(180deg); }
+.jad-supplement-body { padding: 20px 23px; border-top: 1px solid var(--line); }
+.jad-supplement-body .progress-applicant-grid { grid-template-columns: 1fr 1fr; }
+.jad-supplement-body .progress-accordion-list { gap: 21px; margin-top: 26px; }
+.jad-supplement-body .detail-section { margin-bottom: 0; }
+@media (max-width: 760px) {
+  .jad-find-tools { padding: 0 17px 18px; }
+  .jad-filter-options .filters { padding-left: 0; padding-right: 0; }
+  .jad-progress-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+  .jad-progress-table, .jad-progress-table tbody { display: block; }
+  .jad-progress-table tr { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 12px; padding: 20px 17px; border-bottom: 1px solid var(--line); }
+  .jad-progress-table td { display: block; min-width: 0; padding: 0; border: 0; overflow-wrap: anywhere; }
+  .jad-progress-table td:not(:first-child):not(:last-child)::before { display: block; margin-bottom: 6px; content: attr(data-label); color: #819198; font-size: 10px; }
+  .jad-progress-table td:first-child { grid-column: 1 / -1; min-width: 0; max-width: none; font-size: 15px; }
+  .jad-progress-table td:last-child { display: flex; align-items: end; }
+  .jad-progress-action { width: 100%; }
+  #jadProgressView .progress-stage-card, #jadProgressView .jad-requirements-card { padding: 20px 17px; }
+  #jadProgressStageLabel { font-size: 21px; }
+  #jadProgressView .jad-checklist-item { display: grid; grid-template-columns: 24px minmax(0,1fr); gap: 8px 11px; }
+  #jadProgressView .jad-checklist-state { grid-column: 2; justify-self: start; }
+  .jad-supplement > summary { padding: 19px 17px; }
+  .jad-supplement-body { padding: 17px; }
+  .jad-supplement-body .progress-applicant-grid { grid-template-columns: 1fr; }
+}
