@@ -341,6 +341,31 @@
     select.innerHTML = `<option value="">${esc(firstLabel)}</option>` + unique.map((value) => `<option value="${esc(value)}">${esc(value)}</option>`).join('');
   }
 
+  function renderPageNumbers(selector, current, total, label, selectPage) {
+    const container = $(selector);
+    const numbers = [];
+    if (total <= 7) {
+      for (let number = 1; number <= total; number++) numbers.push(number);
+    } else {
+      const start = current <= 4 ? 2 : current >= total - 3 ? total - 4 : current - 1;
+      const end = current <= 4 ? 5 : current >= total - 3 ? total - 1 : current + 1;
+      numbers.push(1);
+      if (start > 2) numbers.push(null);
+      for (let number = start; number <= end; number++) numbers.push(number);
+      if (end < total - 1) numbers.push(null);
+      numbers.push(total);
+    }
+    container.innerHTML = numbers.map(number => number === null
+      ? '<span class="page-ellipsis" aria-hidden="true">…</span>'
+      : `<button type="button" class="page-button page-number" data-page="${number}" aria-label="Halaman ${number} ${esc(label)}"${number === current ? ' aria-current="page"' : ''}>${number}</button>`).join('');
+    container.querySelectorAll('[data-page]').forEach(button => button.addEventListener('click', () => {
+      const number = Number(button.dataset.page);
+      if (number === current) return;
+      selectPage(number);
+      container.querySelector(`[data-page="${number}"]`)?.focus({preventScroll: true});
+    }));
+  }
+
   function detailItem(label, value) {
     const text = value === null || value === undefined || value === '' ? '—' : value;
     return `<div class="detail-item"><span>${esc(label)}</span><strong>${esc(text)}</strong></div>`;
@@ -431,6 +456,7 @@
       $('#jadPageLabel').textContent = `Baris ${filtered.length ? start + 1 : 0}–${Math.min(start + PAGE_SIZE, filtered.length)} dari ${fmt(filtered.length, 0)}`;
       $('#jadPrev').disabled = pages.jad <= 1;
       $('#jadNext').disabled = pages.jad >= pagesTotal;
+      renderPageNumbers('#jadPageNumbers', pages.jad, pagesTotal, 'daftar JAD', number => { pages.jad = number; render(); });
       const shown = filtered.slice(start, start + PAGE_SIZE);
       $('#jadTableBody').innerHTML = shown.length ? shown.map((row) => {
         const { stage, completeCount, reviewedCount } = jadProgressFor(row);
@@ -515,6 +541,7 @@
         $('#bkdCertificationPageLabel').textContent = `Baris ${filtered.length ? start + 1 : 0}–${Math.min(start + PAGE_SIZE, filtered.length)} dari ${fmt(filtered.length, 0)}`;
         $('#bkdCertificationPrev').disabled = pages.bkdCertification <= 1;
         $('#bkdCertificationNext').disabled = pages.bkdCertification >= pagesTotal;
+        renderPageNumbers('#bkdCertificationPageNumbers', pages.bkdCertification, pagesTotal, 'daftar sertifikasi', number => { pages.bkdCertification = number; renderBkdCertificationTable(); });
         const shown = filtered.slice(start, start + PAGE_SIZE);
         $('#bkdCertificationTableBody').innerHTML = shown.length ? shown.map((row) => `<tr class="clickable-row" data-bkd-certification-detail="${esc(row.no)}">
           <td class="name-cell">${esc(row.name)}</td>
@@ -591,6 +618,7 @@
       $('#bkdProgramPageLabel').textContent = `Baris ${filtered.length ? start + 1 : 0}–${Math.min(start + PAGE_SIZE, filtered.length)} dari ${fmt(filtered.length, 0)}`;
       $('#bkdProgramPrev').disabled = pages.bkd <= 1;
       $('#bkdProgramNext').disabled = pages.bkd >= pagesTotal;
+      renderPageNumbers('#bkdProgramPageNumbers', pages.bkd, pagesTotal, 'daftar prodi', number => { pages.bkd = number; renderBkdProgramTable(); });
       const shown = filtered.slice(start, start + PAGE_SIZE);
       $('#bkdProgramTableBody').innerHTML = shown.length ? shown.map((row) => `<tr class="clickable-row" data-bkd-detail="${esc(row.no)}">
         <td class="name-cell">${esc(row.name)}</td>
