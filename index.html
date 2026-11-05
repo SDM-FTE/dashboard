@@ -5,9 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Dashboard monitoring pengajuan JAD dan hasil BKD dosen.">
   <title>Portal Informasi Dosen · SDM FTE</title>
-  <link rel="stylesheet" href="assets/css/styles.css?v=20261102-privasi">
+  <link rel="stylesheet" href="assets/css/styles.css?v=20261105-bkd-periode">
   <link rel="stylesheet" href="assets/css/branding.css?v=20261006">
-  <script src="assets/js/dashboard.js?v=20261102-privasi" defer></script>
+  <script src="assets/js/bkd-periods.js?v=20261105-bkd-periode" defer></script>
+  <script src="assets/js/dashboard.js?v=20261105-bkd-periode" defer></script>
   <style>
     .topbar-meta { display: flex; gap: 20px; }
     .public-status { display: inline-flex; align-items: center; gap: 9px; }
@@ -64,6 +65,8 @@
           <span class="home-page-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="m8 11 3 3 5-5M8 17h8"/></svg></span>
           <h3>Lihat hasil BKD</h3>
           <p>Cek hasil beban kerja dosen: memenuhi atau tidak memenuhi, sesuai kelompok sertifikasi.</p>
+          <label class="bkd-period-field home-bkd-period" for="homeBkdPeriod"><span>Periode kegiatan BKD</span><select id="homeBkdPeriod" data-bkd-period-select disabled aria-describedby="homeBkdPeriodNote"><option value="">Memuat periode…</option></select></label>
+          <p id="homeBkdPeriodNote" class="bkd-period-note" aria-live="polite"></p>
           <button type="button" class="home-link-button" data-view="bkd">Lihat hasil BKD <span aria-hidden="true">→</span></button>
         </article>
       </div>
@@ -126,10 +129,12 @@
 
     <section id="bkdView" class="view-panel" aria-labelledby="bkdHeading" hidden>
       <div class="section-heading">
-        <div><p class="eyebrow">BEBAN KERJA DOSEN</p><h2 id="bkdHeading">Rekap BKD</h2></div>
+        <div><p class="eyebrow">BEBAN KERJA DOSEN</p><h2 id="bkdHeading">Rekap BKD</h2><p class="bkd-period-context" data-bkd-period-label></p></div>
         <div class="section-tools"><p class="section-note">Rekap dosen pada 8 program studi pilihan.</p><button class="page-back" type="button" data-view="home">← Kembali ke Beranda</button></div>
       </div>
-      <div class="content-card chart-card">
+      <label class="bkd-period-field bkd-period-toolbar" for="bkdPeriod"><span>Periode kegiatan BKD</span><select id="bkdPeriod" data-bkd-period-select disabled><option value="">Memuat periode…</option></select></label>
+      <div id="bkdPeriodEmpty" class="content-card bkd-period-empty" role="status" hidden><h3>Data belum tersedia</h3><p>Data periode ini belum diunggah.</p><p>Pilih periode lain untuk melihat hasil BKD yang tersedia.</p></div>
+      <div id="bkdPeriodSummary" class="content-card chart-card">
         <div class="card-heading"><div><h3>Sertifikasi dosen</h3><p>Pilih kelompok untuk melihat hasil BKD dan daftar dosennya.</p></div></div>
         <div class="kpi-grid certification-kpis">
           <button class="kpi-card accent-teal kpi-button" type="button" data-bkd-certification="sudah" aria-label="Buka daftar dosen sudah tersertifikasi"><span class="kpi-label">Sudah tersertifikasi</span><strong id="bkdCertified" class="kpi-value">—</strong><span class="kpi-foot">lihat daftar dosen →</span></button>
@@ -142,9 +147,10 @@
 
     <section id="bkdCertificationView" class="view-panel" aria-labelledby="bkdCertificationHeading" hidden>
       <div class="section-heading">
-        <div><p class="eyebrow">SERTIFIKASI DOSEN</p><h2 id="bkdCertificationHeading">Status sertifikasi dosen</h2><p id="bkdCertificationDescription" class="section-note"></p></div>
+        <div><p class="eyebrow">SERTIFIKASI DOSEN</p><h2 id="bkdCertificationHeading">Status sertifikasi dosen</h2><p class="bkd-period-context" data-bkd-period-label></p><p id="bkdCertificationDescription" class="section-note"></p></div>
         <button class="page-back" type="button" data-view="bkd">← Kembali ke Rekap BKD</button>
       </div>
+      <label class="bkd-period-field bkd-period-toolbar" for="bkdCertificationPeriod"><span>Periode kegiatan BKD</span><select id="bkdCertificationPeriod" data-bkd-period-select disabled><option value="">Memuat periode…</option></select></label>
       <div class="kpi-grid certification-page-kpis">
         <button class="kpi-card accent-teal kpi-button" type="button" data-bkd-certification-conclusion="M" aria-pressed="false" aria-label="Tampilkan dosen memenuhi BKD dalam kelompok sertifikasi ini"><span class="kpi-label">Memenuhi</span><strong id="bkdCertificationMet" class="kpi-value">—</strong><span class="kpi-foot">klik untuk melihat daftar dosen</span></button>
         <button class="kpi-card accent-rose kpi-button" type="button" data-bkd-certification-conclusion="TM" aria-pressed="false" aria-label="Tampilkan dosen tidak memenuhi BKD dalam kelompok sertifikasi ini"><span class="kpi-label">Tidak memenuhi</span><strong id="bkdCertificationUnmet" class="kpi-value">—</strong><span class="kpi-foot">klik untuk melihat daftar dosen</span></button>
@@ -162,9 +168,10 @@
 
     <section id="bkdProgramView" class="view-panel" aria-labelledby="bkdProgramHeading" hidden>
       <div class="section-heading">
-        <div><p class="eyebrow">BEBAN KERJA DOSEN</p><h2 id="bkdProgramHeading">Daftar dosen per prodi</h2></div>
+        <div><p class="eyebrow">BEBAN KERJA DOSEN</p><h2 id="bkdProgramHeading">Daftar dosen per prodi</h2><p class="bkd-period-context" data-bkd-period-label></p></div>
         <button class="page-back" type="button" data-view="bkd">← Kembali ke Rekap BKD</button>
       </div>
+      <label class="bkd-period-field bkd-period-toolbar" for="bkdProgramPeriod"><span>Periode kegiatan BKD</span><select id="bkdProgramPeriod" data-bkd-period-select disabled><option value="">Memuat periode…</option></select></label>
       <div class="content-card table-card">
         <div class="card-heading table-heading"><div><h3 id="bkdProgramTitle">Program studi</h3><p id="bkdProgramDescription">Daftar dosen dan kesimpulan BKD pada program studi ini.</p></div><span id="bkdProgramResultCount" class="result-count"></span></div>
         <div class="filters bkd-filters">

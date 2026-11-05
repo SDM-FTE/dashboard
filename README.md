@@ -5,7 +5,13 @@ Paket untuk repository GitHub `SDM-FTE/dashboard`. Halaman utama berisi pilihan 
 ## Halaman
 
 - **JAD:** daftar usulan dan rincian angka kredit/SKP.
-- **BKD:** rekap 210 dosen pada 8 prodi pilihan, dengan daftar dosen dan rincian kinerja.
+- **BKD:** rekap per periode pada 8 prodi pilihan, dengan daftar dosen dan rincian kinerja. Jumlah dosen mengikuti file setiap semester.
+
+## Periode BKD
+
+Pilih periode di kartu **Lihat hasil BKD** pada beranda atau di halaman rekap. Data awal berada pada **2025/2026 Genap**; periode lain ditandai **Belum diunggah** sampai admin mengisi datanya.
+
+Admin dapat memakai **Tambah periode BKD** untuk semester baru atau **Upload BKD lampau** untuk arsip. Pilih periode yang sesuai, unggah CSV/Excel ekspor SISTER, periksa jumlah dosen serta hasil M/TM, lalu pilih **Simpan periode**. Setiap periode menyimpan datanya sendiri. Penyimpanan memerlukan akun admin terverifikasi dan mempertahankan data JAD serta periode BKD lain.
 
 ## Data yang ditampilkan
 
