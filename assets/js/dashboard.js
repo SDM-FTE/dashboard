@@ -369,7 +369,7 @@
     } else {
       $('#dialogEyebrow').textContent = `DETAIL MONITORING BKD · ${bkdPeriodLabel()}`;
       $('#dialogTitle').textContent = record.name;
-      const activityLabels = ['A/B', 'Lebih A/B', 'C', 'Lebih C', 'D', 'Lebih D', 'E', 'Lebih E'];
+      const activityLabels = ['Pengajaran/Penelitian', 'Lebih Pengajaran/Penelitian', 'Pengabdian Masyarakat', 'Lebih Pengabdian Masyarakat', 'D', 'Lebih D', 'Penunjang', 'Lebih Penunjang'];
       $('#dialogContent').innerHTML =
         detailSection('Identitas dan status', [
           ['Periode kegiatan BKD', bkdPeriodLabel()], ['No.', record.no], ['Program studi', record.program], ['Status dosen', record.status],
