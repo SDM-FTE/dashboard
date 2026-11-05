@@ -62,11 +62,11 @@
     },
     "6": {
       "name": "DITA PUSPITASARI",
-      "stage": null,
+      "stage": 2,
       "requirements": {
-        "paperPdf": null,
-        "similarity": null,
-        "correspondence": null
+        "paperPdf": true,
+        "similarity": true,
+        "correspondence": true
       }
     },
     "7": {
@@ -250,6 +250,5 @@
       }
     }
   },
-  "updatedAt": "2026-10-01T04:27:32.861Z"
+  "updatedAt": "2026-11-05T06:31:14.000Z"
 }
-
