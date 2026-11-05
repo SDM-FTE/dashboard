@@ -33,8 +33,80 @@
   let bkdPrograms = [];
   let renderBkdProgramTable = () => {};
   let renderBkdCertificationTable = () => {};
+  let selectedBkdPeriodId = '';
+  let bkdRecords = [];
+  const bkdBindings = new WeakMap();
   let homeSearchInitialized = false;
   let renderHomeSearch = () => {};
+
+  function bkdPeriods() { return data ? window.BkdPeriods.list(data) : []; }
+
+  function selectedBkdPeriod() { return bkdPeriods().find((period) => period.id === selectedBkdPeriodId); }
+
+  function bkdPeriodLabel() { return selectedBkdPeriod()?.label || 'Periode BKD'; }
+
+  function bkdHash(path) { return `#${path}?period=${encodeURIComponent(selectedBkdPeriodId)}`; }
+
+  // A period switch rebuilds the render closures. Replace only this module's
+  // static event handlers so repeated switches never accumulate listeners.
+  function listenBkd(node, type, listener) {
+    if (!node) return;
+    const handlers = bkdBindings.get(node) || {};
+    if (handlers[type]) node.removeEventListener(type, handlers[type]);
+    node.addEventListener(type, listener);
+    handlers[type] = listener;
+    bkdBindings.set(node, handlers);
+  }
+
+  function renderBkdPeriodControls() {
+    const periods = bkdPeriods();
+    document.querySelectorAll('[data-bkd-period-select]').forEach((select) => {
+      select.innerHTML = periods.map((period) => `<option value="${esc(period.id)}">BKD Rencana dan Laporan ${esc(period.label)}${period.records.length ? '' : ' — Belum diunggah'}</option>`).join('');
+      select.value = selectedBkdPeriodId;
+      select.disabled = !periods.length;
+    });
+    document.querySelectorAll('[data-bkd-period-label]').forEach((label) => { label.textContent = bkdPeriodLabel(); });
+    const empty = !bkdRecords.length;
+    $('#bkdPeriodEmpty').hidden = !empty;
+    $('#bkdPeriodSummary').hidden = empty;
+    $('#homeBkdPeriodNote').textContent = empty ? 'Data periode ini belum diunggah.' : '';
+  }
+
+  function selectBkdPeriod(id, rerender = true) {
+    const periods = bkdPeriods();
+    const requested = periods.find((period) => period.id === id);
+    const nextId = requested ? requested.id : window.BkdPeriods.activeId(data);
+    if (selectedBkdPeriodId === nextId) return false;
+    selectedBkdPeriodId = nextId;
+    bkdRecords = window.BkdPeriods.records(data, nextId);
+    const dialog = $('#detailDialog');
+    if (dialog.open && typeof dialog.close === 'function') dialog.close();
+    activeBkdConclusion = '';
+    activeCertificationConclusion = '';
+    pages.bkd = 1;
+    pages.bkdCertification = 1;
+    ['#bkdCertificationSearch', '#bkdCertificationProgramFilter', '#bkdProgramSearch', '#bkdProgramConclusionFilter'].forEach((selector) => { const field = $(selector); if (field) field.value = ''; });
+    renderBkdPeriodControls();
+    if (rerender) { initBkd(); renderHomeSearch(); }
+    return true;
+  }
+
+  function initBkdPeriods() {
+    const [path, query = ''] = window.location.hash.slice(1).split('?');
+    const requested = path.startsWith('bkd') ? new URLSearchParams(query).get('period') : '';
+    selectBkdPeriod(requested || window.BkdPeriods.activeId(data), false);
+    document.querySelectorAll('[data-bkd-period-select]').forEach((select) => listenBkd(select, 'change', () => {
+      const path = window.location.hash.slice(1).split('?')[0];
+      const category = activeCertification;
+      const programIndex = activeProgramIndex;
+      selectBkdPeriod(select.value);
+      if (!path.startsWith('bkd')) return;
+      if (!bkdRecords.length) setView('bkd');
+      else if (path.startsWith('bkd-sertifikasi/') && category) openBkdCertification(category);
+      else if (path.startsWith('bkd-prodi/') && programIndex !== null) openBkdProgram(programIndex);
+      else setView('bkd');
+    }));
+  }
 
   function initHome() {
     const form = $('#homeSearchForm');
@@ -70,7 +142,7 @@
       const programs = data.focusPrograms || data.meta?.bkdProgramNames || [];
       const groups = [
         { key: 'jad', label: 'Pengajuan JAD', action: 'Lihat progres JAD', records: data.jad || [], context: (row) => row.proposedRank ? `Usulan ${row.proposedRank}` : 'Data pengajuan JAD', open: (row) => openJadProgress(row.no) },
-        { key: 'bkd', label: 'Hasil BKD', action: 'Lihat hasil BKD', records: (data.bkd || []).filter((row) => !programs.length || programs.includes(row.program)), context: (row) => [row.program, row.conclusion === 'M' ? 'Memenuhi' : row.conclusion === 'TM' ? 'Tidak memenuhi' : row.conclusion].filter(Boolean).join(' · '), open: (row) => showDetails('bkd', row) },
+        { key: 'bkd', label: `Hasil BKD · ${bkdPeriodLabel()}`, action: 'Lihat hasil BKD', records: bkdRecords.filter((row) => !programs.length || programs.includes(row.program)), context: (row) => [row.program, row.conclusion === 'M' ? 'Memenuhi' : row.conclusion === 'TM' ? 'Tidak memenuhi' : row.conclusion].filter(Boolean).join(' · '), open: (row) => showDetails('bkd', row) },
       ].map((group) => ({ ...group, matches: group.records.filter((row) => searchName(row.name).includes(query)) })).filter((group) => group.matches.length);
       const total = groups.reduce((sum, group) => sum + group.matches.length, 0);
       results.hidden = false;
@@ -99,7 +171,8 @@
   }
 
   function setView(name, updateHash = true) {
-    const view = ['home', 'jad', 'jad-detail', 'jad-progress', 'bkd', 'bkd-prodi', 'bkd-sertifikasi'].includes(name) ? name : 'home';
+    let view = ['home', 'jad', 'jad-detail', 'jad-progress', 'bkd', 'bkd-prodi', 'bkd-sertifikasi'].includes(name) ? name : 'home';
+    if (data && view.startsWith('bkd') && !bkdRecords.length) view = 'bkd';
     $('#homeView').hidden = view !== 'home';
     $('#jadView').hidden = view !== 'jad';
     $('#jadDetailView').hidden = view !== 'jad-detail';
@@ -109,8 +182,9 @@
     if ($('#bkdCertificationView')) $('#bkdCertificationView').hidden = view !== 'bkd-sertifikasi';
     if (updateHash) {
       const hash = view === 'bkd-prodi'
-        ? (activeProgramIndex === null ? '#bkd-detail' : `#bkd-prodi/${activeProgramIndex}${activeBkdConclusion ? `/${activeBkdConclusion}` : ''}`)
-        : view === 'bkd-sertifikasi' ? (activeCertification === null ? '#bkd' : `#bkd-sertifikasi/${activeCertification}`)
+        ? bkdHash(activeProgramIndex === null ? 'bkd' : `bkd-prodi/${activeProgramIndex}${activeBkdConclusion ? `/${activeBkdConclusion}` : ''}`)
+        : view === 'bkd-sertifikasi' ? bkdHash(activeCertification === null ? 'bkd' : `bkd-sertifikasi/${activeCertification}`)
+        : view === 'bkd' ? bkdHash('bkd')
         : view === 'jad-progress' && activeJadNo !== null ? `#jad-progress/${activeJadNo}` : `#${view}`;
       if (window.location.hash !== hash) window.location.hash = hash;
     }
@@ -120,7 +194,7 @@
   function openBkdProgram(index, updateHash = true, conclusion = activeBkdConclusion) {
     activeProgramIndex = Number(index);
     const program = bkdPrograms[activeProgramIndex];
-    if (!program) return;
+    if (!program) { activeProgramIndex = null; setView('bkd', updateHash); return; }
     $('#bkdProgramHeading').textContent = program;
     $('#bkdProgramTitle').textContent = program;
     activeBkdConclusion = conclusion === 'M' || conclusion === 'TM' ? conclusion : '';
@@ -218,7 +292,8 @@
   }
 
   function routeFromHash() {
-    const route = window.location.hash.slice(1) || 'home';
+    const [route = 'home', query = ''] = (window.location.hash.slice(1) || 'home').split('?');
+    if (data && route.startsWith('bkd')) selectBkdPeriod(new URLSearchParams(query).get('period') || window.BkdPeriods.activeId(data));
     const certificationMatch = route.match(/^bkd-sertifikasi\/(sudah|belum|belum-terdata)$/);
     if (certificationMatch) {
       if (data) openBkdCertification(certificationMatch[1], false);
@@ -292,12 +367,12 @@
         ]));
       }
     } else {
-      $('#dialogEyebrow').textContent = 'DETAIL MONITORING BKD';
+      $('#dialogEyebrow').textContent = `DETAIL MONITORING BKD · ${bkdPeriodLabel()}`;
       $('#dialogTitle').textContent = record.name;
       const activityLabels = ['A/B', 'Lebih A/B', 'C', 'Lebih C', 'D', 'Lebih D', 'E', 'Lebih E'];
       $('#dialogContent').innerHTML =
         detailSection('Identitas dan status', [
-          ['No.', record.no], ['Program studi', record.program], ['Status dosen', record.status],
+          ['Periode kegiatan BKD', bkdPeriodLabel()], ['No.', record.no], ['Program studi', record.program], ['Status dosen', record.status],
           ['Jabatan fungsional', record.position], ['Sertifikasi dosen', shortText(record.certification, 'Data sertifikasi belum tersedia')], ['BKD semester', record.semesterBkd],
           ['Kewajiban dosen', record.obligation], ['Kesimpulan', record.conclusion === 'M' ? 'Memenuhi (M)' : record.conclusion === 'TM' ? 'Tidak memenuhi (TM)' : record.conclusion],
         ]) + detailSection('Rincian kinerja', [
@@ -388,7 +463,7 @@
   }
 
   function initBkd() {
-    const records = data.bkd || [];
+    const records = bkdRecords;
     bkdPrograms = data.focusPrograms || data.meta.bkdProgramNames || [];
     if ($('#bkdCertificationView')) {
       const certificationRecords = records.filter((row) => bkdPrograms.includes(row.program));
@@ -398,7 +473,7 @@
       $('#bkdCertificationUnknown').textContent = fmt(certificationRecords.filter((row) => certificationCategory(row) === 'belum-terdata').length, 0);
       const unknownButton = document.querySelector('[data-bkd-certification="belum-terdata"]');
       if (unknownButton) unknownButton.hidden = !certificationRecords.some((row) => certificationCategory(row) === 'belum-terdata');
-      document.querySelectorAll('[data-bkd-certification]').forEach((button) => button.addEventListener('click', () => openBkdCertification(button.dataset.bkdCertification)));
+      document.querySelectorAll('[data-bkd-certification]').forEach((button) => listenBkd(button, 'click', () => openBkdCertification(button.dataset.bkdCertification)));
       optionsFor($('#bkdCertificationProgramFilter'), bkdPrograms, 'Semua program studi');
       renderBkdCertificationTable = () => {
         const query = normalized($('#bkdCertificationSearch').value);
@@ -430,22 +505,22 @@
           <td class="numeric">${fmt(row.totalPerformance)}</td>
           <td><button type="button" class="row-action" aria-label="Lihat detail ${esc(row.name)}">›</button></td>
         </tr>`).join('') : '<tr><td colspan="6" class="empty-row">Tidak ada data yang cocok dengan filter.</td></tr>';
-        $('#bkdCertificationTableBody').querySelectorAll('[data-bkd-certification-detail]').forEach((rowElement) => rowElement.addEventListener('click', () => {
+        $('#bkdCertificationTableBody').querySelectorAll('[data-bkd-certification-detail]').forEach((rowElement) => listenBkd(rowElement, 'click', () => {
           const record = filtered.find((row) => String(row.no) === rowElement.dataset.bkdCertificationDetail);
           if (record) showDetails('bkd', record);
         }));
       };
-      $('#bkdCertificationSearch').addEventListener('input', () => { pages.bkdCertification = 1; renderBkdCertificationTable(); });
-      $('#bkdCertificationProgramFilter').addEventListener('change', () => { pages.bkdCertification = 1; renderBkdCertificationTable(); });
-      document.querySelectorAll('[data-bkd-certification-conclusion]').forEach((button) => button.addEventListener('click', () => {
+      listenBkd($('#bkdCertificationSearch'), 'input', () => { pages.bkdCertification = 1; renderBkdCertificationTable(); });
+      listenBkd($('#bkdCertificationProgramFilter'), 'change', () => { pages.bkdCertification = 1; renderBkdCertificationTable(); });
+      document.querySelectorAll('[data-bkd-certification-conclusion]').forEach((button) => listenBkd(button, 'click', () => {
         const conclusion = button.dataset.bkdCertificationConclusion;
         if (conclusion !== 'M' && conclusion !== 'TM') return;
         activeCertificationConclusion = activeCertificationConclusion === conclusion ? '' : conclusion;
         pages.bkdCertification = 1;
         renderBkdCertificationTable();
       }));
-      $('#bkdCertificationPrev').addEventListener('click', () => { pages.bkdCertification -= 1; renderBkdCertificationTable(); });
-      $('#bkdCertificationNext').addEventListener('click', () => { pages.bkdCertification += 1; renderBkdCertificationTable(); });
+      listenBkd($('#bkdCertificationPrev'), 'click', () => { pages.bkdCertification -= 1; renderBkdCertificationTable(); });
+      listenBkd($('#bkdCertificationNext'), 'click', () => { pages.bkdCertification += 1; renderBkdCertificationTable(); });
       renderBkdCertificationTable();
     }
     const met = records.filter((row) => row.conclusion === 'M').length;
@@ -474,9 +549,9 @@
         const badWidth = mode !== 'M' && group.total ? group.unmet / group.total * 100 : 0;
         return `<button type="button" class="program-row program-open-button" data-open-program="${group.index}" aria-label="Buka daftar ${esc(group.program)}, ${fmt(count, 0)} dosen${mode === 'all' ? '' : ` ${statusLabel.toLocaleLowerCase('id-ID')}`}"><span class="program-name">${esc(group.program)}</span><span class="stack-track" aria-hidden="true"><span class="stack-met" style="width:${goodWidth}%"></span><span class="stack-unmet" style="width:${badWidth}%"></span></span><span class="program-numbers">${fmt(count, 0)} dosen</span></button>`;
       }).join('');
-      chart.querySelectorAll('[data-open-program]').forEach((button) => button.addEventListener('click', () => openBkdProgram(button.dataset.openProgram)));
+      chart.querySelectorAll('[data-open-program]').forEach((button) => listenBkd(button, 'click', () => openBkdProgram(button.dataset.openProgram)));
     };
-    document.querySelectorAll('[data-bkd-quick-filter]').forEach((button) => button.addEventListener('click', () => {
+    document.querySelectorAll('[data-bkd-quick-filter]').forEach((button) => listenBkd(button, 'click', () => {
       const mode = button.dataset.bkdQuickFilter;
       activeBkdConclusion = mode === 'M' || mode === 'TM' ? mode : '';
       renderBkdProgramChart();
@@ -509,22 +584,22 @@
         <td class="numeric">${fmt(row.excessLoad)}</td>
         <td><button type="button" class="row-action" aria-label="Lihat detail ${esc(row.name)}">›</button></td>
       </tr>`).join('') : '<tr><td colspan="9" class="empty-row">Tidak ada data yang cocok dengan filter.</td></tr>';
-      $('#bkdProgramTableBody').querySelectorAll('[data-bkd-detail]').forEach((rowElement) => rowElement.addEventListener('click', () => {
+      $('#bkdProgramTableBody').querySelectorAll('[data-bkd-detail]').forEach((rowElement) => listenBkd(rowElement, 'click', () => {
         const record = filtered.find((row) => String(row.no) === rowElement.dataset.bkdDetail);
         if (record) showDetails('bkd', record);
       }));
     };
-    $('#bkdProgramSearch').addEventListener('input', () => { pages.bkd = 1; renderBkdProgramTable(); });
-    $('#bkdProgramConclusionFilter').addEventListener('change', () => {
+    listenBkd($('#bkdProgramSearch'), 'input', () => { pages.bkd = 1; renderBkdProgramTable(); });
+    listenBkd($('#bkdProgramConclusionFilter'), 'change', () => {
       activeBkdConclusion = $('#bkdProgramConclusionFilter').value;
       updateBkdProgramDescription();
       renderBkdProgramChart();
-      window.history.replaceState(null, '', `#bkd-prodi/${activeProgramIndex}${activeBkdConclusion ? `/${activeBkdConclusion}` : ''}`);
+      window.history.replaceState(null, '', bkdHash(`bkd-prodi/${activeProgramIndex}${activeBkdConclusion ? `/${activeBkdConclusion}` : ''}`));
       pages.bkd = 1;
       renderBkdProgramTable();
     });
-    $('#bkdProgramPrev').addEventListener('click', () => { pages.bkd -= 1; renderBkdProgramTable(); });
-    $('#bkdProgramNext').addEventListener('click', () => { pages.bkd += 1; renderBkdProgramTable(); });
+    listenBkd($('#bkdProgramPrev'), 'click', () => { pages.bkd -= 1; renderBkdProgramTable(); });
+    listenBkd($('#bkdProgramNext'), 'click', () => { pages.bkd += 1; renderBkdProgramTable(); });
     renderBkdProgramTable();
   }
 
@@ -543,6 +618,7 @@
       data = await response.json();
       jadProgress = progressResponse.ok ? await progressResponse.json() : {};
       initJad();
+      initBkdPeriods();
       initBkd();
       initHome();
       $('#sourceLabel').textContent = 'Sumber: workbook JAD dan SISTER BKD';

@@ -334,7 +334,9 @@ const admin = `<!doctype html>
       <p class="status-message" role="status" aria-live="polite">__STATUS_MESSAGE__</p>
       <div class="manage-section admin-menu">
         <div class="manage-links">
-          <a class="manage-link" href="/admin/bkd"><span><strong>Perbarui BKD</strong><small>Unggah Excel SISTER dan periksa hasilnya</small></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+          <a class="manage-link" href="/admin/bkd"><span><strong>Perbarui BKD</strong><small>Ganti data pada periode yang sudah tersedia</small></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
+          <a class="manage-link" href="/admin/bkd?mode=create"><span><strong>Tambah periode BKD</strong><small>Buat periode baru dan unggah ekspor SISTER</small></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></a>
+          <a class="manage-link" href="/admin/bkd?mode=history"><span><strong>Upload BKD lampau</strong><small>Lengkapi arsip semester sebelumnya</small></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5m4-1v5l3 2"/></svg></a>
           <a class="manage-link" href="/admin/jad"><span><strong>Progres JAD</strong><small>Tahap ajuan dan status dokumen</small></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
           <a class="manage-link" href="/admin/antrian"><span><strong>Antrean ajuan JAD</strong><small>Validasi ajuan dan kelola nomor antrean</small></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
         </div>
@@ -351,13 +353,14 @@ const bkd = `<!doctype html>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Siapkan pembaruan rekap BKD dari ekspor SISTER terbaru.">
+  <meta name="description" content="Kelola periode BKD dan unggah ekspor SISTER terbaru maupun semester lampau.">
   <title>Perbarui BKD · Admin Monitoring Dosen</title>
-  <link rel="stylesheet" href="/assets/css/admin-bkd.css?v=20261002">
+  <link rel="stylesheet" href="/assets/css/admin-bkd.css?v=20261105-periods">
   <script src="/assets/js/admin-session.js" defer></script>
-  <script src="/assets/js/bkd-import.js?v=20261102-fte-removed" defer></script>
+  <script src="/assets/js/bkd-import.js?v=20261105-periods" defer></script>
+  <script src="/assets/js/bkd-periods.js?v=20261105-periods" defer></script>
   <script src="/assets/js/bkd-xlsx.js?v=20261002" defer></script>
-  <script src="/assets/js/admin-bkd.js?v=20261102-fte-removed" defer></script>
+  <script src="/assets/js/admin-bkd.js?v=20261105-periods" defer></script>
 <style>
   .admin-header-actions { display:flex;align-items:center;justify-content:flex-end;gap:20px;min-width:0; }
   .verified-admin { display:inline-flex;align-items:center;gap:7px;font-size:10px;line-height:1.5;color:#b7e0d8; }
@@ -376,11 +379,17 @@ const bkd = `<!doctype html>
   <header class="topbar"><a class="brand" href="/#top"><span class="brand-mark">J</span><span><strong>MONITORING DOSEN</strong><small>JAD &amp; BKD</small></span></a><div class="admin-header-actions"><span class="verified-admin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6l-8-3Z"/><path d="m8.5 12 2.3 2.3 4.7-4.7"/></svg><span>Admin terverifikasi <strong>__ADMIN_LOGIN__</strong></span></span><a class="back-link" href="/admin/">← Menu admin</a><form method="post" action="/api/admin/logout"><input type="hidden" name="csrf" value="__CSRF_TOKEN__"><button class="admin-logout" type="submit">Keluar</button></form></div></header>
   <main class="shell" data-admin-editor>
     <p class="admin-status" role="status" aria-live="polite">__STATUS_MESSAGE__</p>
-    <div class="page-heading"><div><p class="eyebrow">PENGELOLAAN DATA / BKD</p><h1>Perbarui rekap BKD</h1><p>Gunakan ekspor SISTER terbaru. Periksa hasil untuk 8 prodi sebelum menerbitkan pembaruan.</p></div><a class="view-link" href="/#bkd" target="_blank" rel="noopener">Lihat dashboard ↗</a></div>
-    <ol class="steps" aria-label="Langkah pembaruan"><li><span>1</span> Pilih file</li><li><span>2</span> Periksa hasil</li><li><span>3</span> Terbitkan</li></ol>
+    <div class="page-heading"><div><p class="eyebrow">PENGELOLAAN DATA / BKD</p><h1 id="pageTitle">Perbarui rekap BKD</h1><p>Pilih periode dan unggah ekspor SISTER. Periksa hasil untuk 8 prodi sebelum menyimpan.</p></div><a class="view-link" href="/#bkd" target="_blank" rel="noopener">Lihat dashboard ↗</a></div>
+    <ol class="steps" aria-label="Langkah pembaruan"><li><span>1</span> Pilih periode &amp; file</li><li><span>2</span> Periksa hasil</li><li><span>3</span> Simpan</li></ol>
     <div class="workspace">
       <section class="card upload-card" aria-labelledby="uploadHeading">
-        <p class="eyebrow">LANGKAH 1</p><h2 id="uploadHeading">Pilih file BKD terbaru</h2><p class="muted">CSV atau Excel (.xlsx) hasil ekspor SISTER, maksimal 10 MB.</p>
+        <p class="eyebrow">LANGKAH 1</p><h2 id="uploadHeading">Pilih periode dan file BKD</h2><p class="muted">CSV atau Excel (.xlsx) hasil ekspor SISTER, maksimal 10 MB.</p>
+        <div class="period-fields">
+          <label for="bkdMode">Jenis pembaruan</label><select id="bkdMode"><option value="replace">Perbarui periode yang tersedia</option><option value="history">Upload BKD lampau</option><option value="create">Tambah periode BKD</option></select>
+          <div id="existingPeriodFields"><label for="periodSelect">Periode kegiatan BKD</label><select id="periodSelect" aria-describedby="periodDescription"></select></div>
+          <div id="newPeriodFields" class="period-grid" hidden><div><label for="academicYear">Tahun akademik</label><input id="academicYear" inputmode="numeric" placeholder="Contoh: 2026/2027" maxlength="9" pattern="[0-9]{4}/[0-9]{4}" aria-describedby="periodDescription"></div><div><label for="semester">Semester</label><select id="semester"><option value="Ganjil">Ganjil</option><option value="Genap">Genap</option></select></div></div>
+          <p id="periodDescription" class="period-description" role="status"></p>
+        </div>
         <label class="file-zone" for="bkdFile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 16V3m-5 5 5-5 5 5M4 15v5a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-5"/></svg><strong>Pilih file dari komputer</strong><span>File akan diperiksa di halaman ini.</span><input id="bkdFile" type="file" accept=".csv,.xlsx" aria-label="Pilih file BKD terbaru"></label>
         <p id="fileInfo" class="file-info" aria-live="polite">Belum ada file dipilih.</p>
         <label id="sheetField" class="sheet-field" hidden>Lembar Excel<select id="sheetSelect" aria-label="Pilih lembar BKD"></select></label>
@@ -390,8 +399,9 @@ const bkd = `<!doctype html>
       </section>
       <section class="card preview-card" aria-labelledby="previewHeading">
         <div class="card-heading"><div><p class="eyebrow">LANGKAH 2</p><h2 id="previewHeading">Periksa hasil pembaruan</h2></div><span id="draftBadge" class="badge">Belum ada draf</span></div>
-        <div id="emptyPreview" class="empty-preview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M4 4h16v16H4zM4 10h16M10 4v16"/></svg><h3>Rekap muncul setelah file dipilih</h3><p>Anda dapat memeriksa jumlah dosen, M/TM, dan perubahan data sebelum mengunduh hasil.</p></div>
+        <div id="emptyPreview" class="empty-preview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M4 4h16v16H4zM4 10h16M10 4v16"/></svg><h3>Rekap muncul setelah file dipilih</h3><p>Periksa periode, jumlah dosen, M/TM, dan perubahan data sebelum menyimpan.</p></div>
         <div id="previewContent" hidden>
+          <p id="previewPeriod" class="period-preview"></p>
           <div class="kpis"><div><span>Total dosen</span><strong id="previewTotal">—</strong></div><div class="met"><span>Memenuhi</span><strong id="previewMet">—</strong></div><div class="unmet"><span>Tidak memenuhi</span><strong id="previewUnmet">—</strong></div></div>
           <p id="comparisonSummary" class="comparison-summary"></p>
           <div class="table-wrap"><table><caption>Rekap 8 prodi dari file terbaru</caption><thead><tr><th>Program studi</th><th>Saat ini</th><th>Terbaru</th><th>M</th><th>TM</th></tr></thead><tbody id="programRows"></tbody></table></div>
@@ -402,8 +412,8 @@ const bkd = `<!doctype html>
       </section>
     </div>
     <p id="pageMessage" class="message" role="status" aria-live="polite" hidden></p>
-    <section class="card publish-card" aria-labelledby="publishHeading"><div><p class="eyebrow">LANGKAH 3</p><h2 id="publishHeading">Terbitkan melalui GitHub</h2><p>Unduh hasil, lalu unggah sebagai <strong>dashboard-data.json</strong> ke folder data dan pilih <strong>Commit changes</strong>. GitHub memeriksa izin akun admin Anda.</p><p class="helper">Data JAD dimuat ulang dari GitHub sebelum hasil diunduh. File sumber CSV/Excel tetap di komputer Anda.</p></div><div class="publish-actions"><button id="downloadResult" class="primary-button" type="button" disabled>1. Unduh hasil BKD</button><a class="secondary-button" href="https://github.com/SDM-FTE/dashboard/upload/main/assets/data" target="_blank" rel="noopener">2. Unggah ke GitHub ↗</a><a class="text-link" href="/#bkd" target="_blank" rel="noopener">Periksa dashboard setelah diterbitkan ↗</a></div></section>
-    <footer>MONITORING DOSEN <span>Pengelolaan BKD melalui akun GitHub admin</span></footer>
+    <section class="card publish-card" aria-labelledby="publishHeading"><div><p class="eyebrow">LANGKAH 3</p><h2 id="publishHeading">Simpan periode BKD</h2><p>Hasil yang diperiksa disimpan langsung untuk periode yang dipilih. Periode lainnya tetap tersimpan sebagai arsip.</p><p class="helper">Hanya admin terverifikasi yang dapat menyimpan. File sumber CSV/Excel tetap di komputer Anda; data JAD dan antrean tetap dipertahankan.</p></div><div class="publish-actions"><button id="savePeriod" class="primary-button" type="button" disabled>Simpan periode BKD</button><a id="viewPublished" class="secondary-button" href="/#bkd" target="_blank" rel="noopener" hidden>Lihat rekap periode ini ↗</a></div></section>
+    <footer>MONITORING DOSEN <span>Pengelolaan periode BKD oleh admin</span></footer>
   </main>
 </body>
 </html>

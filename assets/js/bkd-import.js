@@ -244,7 +244,8 @@
       imported.set(key, record);
     });
     const missingPrograms = baseline.focusPrograms.filter(program => !Array.from(imported.values()).some(row => row.program === program));
-    if (missingPrograms.length) fail('PROGRAM_MISSING', 'File belum memuat seluruh delapan prodi: ' + missingPrograms.join(', ') + '.', { missingPrograms });
+    if (missingPrograms.length && !options.allowMissingPrograms) fail('PROGRAM_MISSING', 'File belum memuat seluruh delapan prodi: ' + missingPrograms.join(', ') + '.', { missingPrograms });
+    if (!imported.size) fail('PROGRAM_EMPTY', 'File tidak memuat dosen dari delapan prodi dashboard.');
     const bkd = baseline.bkd.filter(row => imported.has(recordKey(row))).map(row => imported.get(recordKey(row)));
     const additions = Array.from(imported.entries()).filter(([key]) => !previous.has(key)).map(([, row]) => row).sort((left, right) => recordKey(left).localeCompare(recordKey(right), 'id'));
     additions.forEach(row => {
@@ -297,6 +298,7 @@
         certificationPreserved,
         certificationUnknown,
         warnings: [
+          ...(missingPrograms.length ? ['Periode lampau ini belum memiliki data untuk prodi: ' + missingPrograms.join(', ') + '.'] : []),
           ...(privacyRemoved ? ['Data FTE lama dikeluarkan dari hasil pembaruan.'] : []),
           ...(certificationPreserved.length ? [certificationPreserved.length + ' status sertifikasi dari dashboard dipertahankan karena file terbaru belum mencatatnya.'] : []),
           ...(certificationUnknown.some(row => !row.retained) ? [certificationUnknown.filter(row => !row.retained).length + ' dosen belum memiliki status sertifikasi yang dapat dikenali.'] : []),
