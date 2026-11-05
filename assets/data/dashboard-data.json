@@ -1,10 +1,10 @@
 {
   "meta": {
     "jadSource": "SharePoint workbook (PAK / sum)",
-    "bkdSource": "SISTER Bkd_frontend.csv",
+    "bkdSource": "SISTER Bkd_frontend(2).csv",
     "jadRows": 26,
     "bkdRows": 210,
-    "bkdSourceRows": 1564,
+    "bkdSourceRows": 1563,
     "bkdPrograms": 8,
     "bkdProgramNames": [
       "Teknik Telekomunikasi (S1)",
@@ -17,7 +17,8 @@
       "Teknik Biomedis (S1)"
     ],
     "privacyNote": "Static dashboard data is readable by anyone who can access the published site or repository.",
-    "jadUpdatedAt": "2026-11-03T02:07:42+00:00"
+    "jadUpdatedAt": "2026-11-03T02:07:42+00:00",
+    "bkdUpdatedAt": "2026-11-05T03:34:13.872Z"
   },
   "focusPrograms": [
     "Teknik Telekomunikasi (S1)",
@@ -480,7 +481,7 @@
       "skpByYear": [
         0,
         3.13,
-        40.0,
+        40,
         29.997500000000002
       ],
       "akPenyetaraan": 150,
@@ -876,7 +877,7 @@
       "skpByYear": [
         0,
         10.21,
-        40.0,
+        40,
         30.005000000000003
       ],
       "akPenyetaraan": 150,
@@ -2809,29 +2810,6 @@
       "certification": "Sudah tersertifikasi"
     },
     {
-      "no": 1069,
-      "status": "Profesor dengan tugas tambahan (PT)",
-      "name": "Prof. Dr. ACHMAD RIZAL, S.T., M.T",
-      "program": "Teknik Elektro (S3)",
-      "position": "Profesor",
-      "activity": [
-        11.7225,
-        35.0488,
-        1.5,
-        14.7667,
-        0.375,
-        40,
-        2.125,
-        0.5
-      ],
-      "totalPerformance": 15.7225,
-      "excessLoad": 90.3155,
-      "semesterBkd": "M",
-      "obligation": "M",
-      "conclusion": "M",
-      "certification": "Sudah tersertifikasi"
-    },
-    {
       "no": 1070,
       "status": "Profesor dengan tugas tambahan (PT)",
       "name": "Prof. Dr. ALOYSIUS ADYA PRAMUDITA, S.T., M.T",
@@ -4465,29 +4443,6 @@
       "certification": "Sudah tersertifikasi"
     },
     {
-      "no": 1397,
-      "status": "Dosen (DS)",
-      "name": "LEDYA NOVAMIZANTI, M.T",
-      "program": "Teknik Telekomunikasi (S1)",
-      "position": "Lektor Kepala",
-      "activity": [
-        12,
-        0,
-        4,
-        31.75,
-        0,
-        0,
-        0,
-        0
-      ],
-      "totalPerformance": 16,
-      "excessLoad": 31.75,
-      "semesterBkd": "M",
-      "obligation": "Tugas Belajar",
-      "conclusion": "M",
-      "certification": "Sudah tersertifikasi"
-    },
-    {
       "no": 1398,
       "status": "Dosen (DS)",
       "name": "Dr. NYOMAN BOGI ADITYA KARNA, S.T., MSc",
@@ -4902,29 +4857,6 @@
       "certification": "Sudah tersertifikasi"
     },
     {
-      "no": 1416,
-      "status": "Dosen dengan tugas tambahan (DT)",
-      "name": "RATNA MAYASARI, S.T., M.T",
-      "program": "Teknik Telekomunikasi (S1)",
-      "position": "Lektor",
-      "activity": [
-        12,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
-      ],
-      "totalPerformance": 12,
-      "excessLoad": 0,
-      "semesterBkd": "M",
-      "obligation": "Tugas Belajar",
-      "conclusion": "M",
-      "certification": "Sudah tersertifikasi"
-    },
-    {
       "no": 1417,
       "status": "Dosen dengan tugas tambahan (DT)",
       "name": "Dr. RIDHA MULDINA NEGARA, S.T., M.T",
@@ -4964,29 +4896,6 @@
         0
       ],
       "totalPerformance": 12.5714,
-      "excessLoad": 0,
-      "semesterBkd": "M",
-      "obligation": "Tugas Belajar",
-      "conclusion": "M",
-      "certification": "Sudah tersertifikasi"
-    },
-    {
-      "no": 1419,
-      "status": "Dosen (DS)",
-      "name": "SUSSI, S.Si., M.T",
-      "program": "Teknik Telekomunikasi (S1)",
-      "position": "Lektor",
-      "activity": [
-        12,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
-      ],
-      "totalPerformance": 12,
       "excessLoad": 0,
       "semesterBkd": "M",
       "obligation": "Tugas Belajar",
@@ -5040,29 +4949,6 @@
       "certification": "Sudah tersertifikasi"
     },
     {
-      "no": 1422,
-      "status": "Dosen (DS)",
-      "name": "DESTI MADYA SAPUTRI, S.T., M.T",
-      "program": "Teknik Telekomunikasi (S1)",
-      "position": "Lektor",
-      "activity": [
-        12,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
-      ],
-      "totalPerformance": 12,
-      "excessLoad": 0,
-      "semesterBkd": "M",
-      "obligation": "Tugas Belajar",
-      "conclusion": "M",
-      "certification": "Sudah tersertifikasi"
-    },
-    {
       "no": 1423,
       "status": "Dosen (DS)",
       "name": "DHARU ARSENO, S.T., M.T",
@@ -5112,29 +4998,6 @@
       "no": 1425,
       "status": "Dosen (DS)",
       "name": "HARFAN HIAN RYANU, S.T., M.T",
-      "program": "Teknik Telekomunikasi (S1)",
-      "position": "Lektor",
-      "activity": [
-        12,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
-      ],
-      "totalPerformance": 12,
-      "excessLoad": 0,
-      "semesterBkd": "M",
-      "obligation": "Tugas Belajar",
-      "conclusion": "M",
-      "certification": "Sudah tersertifikasi"
-    },
-    {
-      "no": 1426,
-      "status": "Dosen (DS)",
-      "name": "HURIANTI VIDYANINGTYAS, S.T., M.T",
       "program": "Teknik Telekomunikasi (S1)",
       "position": "Lektor",
       "activity": [
@@ -5569,29 +5432,6 @@
       "certification": "Belum tersertifikasi"
     },
     {
-      "no": 1445,
-      "status": "Dosen (DS)",
-      "name": "ARIF INDRA IRAWAN , S.T., M.T",
-      "program": "Teknik Telekomunikasi (S1)",
-      "position": "Asisten Ahli",
-      "activity": [
-        12,
-        0,
-        3.75,
-        0,
-        0,
-        0,
-        0,
-        0
-      ],
-      "totalPerformance": 15.75,
-      "excessLoad": 0,
-      "semesterBkd": "M",
-      "obligation": "Tugas Belajar",
-      "conclusion": "M",
-      "certification": "Sudah tersertifikasi"
-    },
-    {
       "no": 1446,
       "status": "Dosen (DS)",
       "name": "BAGUS ADITYA, S.T., M.T",
@@ -5654,29 +5494,6 @@
         0
       ],
       "totalPerformance": 15,
-      "excessLoad": 0,
-      "semesterBkd": "M",
-      "obligation": "Tugas Belajar",
-      "conclusion": "M",
-      "certification": "Sudah tersertifikasi"
-    },
-    {
-      "no": 1449,
-      "status": "Dosen (DS)",
-      "name": "NUR ANDINI, S.T., M.T",
-      "program": "Teknik Telekomunikasi (S1)",
-      "position": "Asisten Ahli",
-      "activity": [
-        12,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
-      ],
-      "totalPerformance": 12,
       "excessLoad": 0,
       "semesterBkd": "M",
       "obligation": "Tugas Belajar",
@@ -5793,6 +5610,190 @@
       ],
       "totalPerformance": 15.7,
       "excessLoad": 23.875,
+      "semesterBkd": "M",
+      "obligation": "M",
+      "conclusion": "M",
+      "certification": "Sudah tersertifikasi"
+    },
+    {
+      "no": 1455,
+      "status": "Dosen (DS)",
+      "name": "ARIF INDRA IRAWAN , S.T., M.T., Ph.D",
+      "program": "Teknik Telekomunikasi (S1)",
+      "position": "Asisten Ahli",
+      "activity": [
+        12,
+        0,
+        3.75,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "totalPerformance": 15.75,
+      "excessLoad": 0,
+      "semesterBkd": "M",
+      "obligation": "Tugas Belajar",
+      "conclusion": "M",
+      "certification": "Sudah tersertifikasi"
+    },
+    {
+      "no": 1456,
+      "status": "Dosen (DS)",
+      "name": "DESTI MADYA SAPUTRI, S.T., M.T., Doctor of Philosophy",
+      "program": "Teknik Telekomunikasi (S1)",
+      "position": "Lektor",
+      "activity": [
+        12,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "totalPerformance": 12,
+      "excessLoad": 0,
+      "semesterBkd": "M",
+      "obligation": "Tugas Belajar",
+      "conclusion": "M",
+      "certification": "Sudah tersertifikasi"
+    },
+    {
+      "no": 1457,
+      "status": "Dosen (DS)",
+      "name": "Dr. HURIANTI VIDYANINGTYAS, S.T., M.T",
+      "program": "Teknik Telekomunikasi (S1)",
+      "position": "Lektor",
+      "activity": [
+        12,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "totalPerformance": 12,
+      "excessLoad": 0,
+      "semesterBkd": "M",
+      "obligation": "Tugas Belajar",
+      "conclusion": "M",
+      "certification": "Sudah tersertifikasi"
+    },
+    {
+      "no": 1458,
+      "status": "Dosen (DS)",
+      "name": "Dr. LEDYA NOVAMIZANTI, M.T",
+      "program": "Teknik Telekomunikasi (S1)",
+      "position": "Lektor Kepala",
+      "activity": [
+        12,
+        0,
+        4,
+        31.75,
+        0,
+        0,
+        0,
+        0
+      ],
+      "totalPerformance": 16,
+      "excessLoad": 31.75,
+      "semesterBkd": "M",
+      "obligation": "Tugas Belajar",
+      "conclusion": "M",
+      "certification": "Sudah tersertifikasi"
+    },
+    {
+      "no": 1459,
+      "status": "Dosen (DS)",
+      "name": "Dr. NUR ANDINI, S.T., M.T",
+      "program": "Teknik Telekomunikasi (S1)",
+      "position": "Asisten Ahli",
+      "activity": [
+        12,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "totalPerformance": 12,
+      "excessLoad": 0,
+      "semesterBkd": "M",
+      "obligation": "Tugas Belajar",
+      "conclusion": "M",
+      "certification": "Sudah tersertifikasi"
+    },
+    {
+      "no": 1460,
+      "status": "Dosen dengan tugas tambahan (DT)",
+      "name": "Dr. RATNA MAYASARI, S.T., M.T",
+      "program": "Teknik Telekomunikasi (S1)",
+      "position": "Lektor",
+      "activity": [
+        12,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "totalPerformance": 12,
+      "excessLoad": 0,
+      "semesterBkd": "M",
+      "obligation": "Tugas Belajar",
+      "conclusion": "M",
+      "certification": "Sudah tersertifikasi"
+    },
+    {
+      "no": 1461,
+      "status": "Dosen (DS)",
+      "name": "Dr. SUSSI, S.Si., M.T",
+      "program": "Teknik Telekomunikasi (S1)",
+      "position": "Lektor",
+      "activity": [
+        12,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "totalPerformance": 12,
+      "excessLoad": 0,
+      "semesterBkd": "M",
+      "obligation": "Tugas Belajar",
+      "conclusion": "M",
+      "certification": "Sudah tersertifikasi"
+    },
+    {
+      "no": 1462,
+      "status": "Profesor dengan tugas tambahan (PT)",
+      "name": "Prof. Dr., Ir. ACHMAD RIZAL, S.T., M.T",
+      "program": "Teknik Elektro (S3)",
+      "position": "Profesor",
+      "activity": [
+        11.7225,
+        35.0488,
+        1.5,
+        14.7667,
+        0.375,
+        40,
+        2.125,
+        0.5
+      ],
+      "totalPerformance": 15.7225,
+      "excessLoad": 90.3155,
       "semesterBkd": "M",
       "obligation": "M",
       "conclusion": "M",
